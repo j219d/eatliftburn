@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [weight, setWeight] = useState(157); // default weight in lbs
+  const [weight, setWeight] = useState(157);
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
   const [steps, setSteps] = useState(0);
@@ -11,10 +11,10 @@ export default function Home() {
 
   const BMR = 1740;
 
-  const stepCalories = (steps, weight) => steps * (weight * 0.0004); // ~0.04 cal/step @157lbs
+  const stepCalories = (steps) => steps * 0.04;
 
   const calcDeficit = (newCalories, newSteps, manualBurn) => {
-    const stepBurn = stepCalories(newSteps, weight);
+    const stepBurn = stepCalories(newSteps);
     return Math.round(BMR + stepBurn + manualBurn - newCalories);
   };
 
@@ -48,6 +48,27 @@ export default function Home() {
     e.preventDefault();
     const addedBurn = parseInt(e.target.burn.value);
     const updatedManualBurn = manualBurn + addedBurn;
+    setManualBurn(updatedManualBurn);
+    setDeficit(calcDeficit(calories, steps, updatedManualBurn));
+    e.target.reset();
+  };
+
+  const handleExerciseLog = (e) => {
+    e.preventDefault();
+    const type = e.target.type.value;
+    const amount = parseInt(e.target.amount.value);
+
+    let burn = 0;
+    if (type === 'pushups') burn = amount * 0.6;
+    if (type === 'pullups') burn = amount * 1;
+    if (type === 'bicep_curls') burn = amount * 0.5;
+    if (type === 'bench_press') burn = amount * 0.7;
+    if (type === 'tricep_pulls') burn = amount * 0.4;
+    if (type === 'leg_press') burn = amount * 0.6;
+
+    const newLog = [...exerciseLog, { type, amount, burn }];
+    setExerciseLog(newLog);
+    const updatedManualBurn = manualBurn + burn;
     setManualBurn(updatedManualBurn);
     setDeficit(calcDeficit(calories, steps, updatedManualBurn));
     e.target.reset();
@@ -135,6 +156,27 @@ export default function Home() {
         <input name="burn" type="number" placeholder="Calories burned" required />
         <button type="submit">Add</button>
       </form>
+
+      <h2>Log Workout</h2>
+      <form onSubmit={handleExerciseLog}>
+        <select name="type" required>
+          <option value="pushups">Push-ups</option>
+          <option value="pullups">Pull-ups</option>
+          <option value="bicep_curls">Bicep Curls (reps)</option>
+          <option value="bench_press">Bench Press (reps)</option>
+          <option value="tricep_pulls">Tricep Pulls (reps)</option>
+          <option value="leg_press">Leg Press (reps)</option>
+        </select>
+        <input name="amount" type="number" placeholder="Amount" required />
+        <button type="submit">Add</button>
+      </form>
+
+      <h3>Workout Log:</h3>
+      <ul>
+        {exerciseLog.map((ex, i) => (
+          <li key={i}>{ex.amount} × {ex.type.replace('_', ' ')} — {ex.burn.toFixed(1)} cal</li>
+        ))}
+      </ul>
     </div>
   );
 }
