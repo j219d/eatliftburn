@@ -11,7 +11,7 @@ export default function Home() {
 
   const BMR = 1740;
 
-  const stepCalories = (steps, weight) => steps * (weight * 0.0004); // based on ~0.04 cal/step @157lbs
+  const stepCalories = (steps, weight) => steps * (weight * 0.0004); // ~0.04 cal/step @157lbs
 
   const calcDeficit = (newCalories, newSteps, manualBurn) => {
     const stepBurn = stepCalories(newSteps, weight);
@@ -70,7 +70,7 @@ export default function Home() {
       'butter': { cal: 100, protein: 0 },
       'olive_oil_tsp': { cal: 40, protein: 0 },
       'olive_oil_tbsp': { cal: 120, protein: 0 },
-      'protein_icecream': { cal: 400, protein: 30 },
+      'protein_icecream': { cal: 400, protein: 52 },
     };
     const item = presets[value];
     if (item) {
@@ -138,8 +138,3 @@ export default function Home() {
     </div>
   );
 }
-
-// --- next.config.js ---
-module.exports = {
-  reactStrictMode: true,
-};
