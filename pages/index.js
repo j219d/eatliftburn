@@ -3,14 +3,23 @@ import { useState, useEffect } from 'react';
 export default function Home() {
   const BMR = 1740;
 
-  const [weight, setWeight] = useState(() => parseInt(localStorage.getItem('weight')) || 157);
+  const [weight, setWeight] = useState(157);
+  const [weightLog, setWeightLog] = useState([]);
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
   const [steps, setSteps] = useState(0);
   const [manualBurn, setManualBurn] = useState(0);
   const [exerciseLog, setExerciseLog] = useState([]);
   const [deficit, setDeficit] = useState(BMR);
-  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem('weightLog')) || []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedWeight = parseInt(localStorage.getItem('weight'));
+      if (!isNaN(storedWeight)) setWeight(storedWeight);
+      const storedLog = localStorage.getItem('weightLog');
+      if (storedLog) setWeightLog(JSON.parse(storedLog));
+    }
+  }, []);
 
   useEffect(() => {
     const stepBurn = steps * 0.04;
