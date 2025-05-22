@@ -7,17 +7,21 @@ export default function Home() {
   const [steps, setSteps] = useState(0);
   const [manualBurn, setManualBurn] = useState(0);
   const [exerciseLog, setExerciseLog] = useState([]);
-  const [deficit, setDeficit] = useState(0);
+  const [deficit, setDeficit] = useState(1740);
 
   const BMR = 1740;
 
+  const stepCalories = (steps, weight) => steps * (weight * 0.0004); // based on ~0.04 cal/step @157lbs
+
   const calcDeficit = (newCalories, newSteps, manualBurn) => {
-    const stepCalories = newSteps * (0.0005 * weight);
-    return Math.round(BMR + stepCalories + manualBurn - newCalories);
+    const stepBurn = stepCalories(newSteps, weight);
+    return Math.round(BMR + stepBurn + manualBurn - newCalories);
   };
 
   const handleWeightChange = (e) => {
-    setWeight(parseInt(e.target.value));
+    const w = parseInt(e.target.value);
+    setWeight(w);
+    setDeficit(calcDeficit(calories, steps, manualBurn));
   };
 
   const handleFoodLog = (e) => {
@@ -49,27 +53,35 @@ export default function Home() {
     e.target.reset();
   };
 
-  const handleExerciseLog = (e) => {
-    e.preventDefault();
-    const type = e.target.type.value;
-    const amount = parseInt(e.target.amount.value);
-
-    let burn = 0;
-    if (type === 'pushups') burn = amount * 0.29;
-    if (type === 'pullups') burn = amount * 1;
-    if (type === 'bicep_curls') burn = amount * 0.5;
-    if (type === 'bench_press') burn = amount * 0.7;
-    if (type === 'tricep_pulls') burn = amount * 0.4;
-    if (type === 'leg_press') burn = amount * 0.6;
-
-    const newLog = [...exerciseLog, { type, amount, burn }];
-    setExerciseLog(newLog);
-    const updatedManualBurn = manualBurn + burn;
-    setManualBurn(updatedManualBurn);
-    setDeficit(calcDeficit(calories, steps, updatedManualBurn));
-    e.target.reset();
+  const handlePresetFood = (e) => {
+    const value = e.target.value;
+    const presets = {
+      'chicken_50': { cal: 82, protein: 15 },
+      'chicken_100': { cal: 165, protein: 31 },
+      'chicken_150': { cal: 247, protein: 46 },
+      'chicken_200': { cal: 330, protein: 62 },
+      'apple': { cal: 95, protein: 0.5 },
+      'promix': { cal: 150, protein: 15 },
+      'quest': { cal: 190, protein: 20 },
+      'egg': { cal: 70, protein: 6 },
+      'egg_white': { cal: 17, protein: 3.5 },
+      'tomato': { cal: 22, protein: 1 },
+      'green_onion': { cal: 5, protein: 0.2 },
+      'butter': { cal: 100, protein: 0 },
+      'olive_oil_tsp': { cal: 40, protein: 0 },
+      'olive_oil_tbsp': { cal: 120, protein: 0 },
+      'protein_icecream': { cal: 400, protein: 30 },
+    };
+    const item = presets[value];
+    if (item) {
+      const updatedCalories = calories + item.cal;
+      setCalories(updatedCalories);
+      setProtein(prev => prev + item.protein);
+      setDeficit(calcDeficit(updatedCalories, steps, manualBurn));
+    }
+    e.target.value = '';
   };
-  
+
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#121212', color: '#fff' }}>
       <h1>EATLIFTBURN</h1>
@@ -85,7 +97,27 @@ export default function Home() {
 
       <hr />
 
-      <h2>Log Food</h2>
+      <h2>Log Preset Food</h2>
+      <select onChange={handlePresetFood} defaultValue="">
+        <option value="" disabled>Select food...</option>
+        <option value="chicken_50">Chicken Breast (50g)</option>
+        <option value="chicken_100">Chicken Breast (100g)</option>
+        <option value="chicken_150">Chicken Breast (150g)</option>
+        <option value="chicken_200">Chicken Breast (200g)</option>
+        <option value="apple">Medium Apple</option>
+        <option value="promix">Promix Protein Bar</option>
+        <option value="quest">Quest Protein Bar</option>
+        <option value="egg">Egg</option>
+        <option value="egg_white">Egg White</option>
+        <option value="tomato">Tomato</option>
+        <option value="green_onion">Green Onion</option>
+        <option value="butter">Butter</option>
+        <option value="olive_oil_tsp">Olive Oil (1 tsp)</option>
+        <option value="olive_oil_tbsp">Olive Oil (1 tbsp)</option>
+        <option value="protein_icecream">Protein Ice Cream</option>
+      </select>
+
+      <h2>Log Custom Food</h2>
       <form onSubmit={handleFoodLog}>
         <input name="calories" type="number" placeholder="Calories" required />
         <input name="protein" type="number" placeholder="Protein (g)" required />
@@ -103,28 +135,11 @@ export default function Home() {
         <input name="burn" type="number" placeholder="Calories burned" required />
         <button type="submit">Add</button>
       </form>
-
-      <h2>Log Workout</h2>
-      <form onSubmit={handleExerciseLog}>
-        <select name="type" required>
-          <option value="pushups">Push-ups</option>
-          <option value="pullups">Pull-ups</option>
-          <option value="bicep_curls">Bicep Curls (reps)</option>
-          <option value="bench_press">Bench Press (reps)</option>
-          <option value="tricep_pulls">Tricep Pulls (reps)</option>
-          <option value="leg_press">Leg Press (reps)</option>
-        </select>
-        <input name="amount" type="number" placeholder="Amount" required />
-        <button type="submit">Add</button>
-      </form>
-
-      <h3>Workout Log:</h3>
-      <ul>
-        {exerciseLog.map((ex, i) => (
-          <li key={i}>{ex.amount} × {ex.type.replace('_', ' ')} — {ex.burn.toFixed(1)} cal</li>
-        ))}
-      </ul>
     </div>
   );
 }
 
+// --- next.config.js ---
+module.exports = {
+  reactStrictMode: true,
+};
