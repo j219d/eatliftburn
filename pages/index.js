@@ -1,55 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [weight, setWeight] = useState(157);
+  const BMR = 1740;
+
+  const [weight, setWeight] = useState(() => parseInt(localStorage.getItem('weight')) || 157);
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
   const [steps, setSteps] = useState(0);
   const [manualBurn, setManualBurn] = useState(0);
   const [exerciseLog, setExerciseLog] = useState([]);
-  const [deficit, setDeficit] = useState(1740);
+  const [deficit, setDeficit] = useState(BMR);
+  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem('weightLog')) || []);
 
-  const BMR = 1740;
+  useEffect(() => {
+    const stepBurn = steps * 0.04;
+    setDeficit(Math.round(BMR + stepBurn + manualBurn - calories));
+  }, [calories, steps, manualBurn]);
 
-  const stepCalories = (steps) => steps * 0.04;
+  useEffect(() => {
+    localStorage.setItem('weight', weight);
+  }, [weight]);
 
-  const calcDeficit = (newCalories, newSteps, manualBurn) => {
-    const stepBurn = stepCalories(newSteps);
-    return Math.round(BMR + stepBurn + manualBurn - newCalories);
+  useEffect(() => {
+    localStorage.setItem('weightLog', JSON.stringify(weightLog));
+  }, [weightLog]);
+
+  const resetDaily = () => {
+    setCalories(0);
+    setProtein(0);
+    setSteps(0);
+    setManualBurn(0);
+    setExerciseLog([]);
+    setDeficit(BMR);
   };
 
   const handleWeightChange = (e) => {
-    const w = parseInt(e.target.value);
-    setWeight(w);
-    setDeficit(calcDeficit(calories, steps, manualBurn));
+    setWeight(parseInt(e.target.value));
+  };
+
+  const handleWeightLog = (e) => {
+    e.preventDefault();
+    const newWeight = parseFloat(e.target.weight.value);
+    const today = new Date().toISOString().split('T')[0];
+    setWeightLog(prev => [...prev, { date: today, weight: newWeight }]);
+    e.target.reset();
   };
 
   const handleFoodLog = (e) => {
     e.preventDefault();
     const foodCals = parseInt(e.target.calories.value);
     const foodProtein = parseInt(e.target.protein.value);
-    const updatedCalories = calories + foodCals;
-    setCalories(updatedCalories);
+    setCalories(prev => prev + foodCals);
     setProtein(prev => prev + foodProtein);
-    setDeficit(calcDeficit(updatedCalories, steps, manualBurn));
     e.target.reset();
   };
 
   const handleStepLog = (e) => {
     e.preventDefault();
     const addedSteps = parseInt(e.target.steps.value);
-    const updatedSteps = steps + addedSteps;
-    setSteps(updatedSteps);
-    setDeficit(calcDeficit(calories, updatedSteps, manualBurn));
+    setSteps(prev => prev + addedSteps);
     e.target.reset();
   };
 
   const handleManualBurn = (e) => {
     e.preventDefault();
     const addedBurn = parseInt(e.target.burn.value);
-    const updatedManualBurn = manualBurn + addedBurn;
-    setManualBurn(updatedManualBurn);
-    setDeficit(calcDeficit(calories, steps, updatedManualBurn));
+    setManualBurn(prev => prev + addedBurn);
     e.target.reset();
   };
 
@@ -57,7 +73,6 @@ export default function Home() {
     e.preventDefault();
     const type = e.target.type.value;
     const amount = parseInt(e.target.amount.value);
-
     let burn = 0;
     if (type === 'pushups') burn = amount * 0.6;
     if (type === 'pullups') burn = amount * 1;
@@ -65,12 +80,9 @@ export default function Home() {
     if (type === 'bench_press') burn = amount * 0.7;
     if (type === 'tricep_pulls') burn = amount * 0.4;
     if (type === 'leg_press') burn = amount * 0.6;
-
     const newLog = [...exerciseLog, { type, amount, burn }];
     setExerciseLog(newLog);
-    const updatedManualBurn = manualBurn + burn;
-    setManualBurn(updatedManualBurn);
-    setDeficit(calcDeficit(calories, steps, updatedManualBurn));
+    setManualBurn(prev => prev + burn);
     e.target.reset();
   };
 
@@ -95,10 +107,8 @@ export default function Home() {
     };
     const item = presets[value];
     if (item) {
-      const updatedCalories = calories + item.cal;
-      setCalories(updatedCalories);
+      setCalories(prev => prev + item.cal);
       setProtein(prev => prev + item.protein);
-      setDeficit(calcDeficit(updatedCalories, steps, manualBurn));
     }
     e.target.value = '';
   };
@@ -108,7 +118,7 @@ export default function Home() {
       <h1>EATLIFTBURN</h1>
 
       <label>Body Weight (lbs): </label>
-      <input type="number" value={weight} onChange={handleWeightChange} style={{ marginBottom: '20px' }} />
+      <input type="number" value={weight} onChange={handleWeightChange} />
 
       <p>Calories consumed: {calories}</p>
       <p>Protein: {protein}g</p>
@@ -116,7 +126,7 @@ export default function Home() {
       <p>Manual Burn: {manualBurn} cal</p>
       <p>Estimated Deficit: {deficit}</p>
 
-      <hr />
+      <button onClick={resetDaily}>Reset for New Day</button>
 
       <h2>Log Preset Food</h2>
       <select onChange={handlePresetFood} defaultValue="">
@@ -145,13 +155,13 @@ export default function Home() {
         <button type="submit">Add</button>
       </form>
 
-      <h2>Log Steps (flat pace walk)</h2>
+      <h2>Log Steps</h2>
       <form onSubmit={handleStepLog}>
         <input name="steps" type="number" placeholder="Steps" required />
         <button type="submit">Add</button>
       </form>
 
-      <h2>Log Manual Burn (e.g. treadmill calories)</h2>
+      <h2>Log Manual Burn</h2>
       <form onSubmit={handleManualBurn}>
         <input name="burn" type="number" placeholder="Calories burned" required />
         <button type="submit">Add</button>
@@ -162,10 +172,10 @@ export default function Home() {
         <select name="type" required>
           <option value="pushups">Push-ups</option>
           <option value="pullups">Pull-ups</option>
-          <option value="bicep_curls">Bicep Curls (reps)</option>
-          <option value="bench_press">Bench Press (reps)</option>
-          <option value="tricep_pulls">Tricep Pulls (reps)</option>
-          <option value="leg_press">Leg Press (reps)</option>
+          <option value="bicep_curls">Bicep Curls</option>
+          <option value="bench_press">Bench Press</option>
+          <option value="tricep_pulls">Tricep Pulls</option>
+          <option value="leg_press">Leg Press</option>
         </select>
         <input name="amount" type="number" placeholder="Amount" required />
         <button type="submit">Add</button>
@@ -175,6 +185,19 @@ export default function Home() {
       <ul>
         {exerciseLog.map((ex, i) => (
           <li key={i}>{ex.amount} × {ex.type.replace('_', ' ')} — {ex.burn.toFixed(1)} cal</li>
+        ))}
+      </ul>
+
+      <h2>Log Weight</h2>
+      <form onSubmit={handleWeightLog}>
+        <input name="weight" type="number" step="0.1" placeholder="Weight (lbs)" required />
+        <button type="submit">Add</button>
+      </form>
+
+      <h3>Weight History</h3>
+      <ul>
+        {weightLog.map((entry, index) => (
+          <li key={index}>{entry.date}: {entry.weight} lbs</li>
         ))}
       </ul>
     </div>
