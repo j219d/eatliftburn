@@ -7,44 +7,52 @@ export default function Home() {
   const [manualBurn, setManualBurn] = useState(0);
   const [weightLog, setWeightLog] = useState([]);
   const [newWeight, setNewWeight] = useState("");
-  const [deficitGoal, setDeficitGoal] = useState(() => {
-    return parseInt(localStorage.getItem("deficitGoal")) || 1000;
-  });
-  const [proteinGoal, setProteinGoal] = useState(() => {
-    return parseInt(localStorage.getItem("proteinGoal")) || 130;
-  });
-  const [checklist, setChecklist] = useState(() => {
-    return (
-      JSON.parse(localStorage.getItem("checklist")) || {
-        workout: false,
-        cardio: false,
-        deficit: false,
-        protein: false,
-        supplements: false,
-        sunlight: false,
-        steps: false,
-      }
-    );
+  const [deficitGoal, setDeficitGoal] = useState(1000);
+  const [proteinGoal, setProteinGoal] = useState(130);
+  const [checklist, setChecklist] = useState({
+    workout: false,
+    cardio: false,
+    deficit: false,
+    protein: false,
+    supplements: false,
+    sunlight: false,
+    steps: false,
   });
 
   const stepCalories = Math.round(steps * 0.04);
   const totalBurned = stepCalories + manualBurn;
   const estimatedDeficit = 1740 + totalBurned - calories;
 
+  // Load from localStorage only on client
   useEffect(() => {
-    localStorage.setItem("checklist", JSON.stringify(checklist));
-  }, [checklist]);
+    if (typeof window !== "undefined") {
+      const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
+      setWeightLog(storedWeights);
+
+      const storedChecklist = JSON.parse(localStorage.getItem("checklist")) || checklist;
+      setChecklist(storedChecklist);
+
+      const storedDeficit = parseInt(localStorage.getItem("deficitGoal"));
+      if (storedDeficit) setDeficitGoal(storedDeficit);
+
+      const storedProtein = parseInt(localStorage.getItem("proteinGoal"));
+      if (storedProtein) setProteinGoal(storedProtein);
+    }
+  }, []);
 
   useEffect(() => {
-    const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
-    setWeightLog(storedWeights);
-  }, []);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("checklist", JSON.stringify(checklist));
+    }
+  }, [checklist]);
 
   const logWeight = () => {
     if (newWeight) {
       const updated = [...weightLog, { date: new Date().toLocaleDateString(), weight: newWeight }];
       setWeightLog(updated);
-      localStorage.setItem("weightLog", JSON.stringify(updated));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("weightLog", JSON.stringify(updated));
+      }
       setNewWeight("");
     }
   };
@@ -53,7 +61,9 @@ export default function Home() {
     const updated = [...weightLog];
     updated[index].weight = newVal;
     setWeightLog(updated);
-    localStorage.setItem("weightLog", JSON.stringify(updated));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("weightLog", JSON.stringify(updated));
+    }
   };
 
   const resetAll = () => {
@@ -71,8 +81,11 @@ export default function Home() {
       sunlight: false,
       steps: false,
     });
-    localStorage.removeItem("weightLog");
-    localStorage.removeItem("checklist");
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("weightLog");
+      localStorage.removeItem("checklist");
+    }
   };
 
   const addFood = (cal, prot) => {
@@ -87,13 +100,17 @@ export default function Home() {
   const handleDeficitGoalChange = (e) => {
     const val = parseInt(e.target.value);
     setDeficitGoal(val);
-    localStorage.setItem("deficitGoal", val);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("deficitGoal", val);
+    }
   };
 
   const handleProteinGoalChange = (e) => {
     const val = parseInt(e.target.value);
     setProteinGoal(val);
-    localStorage.setItem("proteinGoal", val);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("proteinGoal", val);
+    }
   };
 
   return (
