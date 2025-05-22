@@ -1,214 +1,222 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
-  const BMR = 1740;
-
-  const [weight, setWeight] = useState(157);
-  const [weightLog, setWeightLog] = useState([]);
   const [calories, setCalories] = useState(0);
   const [protein, setProtein] = useState(0);
   const [steps, setSteps] = useState(0);
   const [manualBurn, setManualBurn] = useState(0);
-  const [exerciseLog, setExerciseLog] = useState([]);
-  const [deficit, setDeficit] = useState(BMR);
+  const [weightLog, setWeightLog] = useState([]);
+  const [newWeight, setNewWeight] = useState("");
+  const [deficitGoal, setDeficitGoal] = useState(() => {
+    return parseInt(localStorage.getItem("deficitGoal")) || 1000;
+  });
+  const [proteinGoal, setProteinGoal] = useState(() => {
+    return parseInt(localStorage.getItem("proteinGoal")) || 130;
+  });
+  const [checklist, setChecklist] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem("checklist")) || {
+        workout: false,
+        cardio: false,
+        deficit: false,
+        protein: false,
+        supplements: false,
+        sunlight: false,
+        steps: false,
+      }
+    );
+  });
+
+  const stepCalories = Math.round(steps * 0.04);
+  const totalBurned = stepCalories + manualBurn;
+  const estimatedDeficit = 1740 + totalBurned - calories;
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedWeight = parseInt(localStorage.getItem('weight'));
-      if (!isNaN(storedWeight)) setWeight(storedWeight);
-      const storedLog = localStorage.getItem('weightLog');
-      if (storedLog) setWeightLog(JSON.parse(storedLog));
-    }
+    localStorage.setItem("checklist", JSON.stringify(checklist));
+  }, [checklist]);
+
+  useEffect(() => {
+    const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
+    setWeightLog(storedWeights);
   }, []);
 
-  useEffect(() => {
-    const stepBurn = steps * 0.04;
-    setDeficit(Math.round(BMR + stepBurn + manualBurn - calories));
-  }, [calories, steps, manualBurn]);
+  const logWeight = () => {
+    if (newWeight) {
+      const updated = [...weightLog, { date: new Date().toLocaleDateString(), weight: newWeight }];
+      setWeightLog(updated);
+      localStorage.setItem("weightLog", JSON.stringify(updated));
+      setNewWeight("");
+    }
+  };
 
-  useEffect(() => {
-    localStorage.setItem('weight', weight);
-  }, [weight]);
+  const editWeight = (index, newVal) => {
+    const updated = [...weightLog];
+    updated[index].weight = newVal;
+    setWeightLog(updated);
+    localStorage.setItem("weightLog", JSON.stringify(updated));
+  };
 
-  useEffect(() => {
-    localStorage.setItem('weightLog', JSON.stringify(weightLog));
-  }, [weightLog]);
-
-  const resetDaily = () => {
+  const resetAll = () => {
     setCalories(0);
     setProtein(0);
     setSteps(0);
     setManualBurn(0);
-    setExerciseLog([]);
-    setDeficit(BMR);
+    setWeightLog([]);
+    setChecklist({
+      workout: false,
+      cardio: false,
+      deficit: false,
+      protein: false,
+      supplements: false,
+      sunlight: false,
+      steps: false,
+    });
+    localStorage.removeItem("weightLog");
+    localStorage.removeItem("checklist");
   };
 
-  const handleWeightChange = (e) => {
-    setWeight(parseInt(e.target.value));
+  const addFood = (cal, prot) => {
+    setCalories((prev) => prev + cal);
+    setProtein((prev) => prev + prot);
   };
 
-  const handleWeightLog = (e) => {
-    e.preventDefault();
-    const newWeight = parseFloat(e.target.weight.value);
-    const today = new Date().toISOString().split('T')[0];
-    setWeightLog(prev => [...prev, { date: today, weight: newWeight }]);
-    e.target.reset();
+  const updateChecklist = (item) => {
+    setChecklist((prev) => ({ ...prev, [item]: !prev[item] }));
   };
 
-  const handleFoodLog = (e) => {
-    e.preventDefault();
-    const foodCals = parseInt(e.target.calories.value);
-    const foodProtein = parseInt(e.target.protein.value);
-    setCalories(prev => prev + foodCals);
-    setProtein(prev => prev + foodProtein);
-    e.target.reset();
+  const handleDeficitGoalChange = (e) => {
+    const val = parseInt(e.target.value);
+    setDeficitGoal(val);
+    localStorage.setItem("deficitGoal", val);
   };
 
-  const handleStepLog = (e) => {
-    e.preventDefault();
-    const addedSteps = parseInt(e.target.steps.value);
-    setSteps(prev => prev + addedSteps);
-    e.target.reset();
-  };
-
-  const handleManualBurn = (e) => {
-    e.preventDefault();
-    const addedBurn = parseInt(e.target.burn.value);
-    setManualBurn(prev => prev + addedBurn);
-    e.target.reset();
-  };
-
-  const handleExerciseLog = (e) => {
-    e.preventDefault();
-    const type = e.target.type.value;
-    const amount = parseInt(e.target.amount.value);
-    let burn = 0;
-    if (type === 'pushups') burn = amount * 0.6;
-    if (type === 'pullups') burn = amount * 1;
-    if (type === 'bicep_curls') burn = amount * 0.5;
-    if (type === 'bench_press') burn = amount * 0.7;
-    if (type === 'tricep_pulls') burn = amount * 0.4;
-    if (type === 'leg_press') burn = amount * 0.6;
-    const newLog = [...exerciseLog, { type, amount, burn }];
-    setExerciseLog(newLog);
-    setManualBurn(prev => prev + burn);
-    e.target.reset();
-  };
-
-  const handlePresetFood = (e) => {
-    const value = e.target.value;
-    const presets = {
-      'chicken_50': { cal: 82, protein: 15 },
-      'chicken_100': { cal: 165, protein: 31 },
-      'chicken_150': { cal: 247, protein: 46 },
-      'chicken_200': { cal: 330, protein: 62 },
-      'apple': { cal: 95, protein: 0.5 },
-      'promix': { cal: 150, protein: 15 },
-      'quest': { cal: 190, protein: 20 },
-      'egg': { cal: 70, protein: 6 },
-      'egg_white': { cal: 17, protein: 3.5 },
-      'tomato': { cal: 22, protein: 1 },
-      'green_onion': { cal: 5, protein: 0.2 },
-      'butter': { cal: 100, protein: 0 },
-      'olive_oil_tsp': { cal: 40, protein: 0 },
-      'olive_oil_tbsp': { cal: 120, protein: 0 },
-      'protein_icecream': { cal: 400, protein: 52 },
-    };
-    const item = presets[value];
-    if (item) {
-      setCalories(prev => prev + item.cal);
-      setProtein(prev => prev + item.protein);
-    }
-    e.target.value = '';
+  const handleProteinGoalChange = (e) => {
+    const val = parseInt(e.target.value);
+    setProteinGoal(val);
+    localStorage.setItem("proteinGoal", val);
   };
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif', backgroundColor: '#121212', color: '#fff' }}>
-      <h1>EATLIFTBURN</h1>
+    <main className="p-4 space-y-4 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold">Eatliftburn Tracker</h1>
 
-      <label>Body Weight (lbs): </label>
-      <input type="number" value={weight} onChange={handleWeightChange} />
+      <div className="space-y-2">
+        <div>
+          <label>Calories: {calories}</label>
+          <br />
+          <label>Protein: {protein}g</label>
+          <br />
+          <label>Steps: {steps} ({stepCalories} cal)</label>
+          <br />
+          <label>Manual Burn: {manualBurn} cal</label>
+          <br />
+          <label>Deficit: {estimatedDeficit} cal</label>
+        </div>
 
-      <p>Calories consumed: {calories}</p>
-      <p>Protein: {protein}g</p>
-      <p>Steps: {steps}</p>
-      <p>Manual Burn: {manualBurn} cal</p>
-      <p>Estimated Deficit: {deficit}</p>
+        <div className="flex gap-2">
+          <select onChange={(e) => addFood(...JSON.parse(e.target.value))} defaultValue="">
+            <option value="" disabled>Log food</option>
+            <option value={JSON.stringify([165, 31])}>Chicken breast (150g)</option>
+            <option value={JSON.stringify([95, 1])}>Medium apple</option>
+            <option value={JSON.stringify([260, 20])}>Promix bar</option>
+            <option value={JSON.stringify([190, 21])}>Quest bar</option>
+            <option value={JSON.stringify([70, 6])}>Egg</option>
+            <option value={JSON.stringify([15, 3])}>Egg white</option>
+            <option value={JSON.stringify([20, 1])}>Tomatoes</option>
+            <option value={JSON.stringify([5, 0])}>Green onions</option>
+            <option value={JSON.stringify([35, 0])}>Butter (1 tsp)</option>
+            <option value={JSON.stringify([120, 0])}>Olive oil (1 tbsp)</option>
+            <option value={JSON.stringify([400, 52])}>Protein ice cream</option>
+          </select>
+        </div>
 
-      <button onClick={resetDaily}>Reset for New Day</button>
+        <div className="flex gap-2">
+          <input
+            type="number"
+            placeholder="Steps"
+            onChange={(e) => setSteps(parseInt(e.target.value) || 0)}
+          />
+          <input
+            type="number"
+            placeholder="Manual burn"
+            onChange={(e) => setManualBurn(Math.round(parseFloat(e.target.value) || 0))}
+          />
+        </div>
 
-      <h2>Log Preset Food</h2>
-      <select onChange={handlePresetFood} defaultValue="">
-        <option value="" disabled>Select food...</option>
-        <option value="chicken_50">Chicken Breast (50g)</option>
-        <option value="chicken_100">Chicken Breast (100g)</option>
-        <option value="chicken_150">Chicken Breast (150g)</option>
-        <option value="chicken_200">Chicken Breast (200g)</option>
-        <option value="apple">Medium Apple</option>
-        <option value="promix">Promix Protein Bar</option>
-        <option value="quest">Quest Protein Bar</option>
-        <option value="egg">Egg</option>
-        <option value="egg_white">Egg White</option>
-        <option value="tomato">Tomato</option>
-        <option value="green_onion">Green Onion</option>
-        <option value="butter">Butter</option>
-        <option value="olive_oil_tsp">Olive Oil (1 tsp)</option>
-        <option value="olive_oil_tbsp">Olive Oil (1 tbsp)</option>
-        <option value="protein_icecream">Protein Ice Cream</option>
-      </select>
+        <div>
+          <label>Deficit goal:</label>
+          <select value={deficitGoal} onChange={handleDeficitGoalChange}>
+            {[500, 750, 1000, 1250, 1500].map((g) => (
+              <option key={g} value={g}>{g} kcal</option>
+            ))}
+          </select>
+          <br />
+          <label>Protein goal:</label>
+          <select value={proteinGoal} onChange={handleProteinGoalChange}>
+            {[100, 120, 130, 150, 160].map((g) => (
+              <option key={g} value={g}>{g} g</option>
+            ))}
+          </select>
+        </div>
 
-      <h2>Log Custom Food</h2>
-      <form onSubmit={handleFoodLog}>
-        <input name="calories" type="number" placeholder="Calories" required />
-        <input name="protein" type="number" placeholder="Protein (g)" required />
-        <button type="submit">Add</button>
-      </form>
+        <div>
+          <div className="h-4 bg-gray-300 rounded overflow-hidden my-1">
+            <div
+              className="h-full bg-green-500"
+              style={{ width: `${Math.min(100, (estimatedDeficit / deficitGoal) * 100)}%` }}
+            ></div>
+          </div>
+          <div className="h-4 bg-gray-300 rounded overflow-hidden my-1">
+            <div
+              className="h-full bg-blue-500"
+              style={{ width: `${Math.min(100, (protein / proteinGoal) * 100)}%` }}
+            ></div>
+          </div>
+        </div>
 
-      <h2>Log Steps</h2>
-      <form onSubmit={handleStepLog}>
-        <input name="steps" type="number" placeholder="Steps" required />
-        <button type="submit">Add</button>
-      </form>
+        <div>
+          <h2 className="font-bold">Checklist</h2>
+          {Object.keys(checklist).map((item) => (
+            <div key={item}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={checklist[item]}
+                  onChange={() => updateChecklist(item)}
+                />{" "}
+                {item}
+              </label>
+            </div>
+          ))}
+        </div>
 
-      <h2>Log Manual Burn</h2>
-      <form onSubmit={handleManualBurn}>
-        <input name="burn" type="number" placeholder="Calories burned" required />
-        <button type="submit">Add</button>
-      </form>
+        <div>
+          <h2 className="font-bold">Weight Log</h2>
+          <input
+            type="number"
+            value={newWeight}
+            onChange={(e) => setNewWeight(e.target.value)}
+            placeholder="Log weight"
+          />
+          <button onClick={logWeight} className="ml-2">Add</button>
+          <ul>
+            {weightLog.map((entry, idx) => (
+              <li key={idx}>
+                {entry.date}: 
+                <input
+                  className="ml-2"
+                  value={entry.weight}
+                  onChange={(e) => editWeight(idx, e.target.value)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      <h2>Log Workout</h2>
-      <form onSubmit={handleExerciseLog}>
-        <select name="type" required>
-          <option value="pushups">Push-ups</option>
-          <option value="pullups">Pull-ups</option>
-          <option value="bicep_curls">Bicep Curls</option>
-          <option value="bench_press">Bench Press</option>
-          <option value="tricep_pulls">Tricep Pulls</option>
-          <option value="leg_press">Leg Press</option>
-        </select>
-        <input name="amount" type="number" placeholder="Amount" required />
-        <button type="submit">Add</button>
-      </form>
-
-      <h3>Workout Log:</h3>
-      <ul>
-        {exerciseLog.map((ex, i) => (
-          <li key={i}>{ex.amount} × {ex.type.replace('_', ' ')} — {ex.burn.toFixed(1)} cal</li>
-        ))}
-      </ul>
-
-      <h2>Log Weight</h2>
-      <form onSubmit={handleWeightLog}>
-        <input name="weight" type="number" step="0.1" placeholder="Weight (lbs)" required />
-        <button type="submit">Add</button>
-      </form>
-
-      <h3>Weight History</h3>
-      <ul>
-        {weightLog.map((entry, index) => (
-          <li key={index}>{entry.date}: {entry.weight} lbs</li>
-        ))}
-      </ul>
-    </div>
+        <button onClick={resetAll} className="bg-red-500 text-white px-3 py-1 mt-2 rounded">
+          Reset All
+        </button>
+      </div>
+    </main>
   );
 }
