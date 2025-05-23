@@ -1,4 +1,6 @@
-// Eatliftburn App - Full Update: Checklist, Food Log, Workout Consolidation, Weight Graph, Summary Screen
+// Eatliftburn App – Full Update May 2025
+// Includes checklist spacing, home title, food log ❌, workout + steps logging, weight tracker, and summary cleanup
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -30,7 +32,7 @@ function App() {
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
-  const [goalWeight, setGoalWeight] = useState(() => parseFloat(localStorage.getItem("goalWeight")) || 0);
+  const [customSteps, setCustomSteps] = useState("");
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "" });
   const [customWorkout, setCustomWorkout] = useState({});
 
@@ -58,8 +60,7 @@ function App() {
     localStorage.setItem("foodLog", JSON.stringify(foodLog));
     localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
     localStorage.setItem("weightLog", JSON.stringify(weightLog));
-    localStorage.setItem("goalWeight", goalWeight);
-  }, [calories, protein, steps, manualBurn, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog, goalWeight]);
+  }, [calories, protein, steps, manualBurn, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
 
   const resetDay = () => {
     setCalories(0);
@@ -97,10 +98,6 @@ function App() {
     return sum + Math.round(reps * workouts[type]);
   }, 0);
 
-  const average = arr => arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
-  const avgWeight = average(weightLog.map(w => parseFloat(w.weight)));
-  const weightDelta = goalWeight ? (avgWeight - goalWeight).toFixed(1) : null;
-
   const weightChartData = {
     labels: weightLog.map(entry => entry.date),
     datasets: [
@@ -114,13 +111,8 @@ function App() {
     ]
   };
 
-  const navBtn = {
-    fontSize: "18px",
-    padding: "10px 16px",
-    marginBottom: "16px",
-    borderRadius: "8px",
-    cursor: "pointer"
-  };
+  const average = arr => arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
+  const avgWeight = average(weightLog.map(w => parseFloat(w.weight)));
 
   const foodOptions = [
     { name: "Chicken breast", cal: 165, prot: 31 },
@@ -133,10 +125,12 @@ function App() {
     { name: "Green onions", cal: 5, prot: 0 },
     { name: "Butter (1 tsp)", cal: 35, prot: 0 },
     { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
-    { name: "Protein ice cream", cal: 400, prot: 52 }
+    { name: "Protein ice cream", cal: 400, prot: 52 },
+    { name: "2 eggs + butter", cal: 175, prot: 12 },
+    { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 }
   ];
 
-  const HomeButton = () => <button style={{ fontSize: "18px", padding: "8px 16px", marginBottom: "10px" }} onClick={() => setScreen("home")}>⬅ Home</button>;
+  const HomeButton = () => <button style={{ fontSize: "18px", padding: "10px 16px", marginBottom: "16px" }} onClick={() => setScreen("home")}>⬅ Home</button>;
 
   if (screen === "food") return (
     <div style={{ padding: "20px" }}>
@@ -157,7 +151,7 @@ function App() {
         <input placeholder="Protein" type="number" value={customFood.prot} onChange={e => setCustomFood({ ...customFood, prot: e.target.value })} />
         <button onClick={addCustomFood}>Add</button>
       </div>
-      <ul>{foodLog.map((f, i) => <li key={i}>{f.name} - {f.cal} cal, {f.prot}g</li>)}</ul>
+      <ul>{foodLog.map((f, i) => <li key={i}>{f.name} - {f.cal} cal, {f.prot}g <button onClick={() => setFoodLog(foodLog.filter((_, idx) => idx !== i))}>❌</button></li>)}</ul>
     </div>
   );
 
@@ -165,6 +159,9 @@ function App() {
     <div style={{ padding: "20px" }}>
       <HomeButton />
       <h2>Workout Log</h2>
+      <label>Steps walked today:</label>
+      <input type="number" value={customSteps} onChange={(e) => setCustomSteps(e.target.value)} />
+      <button onClick={() => setSteps(parseInt(customSteps))}>Log Steps</button>
       {Object.keys(workouts).map((type, i) => (
         <div key={i}>
           <label>{type} reps: </label>
@@ -207,24 +204,17 @@ function App() {
       <p>Avg Protein: {protein}</p>
       <p>Steps: {steps}</p>
       <p>Avg Weight: {avgWeight.toFixed(1)}</p>
-      {goalWeight > 0 && <p>To Goal ({goalWeight}): {weightDelta} lbs remaining</p>}
-      <input
-        type="number"
-        value={goalWeight}
-        onChange={(e) => setGoalWeight(parseFloat(e.target.value))}
-        placeholder="Set Goal Weight"
-      />
     </div>
   );
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h1 style={{ fontSize: '28px', fontWeight: 'bold' }}>Eatliftburn</h1>
-      <h2 style={{ fontWeight: 'bold', fontSize: '20px' }}>Overview</h2>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '6px' }}>Eatliftburn, an app by Jon Deutsch</h1>
+      <h2 style={{ fontWeight: 'bold', fontSize: '20px', marginBottom: '4px' }}>Overview</h2>
       <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
       <p>Protein: {protein} / {proteinGoal}</p>
       <p>Steps: {steps} / {stepGoal}</p>
-      <h3>Checklist</h3>
+      <h3 style={{ marginTop: '12px', marginBottom: '4px' }}>Checklist</h3>
       {Object.keys(checklist).map(key => (
         <div key={key}>
           <label>
@@ -232,13 +222,13 @@ function App() {
           </label>
         </div>
       ))}
-      <div>
-        <button style={navBtn} onClick={() => setScreen("food")}>🍽️ Food Log</button>
-        <button style={navBtn} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
-        <button style={navBtn} onClick={() => setScreen("weight")}>⚖️ Weight</button>
-        <button style={navBtn} onClick={() => setScreen("summary")}>📊 Summary</button>
+      <div style={{ marginTop: '20px' }}>
+        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("food")}>🍽️ Food Log</button>
+        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
+        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("weight")}>⚖️ Weight</button>
+        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("summary")}>📊 Summary</button>
       </div>
-      <button onClick={resetDay} style={{ ...navBtn, backgroundColor: '#f44336', color: 'white' }}>Reset Day</button>
+      <button onClick={resetDay} style={{ backgroundColor: '#f44336', color: 'white', fontSize: '16px', padding: '10px', borderRadius: '6px', marginTop: '10px' }}>Reset Day</button>
     </div>
   );
 }
