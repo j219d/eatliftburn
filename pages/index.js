@@ -1,4 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 export default function Home() {
   const [calories, setCalories] = useState(0);
@@ -29,8 +41,13 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
       setWeightLog(storedWeights);
-      const storedChecklist = JSON.parse(localStorage.getItem("checklist")) || checklist;
-      setChecklist(storedChecklist);
+      setFoodLog(JSON.parse(localStorage.getItem("foodLog")) || []);
+      setWorkoutLog(JSON.parse(localStorage.getItem("workoutLog")) || []);
+      setCalories(parseInt(localStorage.getItem("calories")) || 0);
+      setProtein(parseInt(localStorage.getItem("protein")) || 0);
+      setSteps(parseInt(localStorage.getItem("steps")) || 0);
+      setManualBurn(parseInt(localStorage.getItem("manualBurn")) || 0);
+      setChecklist(JSON.parse(localStorage.getItem("checklist")) || checklist);
       const storedDeficit = parseInt(localStorage.getItem("deficitGoal"));
       if (storedDeficit) setDeficitGoal(storedDeficit);
       const storedProtein = parseInt(localStorage.getItem("proteinGoal"));
@@ -40,9 +57,15 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      localStorage.setItem("foodLog", JSON.stringify(foodLog));
+      localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
+      localStorage.setItem("calories", calories);
+      localStorage.setItem("protein", protein);
+      localStorage.setItem("steps", steps);
+      localStorage.setItem("manualBurn", manualBurn);
       localStorage.setItem("checklist", JSON.stringify(checklist));
     }
-  }, [checklist]);
+  }, [foodLog, workoutLog, calories, protein, steps, manualBurn, checklist]);
 
   const addFood = (cal, prot, name) => {
     setCalories((prev) => prev + cal);
@@ -105,7 +128,6 @@ export default function Home() {
     setManualBurn(0);
     setFoodLog([]);
     setWorkoutLog([]);
-    setWeightLog([]);
     setChecklist({
       workout: false,
       cardio: false,
@@ -116,7 +138,12 @@ export default function Home() {
       steps: false,
     });
     if (typeof window !== "undefined") {
-      localStorage.removeItem("weightLog");
+      localStorage.removeItem("foodLog");
+      localStorage.removeItem("workoutLog");
+      localStorage.removeItem("calories");
+      localStorage.removeItem("protein");
+      localStorage.removeItem("steps");
+      localStorage.removeItem("manualBurn");
       localStorage.removeItem("checklist");
     }
   };
@@ -139,6 +166,19 @@ export default function Home() {
     if (typeof window !== "undefined") {
       localStorage.setItem("proteinGoal", val);
     }
+  };
+
+  const weightChartData = {
+    labels: weightLog.map(entry => entry.date),
+    datasets: [
+      {
+        label: "Weight Progress",
+        data: weightLog.map(entry => entry.weight),
+        fill: false,
+        borderColor: "rgb(75, 192, 192)",
+        tension: 0.1
+      }
+    ]
   };
 
   return (
@@ -187,8 +227,8 @@ export default function Home() {
         </div>
 
         <div className="flex gap-2">
-          <input type="number" placeholder="Steps" onChange={(e) => setSteps(parseInt(e.target.value) || 0)} />
-          <input type="number" placeholder="Manual burn" onChange={(e) => setManualBurn(Math.round(parseFloat(e.target.value) || 0))} />
+          <input type="number" placeholder="Steps" value={steps} onChange={(e) => setSteps(parseInt(e.target.value) || 0)} />
+          <input type="number" placeholder="Manual burn" value={manualBurn} onChange={(e) => setManualBurn(Math.round(parseFloat(e.target.value) || 0))} />
         </div>
 
         <div className="flex gap-2">
@@ -253,6 +293,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
+          <Line data={weightChartData} />
         </div>
 
         <button onClick={resetAll} className="bg-red-500 text-white px-3 py-1 mt-2 rounded">Reset All</button>
