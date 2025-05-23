@@ -1,6 +1,4 @@
-// Eatliftburn App – Full Update May 2025
-// Includes checklist spacing, home title, food log ❌, workout + steps logging, weight tracker, and summary cleanup
-
+// EatLiftBurn – Full Code Update: UI polish, workouts, step logging, and food options
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -42,7 +40,8 @@ function App() {
     "Biceps": 0.25,
     "Bench Press": 0.42,
     "Triceps": 0.3,
-    "Leg Press": 0.35
+    "Leg Press": 0.35,
+    "Steps": 0.04
   };
 
   const stepCalories = Math.round(steps * 0.04);
@@ -92,6 +91,7 @@ function App() {
       return updated;
     });
     setManualBurn(b => b + burn);
+    if (type === "Steps") setSteps(parseInt(customSteps));
   };
 
   const totalWorkoutCalories = Object.entries(workoutLog).reduce((sum, [type, reps]) => {
@@ -115,7 +115,10 @@ function App() {
   const avgWeight = average(weightLog.map(w => parseFloat(w.weight)));
 
   const foodOptions = [
-    { name: "Chicken breast", cal: 165, prot: 31 },
+    { name: "Chicken breast (50g)", cal: 82, prot: 15 },
+    { name: "Chicken breast (100g)", cal: 165, prot: 31 },
+    { name: "Chicken breast (150g)", cal: 248, prot: 46 },
+    { name: "Chicken breast (200g)", cal: 330, prot: 62 },
     { name: "Apple", cal: 95, prot: 1 },
     { name: "Promix bar", cal: 150, prot: 15 },
     { name: "Quest bar", cal: 190, prot: 21 },
@@ -127,7 +130,8 @@ function App() {
     { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
     { name: "Protein ice cream", cal: 400, prot: 52 },
     { name: "2 eggs + butter", cal: 175, prot: 12 },
-    { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 }
+    { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
+    { name: "Yogurt 0%", cal: 117, prot: 20 }
   ];
 
   const HomeButton = () => <button style={{ fontSize: "18px", padding: "10px 16px", marginBottom: "16px" }} onClick={() => setScreen("home")}>⬅ Home</button>;
@@ -159,10 +163,10 @@ function App() {
     <div style={{ padding: "20px" }}>
       <HomeButton />
       <h2>Workout Log</h2>
-      <label>Steps walked today:</label>
+      <label>Steps:</label>
       <input type="number" value={customSteps} onChange={(e) => setCustomSteps(e.target.value)} />
-      <button onClick={() => setSteps(parseInt(customSteps))}>Log Steps</button>
-      {Object.keys(workouts).map((type, i) => (
+      <button onClick={() => logWorkout("Steps", parseInt(customSteps))}>Add</button>
+      {Object.keys(workouts).filter(w => w !== "Steps").map((type, i) => (
         <div key={i}>
           <label>{type} reps: </label>
           <input type="number" onChange={e => setCustomWorkout({ ...customWorkout, [type]: parseInt(e.target.value) || 0 })} />
@@ -172,7 +176,12 @@ function App() {
       <h3>Workout Summary:</h3>
       <ul>
         {Object.entries(workoutLog).map(([type, reps], i) => (
-          <li key={i}>{type}: {reps} reps — {Math.round(reps * workouts[type])} cal</li>
+          <li key={i}>{type}: {reps} — {Math.round(reps * workouts[type])} cal <button onClick={() => {
+            const updated = { ...workoutLog };
+            setManualBurn(b => b - Math.round(reps * workouts[type]));
+            delete updated[type];
+            setWorkoutLog(updated);
+          }}>❌</button></li>
         ))}
       </ul>
       <p><strong>Total Workout Burn:</strong> {totalWorkoutCalories} cal</p>
@@ -209,11 +218,12 @@ function App() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '6px' }}>Eatliftburn, an app by Jon Deutsch</h1>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>EatLiftBurn</h1>
+      <div style={{ fontSize: '14px', marginBottom: '12px' }}>an app by Jon Deutsch</div>
       <h2 style={{ fontWeight: 'bold', fontSize: '20px', marginBottom: '4px' }}>Overview</h2>
-      <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-      <p>Protein: {protein} / {proteinGoal}</p>
-      <p>Steps: {steps} / {stepGoal}</p>
+      <p style={{ margin: '4px 0' }}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
+      <p style={{ margin: '4px 0' }}>Protein: {protein} / {proteinGoal}</p>
+      <p style={{ margin: '4px 0' }}>Steps: {steps} / {stepGoal}</p>
       <h3 style={{ marginTop: '12px', marginBottom: '4px' }}>Checklist</h3>
       {Object.keys(checklist).map(key => (
         <div key={key}>
@@ -222,11 +232,11 @@ function App() {
           </label>
         </div>
       ))}
-      <div style={{ marginTop: '20px' }}>
-        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("food")}>🍽️ Food Log</button>
-        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
-        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("weight")}>⚖️ Weight</button>
-        <button style={{ fontSize: '16px', padding: '10px', margin: '4px' }} onClick={() => setScreen("summary")}>📊 Summary</button>
+      <div style={{ marginTop: '24px' }}>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("food")}>🍽️ Food Log</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("weight")}>⚖️ Weight</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("summary")}>📊 Summary</button>
       </div>
       <button onClick={resetDay} style={{ backgroundColor: '#f44336', color: 'white', fontSize: '16px', padding: '10px', borderRadius: '6px', marginTop: '10px' }}>Reset Day</button>
     </div>
