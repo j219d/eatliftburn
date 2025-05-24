@@ -354,7 +354,7 @@ const navBtnStyle = {
 <h3 style={{ marginTop: "24px", fontSize: "18px", marginBottom: "4px" }}>Checklist</h3>
 <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
   {["sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px", lineHeight: "1.2", marginBottom: "2px" }}>
+    <label key={key} style={{ fontSize: "16px", lineHeight: "1.1", marginBottom: "1px" }}>
       <input
         type="checkbox"
         checked={checklist[key]}
@@ -378,17 +378,17 @@ const navBtnStyle = {
     <button
   onClick={resetDay}
   style={{
-    backgroundColor: "#d32f2f",
-    color: "white",
-    padding: "12px 24px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "8px",
-    marginTop: "20px",
-    alignSelf: "center",
-    maxWidth: "200px",
-    width: "100%"
-  }}
+  backgroundColor: "#d32f2f",
+  color: "white",
+  padding: "10px 20px",
+  fontSize: "15px",
+  border: "none",
+  borderRadius: "8px",
+  marginTop: "20px",
+  alignSelf: "center",
+  maxWidth: "180px",
+  width: "100%"
+}}
 >
   Reset
 </button>
