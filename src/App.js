@@ -61,23 +61,24 @@ function App() {
 // 🍫 Snacks / Packaged protein
 { name: "Promix bar", cal: 150, prot: 15 },
 { name: "Quest bar", cal: 190, prot: 21 },
-{ name: "Quest Chips", cal: 140, prot: 20 },
+{ name: "Quest chips", cal: 140, prot: 20 },
 
 // 🍎 Fruits
 { name: "Apple", cal: 95, prot: 1 },
-{ name: "Banana (medium)", cal: 105, prot: 1 },
+{ name: "Banana", cal: 105, prot: 1 },
 
 // 🥬 Veggies
-{ name: "Carrot (1 medium)", cal: 25, prot: 0.5 },
-{ name: "Cucumber (1 medium)", cal: 16, prot: 1 },
+{ name: "Carrot", cal: 25, prot: 0.5 },
+{ name: "Cucumber", cal: 16, prot: 1 },
 { name: "Green onions", cal: 5, prot: 0 },
-{ name: "Spinach (cooked portion)", cal: 15, prot: 1.5 },
-{ name: "Tomatoes", cal: 20, prot: 1 },
+{ name: "Spinach (handful)", cal: 15, prot: 1.5 },
+{ name: "Tomato", cal: 20, prot: 1 },
 
 // 🥑 Fats & Seeds
-{ name: "Avocado (1/2 medium)", cal: 120, prot: 1.5 },
+{ name: "Avocado", cal: 120, prot: 1.5 },
 { name: "Butter (1 tsp)", cal: 35, prot: 0 },
 { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
+{ name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
 { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
 { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
 { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
