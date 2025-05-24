@@ -351,22 +351,22 @@ const navBtnStyle = {
 <p style={overviewStyle}>Protein: {protein} / {proteinGoal}</p>
 <p style={overviewStyle}>Steps: {steps} / {stepGoal}</p>
 
-    <h3 style={{ marginTop: "24px", fontSize: "18px" }}>Checklist</h3>
-    <div style={{ marginBottom: "4px" }}>
-      {Object.keys(checklist).map((key) => (
-  <label key={key} style={overviewStyle}>
-          <input
-            type="checkbox"
-            checked={checklist[key]}
-            onChange={() =>
-              setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-            }
-            style={{ marginRight: "8px" }}
-          />
-          {key.charAt(0).toUpperCase() + key.slice(1)}
-        </label>
-      ))}
-    </div>
+<h3 style={{ marginTop: "24px", fontSize: "18px", marginBottom: "4px" }}>Checklist</h3>
+<div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
+  {["sunlight", "supplements"].map((key) => (
+    <label key={key} style={{ fontSize: "16px", lineHeight: "1.8" }}>
+      <input
+        type="checkbox"
+        checked={checklist[key]}
+        onChange={() =>
+          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+        }
+        style={{ marginRight: "8px" }}
+      />
+      {key.charAt(0).toUpperCase() + key.slice(1)}
+    </label>
+  ))}
+</div>
 
     <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
@@ -376,19 +376,23 @@ const navBtnStyle = {
     </div>
 
     <button
-      onClick={resetDay}
-      style={{
-        backgroundColor: "#d32f2f",
-        color: "white",
-        padding: "12px",
-        fontSize: "16px",
-        border: "none",
-        borderRadius: "8px",
-        width: "100%"
-      }}
-    >
-      Reset
-    </button>
+  onClick={resetDay}
+  style={{
+    backgroundColor: "#d32f2f",
+    color: "white",
+    padding: "12px 24px",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
+    marginTop: "20px",
+    alignSelf: "center",
+    maxWidth: "200px",
+    width: "100%"
+  }}
+>
+  Reset
+</button>
+
  </div>
   );
 }
