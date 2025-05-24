@@ -447,63 +447,91 @@ const navBtnStyle = {
 }
 
   return (
-  <div style={{ padding: "16px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-    <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "2px" }}>EatLiftBurn</h1>
-    <p style={{ fontSize: "14px", marginTop: "-6px", marginBottom: "12px", color: "#555" }}>
-  an app by Jon Deutsch
-</p>
+  <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+    <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "4px", textAlign: "center" }}>EatLiftBurn</h1>
+    <p style={{ fontSize: "14px", marginTop: "-6px", marginBottom: "20px", color: "#555", textAlign: "center" }}>
+      an app by Jon Deutsch
+    </p>
 
+    {/* Overview Box */}
+    <div style={{
+      backgroundColor: "#f9f9f9",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+      marginBottom: "20px"
+    }}>
+      <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>📊 Today's Overview</h2>
 
-<h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "6px" }}>Today's Overview</h2>
-<p style={overviewStyle}>Calories Eaten: {calories}</p>
-<p style={overviewStyle}>Calories Burned: {manualBurn}</p>
-<p style={overviewStyle}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-<p style={overviewStyle}>Protein: {protein} / {proteinGoal}</p>
-<p style={overviewStyle}>Steps: {steps} / {stepGoal}</p>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Eaten:</strong> {calories}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Burned:</strong> {manualBurn}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Deficit:</strong> {estimatedDeficit} / {deficitGoal}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Protein:</strong> {protein} / {proteinGoal}
+      </div>
+      <div style={{ fontSize: "16px" }}>
+        <strong>Steps:</strong> {steps} / {stepGoal}
+      </div>
+    </div>
 
-<h3 style={{ marginTop: "24px", fontSize: "18px", marginBottom: "4px" }}>Checklist</h3>
-<div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
-  {["sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px", lineHeight: "1.1", marginBottom: "1px" }}>
-      <input
-        type="checkbox"
-        checked={checklist[key]}
-        onChange={() =>
-          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-        }
-        style={{ marginRight: "8px" }}
-      />
-      {key.charAt(0).toUpperCase() + key.slice(1)}
-    </label>
-  ))}
-</div>
+    {/* Checklist Box */}
+    <div style={{
+      backgroundColor: "#f9f9f9",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+      marginBottom: "24px"
+    }}>
+      <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "12px" }}>☑️ Checklist</h3>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {["sunlight", "supplements"].map((key) => (
+          <label key={key} style={{ fontSize: "16px" }}>
+            <input
+              type="checkbox"
+              checked={checklist[key]}
+              onChange={() =>
+                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              style={{ marginRight: "10px" }}
+            />
+            {key.charAt(0).toUpperCase() + key.slice(1)}
+          </label>
+        ))}
+      </div>
+    </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px", marginBottom: "8px" }}>
+    {/* Navigation Buttons */}
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
     </div>
 
-  <button
-  onClick={resetDay}
-  style={{
-    backgroundColor: "#d32f2f",
-    color: "white",
-    padding: "10px 24px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "8px",
-    marginTop: "12px",
-    alignSelf: "center",
-    width: "160px",
-    maxWidth: "90%",
-  }}
->
-  Reset
-</button>
-
- </div>
-  );
+    <button
+      onClick={resetDay}
+      style={{
+        backgroundColor: "#d32f2f",
+        color: "white",
+        padding: "10px 24px",
+        fontSize: "16px",
+        border: "none",
+        borderRadius: "8px",
+        width: "160px",
+        maxWidth: "100%",
+        display: "block",
+        margin: "0 auto"
+      }}
+    >
+      Reset
+    </button>
+  </div>
+);
 }
 
 export default App;
