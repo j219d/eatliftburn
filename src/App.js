@@ -197,7 +197,6 @@ const navBtnStyle = {
   <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
   Food Log
 </h1>
-</div>
 
       <div style={{ marginBottom: "20px" }}>
         <select
