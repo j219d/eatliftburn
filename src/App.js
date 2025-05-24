@@ -368,27 +368,27 @@ const navBtnStyle = {
   ))}
 </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px", marginBottom: "16px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px", marginBottom: "0" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
       <button style={navBtnStyle} onClick={() => setScreen("summary")}>📊 Summary</button>
     </div>
 
-    <button
+  <button
   onClick={resetDay}
   style={{
-  backgroundColor: "#d32f2f",
-  color: "white",
-  padding: "10px 20px",
-  fontSize: "15px",
-  border: "none",
-  borderRadius: "8px",
-  marginTop: "20px",
-  alignSelf: "center",
-  maxWidth: "180px",
-  width: "100%"
-}}
+    backgroundColor: "#d32f2f",
+    color: "white",
+    padding: "10px 20px",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
+    marginTop: "16px",
+    alignSelf: "center",
+    width: "160px",
+    maxWidth: "90%",
+  }}
 >
   Reset
 </button>
