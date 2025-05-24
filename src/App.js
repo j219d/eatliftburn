@@ -7,7 +7,7 @@ import {
   PointElement,
   LineElement,
   Tooltip,
-  Legend
+  Legend,
 } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
@@ -29,7 +29,9 @@ function App() {
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
+
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "" });
+  const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
 
   const workouts = {
@@ -88,336 +90,307 @@ function App() {
     setChecklist({ supplements: false, sunlight: false });
   };
 
-  const HomeButton = () => (
-    <button
-      onClick={() => setScreen("home")}
-      style={{
-        fontSize: "16px",
-        padding: "10px 16px",
-        backgroundColor: "#eee",
-        border: "1px solid #ccc",
-        borderRadius: "6px",
-        marginBottom: "16px"
-      }}
-    >
-      ⬅ Home
-    </button>
-  );
+  const logWorkout = (type, reps) => {
+    const burn = Math.round(workouts[type] * reps);
+    setWorkoutLog(prev => {
+      const updated = { ...prev };
+      updated[type] = (updated[type] || 0) + reps;
+      return updated;
+    });
+    setManualBurn(prev => prev + burn);
+    if (type === "Steps") {
+      setSteps(prev => {
+        const totalSteps = prev + reps;
+        return totalSteps;
+      });
+    }
+  };
 
-  if (screen === "home") {
-    return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", backgroundColor: "#f8f8f8", minHeight: "100vh" }}>
-        <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "4px" }}>EatLiftBurn</h1>
-        <div style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>an app by Jon Deutsch</div>
+  const deleteWorkout = (type) => {
+    const reps = workoutLog[type];
+    const burn = Math.round(workouts[type] * reps);
+    setManualBurn(prev => prev - burn);
+    if (type === "Steps") {
+      setSteps(prev => prev - reps);
+    }
+    setWorkoutLog(prev => {
+      const updated = { ...prev };
+      delete updated[type];
+      return updated;
+    });
+  };
 
-        <div style={{ background: "#fff", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", marginBottom: "24px" }}>
-          <h2 style={{ fontSize: "20px", marginBottom: "12px" }}>Today's Overview</h2>
-          <p>Calories Eaten: {calories}</p>
-          <p>Calories Burned: {totalBurned}</p>
-          <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-          <p>Protein: {protein} / {proteinGoal}</p>
-          <p>Steps: {steps} / {stepGoal}</p>
-        </div>
+  const addFood = (food) => {
+    setCalories(prev => prev + food.cal);
+    setProtein(prev => prev + food.prot);
+    setFoodLog(prev => [...prev, food]);
+  };
 
-        <div style={{ marginBottom: "24px" }}>
-          <h3 style={{ marginBottom: "8px" }}>Checklist</h3>
-          {Object.keys(checklist).map((key) => (
-            <div key={key} style={{ marginBottom: "6px" }}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={checklist[key]}
-                  onChange={() => setChecklist((c) => ({ ...c, [key]: !c[key] }))}
-                />{" "}
-                {key}
-              </label>
-            </div>
-          ))}
-        </div>
+  const deleteFood = (index) => {
+    const removed = foodLog[index];
+    setCalories(prev => prev - removed.cal);
+    setProtein(prev => prev - removed.prot);
+    setFoodLog(foodLog.filter((_, i) => i !== index));
+  };
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
-          <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽 Food Log</button>
-          <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
-          <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
-          <button style={navBtnStyle} onClick={() => setScreen("summary")}>📊 Summary</button>
-        </div>
+  const addWeight = () => {
+    const weight = parseFloat(newWeight);
+    if (!isNaN(weight)) {
+      setWeightLog([...weightLog, { date: new Date().toLocaleDateString(), weight }]);
+      setNewWeight("");
+    }
+  };
 
-        <button
-          onClick={resetDay}
-          style={{
-            backgroundColor: "#d32f2f",
-            color: "#fff",
-            padding: "12px",
-            fontSize: "16px",
-            border: "none",
-            borderRadius: "8px",
-            width: "100%",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
-          }}
-        >
-          Reset
-        </button>
-      </div>
-    );
-  }
+  const deleteWeight = (i) => {
+    setWeightLog(weightLog.filter((_, idx) => idx !== i));
+  };
+
+  const avgWeight =
+    weightLog.length === 0
+      ? 0
+      : weightLog.reduce((acc, w) => acc + w.weight, 0) / weightLog.length;
+
+  const overviewStyle = {
+    fontSize: "16px",
+    margin: "4px 0"
+  };
 
   const navBtnStyle = {
     fontSize: "18px",
     padding: "14px 20px",
-    borderRadius: "10px",
-    border: "none",
-    backgroundColor: "#4caf50",
-    color: "white",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-    cursor: "pointer"
+    margin: "6px"
   };
+
+  const HomeButton = () => (
+    <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅ Home</button>
+  );
 
   if (screen === "food") {
     return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", backgroundColor: "#f8f8f8", minHeight: "100vh" }}>
+      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
         <HomeButton />
-        <div style={cardStyle}>
-          <h2>Food Log</h2>
-          <select
-            onChange={(e) => {
-              const { name, cal, prot } = JSON.parse(e.target.value);
-              setCalories((c) => c + cal);
-              setProtein((p) => p + prot);
-              setFoodLog((f) => [...f, { name, cal, prot }]);
+        <h2>Food Log</h2>
+        <select
+          defaultValue=""
+          onChange={(e) => {
+            const selected = JSON.parse(e.target.value);
+            addFood(selected);
+          }}
+        >
+          <option value="" disabled>Select Food</option>
+          {foodOptions.map((f, i) => (
+            <option key={i} value={JSON.stringify(f)}>
+              {f.name}
+            </option>
+          ))}
+        </select>
+        <div>
+          <input
+            placeholder="Name"
+            value={customFood.name}
+            onChange={e =>
+              setCustomFood({ ...customFood, name: e.target.value })
+            }
+          />
+          <input
+            placeholder="Calories"
+            type="number"
+            value={customFood.cal}
+            onChange={e =>
+              setCustomFood({ ...customFood, cal: e.target.value })
+            }
+          />
+          <input
+            placeholder="Protein"
+            type="number"
+            value={customFood.prot}
+            onChange={e =>
+              setCustomFood({ ...customFood, prot: e.target.value })
+            }
+          />
+          <button
+            onClick={() => {
+              const { name, cal, prot } = customFood;
+              const parsedCal = parseInt(cal);
+              const parsedProt = parseInt(prot);
+              if (name && parsedCal && parsedProt) {
+                addFood({ name, cal: parsedCal, prot: parsedProt });
+                setCustomFood({ name: "", cal: "", prot: "" });
+              }
             }}
-            defaultValue=""
-            style={{ padding: "10px", borderRadius: "8px", marginBottom: "12px", width: "100%" }}
           >
-            <option value="" disabled>Select Food</option>
-            {foodOptions.map((f, i) => (
-              <option key={i} value={JSON.stringify(f)}>
-                {f.name}
-              </option>
-            ))}
-          </select>
-
-          <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
-            <input
-              placeholder="Name"
-              value={customFood.name}
-              onChange={(e) => setCustomFood({ ...customFood, name: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              placeholder="Calories"
-              type="number"
-              value={customFood.cal}
-              onChange={(e) => setCustomFood({ ...customFood, cal: e.target.value })}
-              style={inputStyle}
-            />
-            <input
-              placeholder="Protein"
-              type="number"
-              value={customFood.prot}
-              onChange={(e) => setCustomFood({ ...customFood, prot: e.target.value })}
-              style={inputStyle}
-            />
-            <button
-              onClick={() => {
-                const { name, cal, prot } = customFood;
-                const parsedCal = parseInt(cal);
-                const parsedProt = parseInt(prot);
-                if (name && parsedCal && parsedProt) {
-                  setCalories((c) => c + parsedCal);
-                  setProtein((p) => p + parsedProt);
-                  setFoodLog((f) => [...f, { name, cal: parsedCal, prot: parsedProt }]);
-                  setCustomFood({ name: "", cal: "", prot: "" });
-                }
-              }}
-              style={navBtnStyle}
-            >
-              Add
-            </button>
-          </div>
-
-          <ul>
-            {foodLog.map((f, i) => (
-              <li key={i} style={{ marginBottom: "8px" }}>
-                {f.name} — {f.cal} cal, {f.prot}g{" "}
-                <button
-                  onClick={() => {
-                    const removed = foodLog[i];
-                    setCalories((c) => c - removed.cal);
-                    setProtein((p) => p - removed.prot);
-                    setFoodLog(foodLog.filter((_, idx) => idx !== i));
-                  }}
-                  style={{ marginLeft: "8px", background: "transparent", color: "red", border: "none", fontSize: "18px" }}
-                >
-                  ❌
-                </button>
-              </li>
-            ))}
-          </ul>
+            Add
+          </button>
         </div>
+        <ul>
+          {foodLog.map((f, i) => (
+            <li key={i}>
+              {f.name} - {f.cal} cal, {f.prot}g{" "}
+              <button onClick={() => deleteFood(i)}>❌</button>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
 
-  const cardStyle = {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.06)"
-  };
-
-  const inputStyle = {
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-    width: "100px"
-  };
-
   if (screen === "workouts") {
     return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", backgroundColor: "#f8f8f8", minHeight: "100vh" }}>
+      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
         <HomeButton />
-        <div style={cardStyle}>
-          <h2>Workout Log</h2>
-          {Object.keys(workouts).map((type, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", marginBottom: "12px", gap: "8px" }}>
-              <label style={{ minWidth: "100px" }}>{type}:</label>
-              <input
-                type="number"
-                placeholder="Reps"
-                onChange={e => setCustomSteps(e.target.value)}
-                value={type === "Steps" ? customSteps : ""}
-                style={inputStyle}
-              />
-              <button onClick={() => {
-                const reps = parseInt(customSteps);
+        <h2>Workout Log</h2>
+        {Object.keys(workouts).map((type, i) => (
+          <div key={i} style={{ marginBottom: "12px" }}>
+            <label>{type}:</label>
+            <input
+              type="number"
+              placeholder="Reps"
+              value={customWorkout[type] || ""}
+              onChange={(e) =>
+                setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+              }
+            />
+            <button
+              onClick={() => {
+                const reps = parseInt(customWorkout[type]);
                 if (!isNaN(reps)) {
-                  const burn = Math.round(workouts[type] * reps);
-                  setWorkoutLog(prev => {
-                    const updated = { ...prev };
-                    updated[type] = (updated[type] || 0) + reps;
-                    return updated;
-                  });
-                  setManualBurn(m => m + burn);
-                  if (type === "Steps") setSteps(s => s + reps);
-                  setCustomSteps("");
+                  logWorkout(type, reps);
+                  setCustomWorkout({ ...customWorkout, [type]: "" });
                 }
-              }} style={navBtnStyle}>Add</button>
-            </div>
+              }}
+            >
+              Add
+            </button>
+          </div>
+        ))}
+        <h3>Workout Summary</h3>
+        <ul>
+          {Object.entries(workoutLog).map(([type, reps], i) => (
+            <li key={i}>
+              {type}: {reps} reps — {Math.round(reps * workouts[type])} cal{" "}
+              <button onClick={() => deleteWorkout(type)}>❌</button>
+            </li>
           ))}
-
-          <h3 style={{ marginTop: "20px" }}>Workout Summary</h3>
-          <ul style={{ marginTop: "8px" }}>
-            {Object.entries(workoutLog).map(([type, reps], i) => (
-              <li key={i} style={{ marginBottom: "8px" }}>
-                {type}: {reps} reps — {Math.round(reps * workouts[type])} cal{" "}
-                <button
-                  onClick={() => {
-                    const burn = Math.round(reps * workouts[type]);
-                    const updated = { ...workoutLog };
-                    delete updated[type];
-                    setWorkoutLog(updated);
-                    setManualBurn(m => m - burn);
-                    if (type === "Steps") setSteps(0);
-                  }}
-                  style={{ marginLeft: "8px", background: "transparent", color: "red", border: "none", fontSize: "18px" }}
-                >
-                  ❌
-                </button>
-              </li>
-            ))}
-          </ul>
-          <p style={{ marginTop: "12px", fontWeight: "bold" }}>Total Workout Burn: {manualBurn} cal</p>
-        </div>
+        </ul>
+        <p>Total Workout Burn: {manualBurn} cal</p>
       </div>
     );
   }
 
   if (screen === "weight") {
     const data = {
-      labels: weightLog.map(w => w.date),
+      labels: weightLog.map((w) => w.date),
       datasets: [
         {
           label: "Weight (lbs)",
-          data: weightLog.map(w => w.weight),
+          data: weightLog.map((w) => w.weight),
           fill: false,
           borderColor: "#4caf50",
-          tension: 0.3,
-          pointRadius: 4
-        }
-      ]
+          tension: 0.1,
+        },
+      ],
     };
 
     return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", backgroundColor: "#f8f8f8", minHeight: "100vh" }}>
+      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
         <HomeButton />
-        <div style={cardStyle}>
-          <h2>Weight Tracker</h2>
-          <div style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
-            <input
-              placeholder="Enter weight"
-              value={newWeight}
-              onChange={e => setNewWeight(e.target.value)}
-              style={inputStyle}
-            />
-            <button
-              onClick={() => {
-                const val = parseFloat(newWeight);
-                if (!isNaN(val)) {
-                  setWeightLog(w => [...w, { date: new Date().toLocaleDateString(), weight: val }]);
-                  setNewWeight("");
-                }
-              }}
-              style={navBtnStyle}
-            >
-              Log
-            </button>
+        <h2>Weight Tracker</h2>
+        <input
+          placeholder="Enter weight"
+          value={newWeight}
+          onChange={(e) => setNewWeight(e.target.value)}
+        />
+        <button onClick={addWeight}>Log Weight</button>
+        <ul>
+          {weightLog.map((w, i) => (
+            <li key={i}>
+              {w.date}: {w.weight} lbs{" "}
+              <button onClick={() => deleteWeight(i)}>❌</button>
+            </li>
+          ))}
+        </ul>
+        {weightLog.length > 0 && (
+          <div style={{ marginTop: "24px" }}>
+            <Line data={data} />
           </div>
-
-          <ul>
-            {weightLog.map((w, i) => (
-              <li key={i} style={{ marginBottom: "8px" }}>
-                {w.date}: {w.weight} lbs{" "}
-                <button
-                  onClick={() => setWeightLog(weightLog.filter((_, idx) => idx !== i))}
-                  style={{ marginLeft: "8px", background: "transparent", color: "red", border: "none", fontSize: "18px" }}
-                >
-                  ❌
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          {weightLog.length > 0 && (
-            <div style={{ marginTop: "24px" }}>
-              <Line data={data} />
-            </div>
-          )}
-        </div>
+        )}
       </div>
     );
   }
 
   if (screen === "summary") {
-    const avgWeight =
-      weightLog.length > 0
-        ? weightLog.reduce((sum, w) => sum + w.weight, 0) / weightLog.length
-        : 0;
-
     return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", backgroundColor: "#f8f8f8", minHeight: "100vh" }}>
+      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
         <HomeButton />
-        <div style={cardStyle}>
-          <h2>Weekly Summary</h2>
-          <p>Avg Deficit: {estimatedDeficit}</p>
-          <p>Avg Protein: {protein}</p>
-          <p>Steps: {steps}</p>
-          <p>Avg Weight: {avgWeight.toFixed(1)} lbs</p>
-        </div>
+        <h2>Weekly Summary</h2>
+        <p>Avg Deficit: {estimatedDeficit}</p>
+        <p>Avg Protein: {protein}</p>
+        <p>Steps: {steps}</p>
+        <p>Avg Weight: {avgWeight.toFixed(1)} lbs</p>
       </div>
     );
   }
 
-  return null;
+  return (
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
+      <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "4px" }}>EatLiftBurn</h1>
+      <div style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
+        an app by Jon Deutsch
+      </div>
+      <h2>Today's Overview</h2>
+      <p style={overviewStyle}>Calories Eaten: {calories}</p>
+      <p style={overviewStyle}>Calories Burned: {totalBurned}</p>
+      <p style={overviewStyle}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
+      <p style={overviewStyle}>Protein: {protein} / {proteinGoal}</p>
+      <p style={overviewStyle}>Steps: {steps} / {stepGoal}</p>
+
+      <h3 style={{ marginTop: "20px" }}>Checklist</h3>
+      {Object.keys(checklist).map((key) => (
+        <div key={key}>
+          <label>
+            <input
+              type="checkbox"
+              checked={checklist[key]}
+              onChange={() =>
+                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+            />{" "}
+            {key}
+          </label>
+        </div>
+      ))}
+
+      <div style={{ marginTop: "24px" }}>
+        <button style={navBtnStyle} onClick={() => setScreen("food")}>
+          🍽️ Food Log
+        </button>
+        <button style={navBtnStyle} onClick={() => setScreen("workouts")}>
+          🏋️ Workouts
+        </button>
+        <button style={navBtnStyle} onClick={() => setScreen("weight")}>
+          ⚖️ Weight
+        </button>
+        <button style={navBtnStyle} onClick={() => setScreen("summary")}>
+          📊 Summary
+        </button>
+      </div>
+
+      <button
+        onClick={resetDay}
+        style={{
+          backgroundColor: "#d32f2f",
+          color: "white",
+          padding: "12px",
+          fontSize: "16px",
+          border: "none",
+          borderRadius: "8px",
+          marginTop: "20px"
+        }}
+      >
+        Reset
+      </button>
+    </div>
+  );
 }
 
 export default App;
