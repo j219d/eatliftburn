@@ -354,7 +354,7 @@ const navBtnStyle = {
     <h3 style={{ marginTop: "24px", fontSize: "18px" }}>Checklist</h3>
     <div style={{ marginBottom: "4px" }}>
       {Object.keys(checklist).map((key) => (
-        <label key={key} style={{ display: "block", margin: "4px 0" }}>
+  <label key={key} style={overviewStyle}>
           <input
             type="checkbox"
             checked={checklist[key]}
