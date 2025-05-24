@@ -211,43 +211,52 @@ const navBtnStyle = {
         </select>
         <div>
   <input
-    placeholder="Name"
-    value={customFood.name}
-    onChange={e =>
-      setCustomFood({ ...customFood, name: e.target.value })
+  placeholder="Name"
+  value={customFood.name}
+  onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+  style={{ display: "block", marginBottom: "8px", padding: "8px", width: "100%" }}
+/>
+
+<input
+  placeholder="Calories"
+  type="number"
+  value={customFood.cal}
+  onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+  style={{ display: "block", marginBottom: "8px", padding: "8px", width: "100%" }}
+/>
+
+<input
+  placeholder="Protein"
+  type="number"
+  value={customFood.prot}
+  onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+  style={{ display: "block", marginBottom: "12px", padding: "8px", width: "100%" }}
+/>
+
+<button
+  onClick={() => {
+    const { name, cal, prot } = customFood;
+    const parsedCal = parseInt(cal);
+    const parsedProt = parseInt(prot);
+    if (name && parsedCal && parsedProt) {
+      setCalories(c => c + parsedCal);
+      setProtein(p => p + parsedProt);
+      setFoodLog(f => [...f, { name, cal: parsedCal, prot: parsedProt }]);
+      setCustomFood({ name: "", cal: "", prot: "" });
     }
-  />
-  <input
-    placeholder="Calories"
-    type="number"
-    value={customFood.cal}
-    onChange={e =>
-      setCustomFood({ ...customFood, cal: e.target.value })
-    }
-  />
-  <input
-    placeholder="Protein"
-    type="number"
-    value={customFood.prot}
-    onChange={e =>
-      setCustomFood({ ...customFood, prot: e.target.value })
-    }
-  />
-  <button
-    onClick={() => {
-      const { name, cal, prot } = customFood;
-      const parsedCal = parseInt(cal);
-      const parsedProt = parseInt(prot);
-      if (name && parsedCal && parsedProt) {
-        setCalories(c => c + parsedCal);
-        setProtein(p => p + parsedProt);
-        setFoodLog(f => [...f, { name, cal: parsedCal, prot: parsedProt }]);
-        setCustomFood({ name: "", cal: "", prot: "" });
-      }
-    }}
-  >
-    Add
-  </button>
+  }}
+  style={{
+    padding: "10px 16px",
+    backgroundColor: "#0070f3",
+    color: "white",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
+    width: "100%",
+  }}
+>
+  Add
+</button>
         </div>
         <ul>
           {foodLog.map((f, i) => (
