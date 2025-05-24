@@ -19,7 +19,7 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   const [manualBurn, setManualBurn] = useState(() => parseInt(localStorage.getItem("manualBurn")) || 0);
   const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
-  const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 130);
+  const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
     supplements: false,
@@ -45,30 +45,41 @@ function App() {
   };
 
   const foodOptions = [
-    { name: "Chicken breast (50g)", cal: 82, prot: 15 },
-    { name: "Chicken breast (100g)", cal: 165, prot: 31 },
-    { name: "Chicken breast (150g)", cal: 248, prot: 46 },
-    { name: "Chicken breast (200g)", cal: 330, prot: 62 },
-    { name: "Apple", cal: 95, prot: 1 },
-    { name: "Promix bar", cal: 150, prot: 15 },
-    { name: "Quest bar", cal: 190, prot: 21 },
-    { name: "Egg", cal: 70, prot: 6 },
-    { name: "Egg white", cal: 15, prot: 3 },
-    { name: "Tomatoes", cal: 20, prot: 1 },
-    { name: "Green onions", cal: 5, prot: 0 },
-    { name: "Butter (1 tsp)", cal: 35, prot: 0 },
-    { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
-    { name: "Protein ice cream", cal: 400, prot: 52 },
-    { name: "2 eggs + butter", cal: 175, prot: 12 },
-    { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
-    { name: "Yogurt 0%", cal: 117, prot: 20 },
-    { name: "Cottage cheese", cal: 100, prot: 11 },
-  { name: "Quest Chips", cal: 140, prot: 20 },
-{ name: "Spinach (cooked portion)", cal: 15, prot: 1.5 },
-{ name: "Cucumber (1 medium)", cal: 16, prot: 1 },
+   // 🥩 Mains (proteins, eggs, dairy)
+{ name: "2 eggs + butter", cal: 175, prot: 12 },
+{ name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
+{ name: "Chicken breast (50g)", cal: 82, prot: 15 },
+{ name: "Chicken breast (100g)", cal: 165, prot: 31 },
+{ name: "Chicken breast (150g)", cal: 248, prot: 46 },
+{ name: "Chicken breast (200g)", cal: 330, prot: 62 },
+{ name: "Cottage cheese", cal: 100, prot: 11 },
+{ name: "Egg", cal: 70, prot: 6 },
+{ name: "Egg white", cal: 15, prot: 3 },
+{ name: "Protein ice cream", cal: 400, prot: 52 },
+{ name: "Yogurt 0%", cal: 117, prot: 20 },
+
+// 🍫 Snacks / Packaged protein
+{ name: "Promix bar", cal: 150, prot: 15 },
+{ name: "Quest bar", cal: 190, prot: 21 },
+{ name: "Quest Chips", cal: 140, prot: 20 },
+
+// 🍎 Fruits
+{ name: "Apple", cal: 95, prot: 1 },
+{ name: "Banana (medium)", cal: 105, prot: 1 },
+
+// 🥬 Veggies
 { name: "Carrot (1 medium)", cal: 25, prot: 0.5 },
-{ name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
+{ name: "Cucumber (1 medium)", cal: 16, prot: 1 },
+{ name: "Green onions", cal: 5, prot: 0 },
+{ name: "Spinach (cooked portion)", cal: 15, prot: 1.5 },
+{ name: "Tomatoes", cal: 20, prot: 1 },
+
+// 🥑 Fats & Seeds
+{ name: "Avocado (1/2 medium)", cal: 120, prot: 1.5 },
+{ name: "Butter (1 tsp)", cal: 35, prot: 0 },
 { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
+{ name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
+{ name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
 { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
   ];
 
