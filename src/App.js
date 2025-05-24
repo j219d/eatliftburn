@@ -195,7 +195,7 @@ const navBtnStyle = {
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
   <HomeButton />
   <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
-  {"🍽️"} Food Log
+  {"🍽️ Food Log"}
 </h1>
 </div>
 
