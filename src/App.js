@@ -155,11 +155,16 @@ function App() {
     margin: "4px 0"
   };
 
-  const navBtnStyle = {
-    fontSize: "18px",
-    padding: "14px 20px",
-    margin: "6px"
-  };
+const navBtnStyle = {
+  fontSize: "18px",
+  padding: "16px",
+  margin: "8px 0",
+  borderRadius: "12px",
+  width: "100%",
+  backgroundColor: "#eee",
+  color: "#0070f3",
+  border: "none"
+};
 
   const HomeButton = () => (
     <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅ Home</button>
@@ -336,14 +341,12 @@ function App() {
     <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "2px" }}>EatLiftBurn</h1>
     <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>an app by Jon Deutsch</p>
 
-    <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "10px" }}>Today's Overview</h2>
-    <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
-      <p>Calories Eaten: {calories}</p>
-      <p>Calories Burned: {manualBurn}</p>
-      <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-      <p>Protein: {protein} / {proteinGoal}</p>
-      <p>Steps: {steps} / {stepGoal}</p>
-    </div>
+<h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "6px" }}>Today's Overview</h2>
+<p style={overviewStyle}>Calories Eaten: {calories}</p>
+<p style={overviewStyle}>Calories Burned: {manualBurn}</p>
+<p style={overviewStyle}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
+<p style={overviewStyle}>Protein: {protein} / {proteinGoal}</p>
+<p style={overviewStyle}>Steps: {steps} / {stepGoal}</p>
 
     <h3 style={{ marginTop: "24px", fontSize: "18px" }}>Checklist</h3>
     <div style={{ marginBottom: "16px" }}>
