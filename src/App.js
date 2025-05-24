@@ -271,47 +271,72 @@ const navBtnStyle = {
   }
 
   if (screen === "workouts") {
-    return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
-        <HomeButton />
-        <h2>Workout Log</h2>
-        {Object.keys(workouts).map((type, i) => (
-          <div key={i} style={{ marginBottom: "12px" }}>
-            <label>{type}:</label>
-            <input
-              type="number"
-              placeholder="Reps"
-              value={customWorkout[type] || ""}
-              onChange={(e) =>
-                setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+  return (
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+      <HomeButton />
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workout Log</h1>
+
+      {Object.keys(workouts).map((type, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+          <input
+            type="number"
+            placeholder="Reps"
+            value={customWorkout[type] || ""}
+            onChange={(e) =>
+              setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+            }
+            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <button
+            onClick={() => {
+              const reps = parseInt(customWorkout[type]);
+              if (!isNaN(reps)) {
+                logWorkout(type, reps);
+                setCustomWorkout({ ...customWorkout, [type]: "" });
               }
-            />
-            <button
-              onClick={() => {
-                const reps = parseInt(customWorkout[type]);
-                if (!isNaN(reps)) {
-                  logWorkout(type, reps);
-                  setCustomWorkout({ ...customWorkout, [type]: "" });
-                }
-              }}
-            >
-              Add
-            </button>
+            }}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
+        </div>
+      ))}
+
+      {Object.keys(workoutLog).length > 0 && (
+        <>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
+          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+            {Object.entries(workoutLog).map(([type, reps], i) => (
+              <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                {type}: {reps} reps — {Math.round(reps * workouts[type])} cal{" "}
+                <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{
+            backgroundColor: "#f1f1f1",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            textAlign: "center",
+            fontSize: "18px",
+            fontWeight: "bold"
+          }}>
+            Total Burn: {manualBurn} cal
           </div>
-        ))}
-        <h3>Workout Summary</h3>
-        <ul>
-          {Object.entries(workoutLog).map(([type, reps], i) => (
-            <li key={i}>
-              {type}: {reps} reps — {Math.round(reps * workouts[type])} cal{" "}
-              <button onClick={() => deleteWorkout(type)}>❌</button>
-            </li>
-          ))}
-        </ul>
-        <p>Total Workout Burn: {manualBurn} cal</p>
-      </div>
-    );
-  }
+        </>
+      )}
+    </div>
+  );
+}
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
