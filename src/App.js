@@ -194,7 +194,10 @@ const navBtnStyle = {
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🍽️ Food Log</h1>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "16px" }}>
+  <img src="/logo.png" alt="Logo" style={{ height: "28px" }} />
+  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>Food Log</h1>
+</div>
 
       <div style={{ marginBottom: "20px" }}>
         <select
@@ -448,10 +451,9 @@ const navBtnStyle = {
 
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-    <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "4px", textAlign: "center" }}>EatLiftBurn</h1>
-    <p style={{ fontSize: "14px", marginTop: "-6px", marginBottom: "20px", color: "#555", textAlign: "center" }}>
-      an app by Jon Deutsch
-    </p>
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
+  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ maxWidth: "100%", height: "auto" }} />
+</div>
 
     {/* Overview Box */}
     <div style={{
