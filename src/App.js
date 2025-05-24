@@ -354,7 +354,7 @@ const navBtnStyle = {
 <h3 style={{ marginTop: "24px", fontSize: "18px", marginBottom: "4px" }}>Checklist</h3>
 <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
   {["sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px", lineHeight: "1.4", marginBottom: "4px" }}>
+    <label key={key} style={{ fontSize: "16px", lineHeight: "1.2", marginBottom: "2px" }}>
       <input
         type="checkbox"
         checked={checklist[key]}
