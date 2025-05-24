@@ -1,4 +1,4 @@
-// EatLiftBurn – May 2025 Update: Overview Enhancements + UI Polish
+// EatLiftBurn – Full App with All Screens Restored
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -30,9 +30,6 @@ function App() {
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
-  const [customSteps, setCustomSteps] = useState("");
-  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "" });
-  const [customWorkout, setCustomWorkout] = useState({});
 
   const workouts = {
     "Push-ups": 0.29,
@@ -73,6 +70,71 @@ function App() {
 
   const average = arr => arr.reduce((a, b) => a + b, 0) / (arr.length || 1);
   const avgWeight = average(weightLog.map(w => parseFloat(w.weight)));
+
+  const HomeButton = () => <button style={{ fontSize: "18px", padding: "10px 16px", marginBottom: "16px" }} onClick={() => setScreen("home")}>⬅ Home</button>;
+
+  if (screen === "food") {
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Food Log</h2>
+        <ul>{foodLog.map((f, i) => <li key={i}>{f.name || 'Food'} - {f.cal} cal, {f.prot}g <button onClick={() => setFoodLog(foodLog.filter((_, idx) => idx !== i))}>❌</button></li>)}</ul>
+      </div>
+    );
+  }
+
+  if (screen === "workouts") {
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Workout Log</h2>
+        <ul>{Object.entries(workoutLog).map(([type, reps], i) => (
+          <li key={i}>{type}: {reps} reps — {Math.round(reps * workouts[type])} cal <button onClick={() => {
+            const updated = { ...workoutLog };
+            setManualBurn(b => b - Math.round(reps * workouts[type]));
+            delete updated[type];
+            setWorkoutLog(updated);
+          }}>❌</button></li>
+        ))}</ul>
+        <p><strong>Total Workout Burn:</strong> {Object.entries(workoutLog).reduce((sum, [type, reps]) => sum + Math.round(reps * workouts[type]), 0)} cal</p>
+      </div>
+    );
+  }
+
+  if (screen === "weight") {
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Weight Tracker</h2>
+        <input value={newWeight} onChange={(e) => setNewWeight(e.target.value)} placeholder="Enter weight" />
+        <button onClick={() => {
+          if (newWeight) {
+            const updated = [...weightLog, { date: new Date().toLocaleDateString(), weight: newWeight }];
+            setWeightLog(updated);
+            setNewWeight("");
+          }
+        }}>Add</button>
+        <Line data={{
+          labels: weightLog.map(entry => entry.date),
+          datasets: [{ label: "Weight", data: weightLog.map(entry => entry.weight), fill: false, borderColor: "#4bc0c0", tension: 0.1 }]
+        }} />
+        <ul>{weightLog.map((w, i) => <li key={i}>{w.date}: {w.weight} <button onClick={() => setWeightLog(weightLog.filter((_, idx) => idx !== i))}>❌</button></li>)}</ul>
+      </div>
+    );
+  }
+
+  if (screen === "summary") {
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Weekly Summary</h2>
+        <p>Avg Deficit: {estimatedDeficit}</p>
+        <p>Avg Protein: {protein}</p>
+        <p>Steps: {steps}</p>
+        <p>Avg Weight: {avgWeight.toFixed(1)}</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', fontFamily: 'Arial, sans-serif' }}>
