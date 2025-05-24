@@ -19,7 +19,7 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   const [manualBurn, setManualBurn] = useState(() => parseInt(localStorage.getItem("manualBurn")) || 0);
   const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
-  const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
+  const [proteinGoal, setProteinGoal] = useState(140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
     supplements: false,
