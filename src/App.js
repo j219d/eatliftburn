@@ -354,19 +354,6 @@ const navBtnStyle = {
     );
   }
 
-  if (screen === "summary") {
-    return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
-        <HomeButton />
-        <h2>Weekly Summary</h2>
-        <p>Avg Deficit: {estimatedDeficit}</p>
-        <p>Avg Protein: {protein}</p>
-        <p>Steps: {steps}</p>
-        <p>Avg Weight: {avgWeight.toFixed(1)} lbs</p>
-      </div>
-    );
-  }
-
   return (
   <div style={{ padding: "16px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "2px" }}>EatLiftBurn</h1>
@@ -403,7 +390,6 @@ const navBtnStyle = {
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
-      <button style={navBtnStyle} onClick={() => setScreen("summary")}>📊 Summary</button>
     </div>
 
   <button
