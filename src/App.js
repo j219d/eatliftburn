@@ -452,7 +452,7 @@ const navBtnStyle = {
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
-  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ maxWidth: "100%", height: "auto" }} />
+  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "50%", height: "auto" }} />
 </div>
 
     {/* Overview Box */}
