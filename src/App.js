@@ -196,7 +196,7 @@ const navBtnStyle = {
       <HomeButton />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "16px" }}>
   <img src="/logo.png" alt="Logo" style={{ height: "28px" }} />
-  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>Food Log</h1>
+  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>🍽️ Food Log</h1>
 </div>
 
       <div style={{ marginBottom: "20px" }}>
@@ -525,7 +525,7 @@ const navBtnStyle = {
 
     {/* Navigation Buttons */}
     <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
-      <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
+      <button style={navBtnStyle} onClick={() => setScreen("food")}></button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
     </div>
