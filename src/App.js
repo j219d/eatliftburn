@@ -277,18 +277,10 @@ const navBtnStyle = {
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
       <ul style={{ paddingLeft: "16px" }}>
         {foodLog.map((f, i) => (
-          <li key={i} style={{ fontSize: "16px", marginBottom: "6px", cursor: "pointer" }} onClick={() => addFood({
-            name: f.name,
-            cal: f.cal,
-            prot: f.prot,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          })}>
+          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
             {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
             {f.name} — {f.cal} cal, {f.prot}g{" "}
-            <button onClick={(e) => {
-              e.stopPropagation();
-              deleteFood(i);
-            }} style={{ marginLeft: "8px" }}>❌</button>
+            <button onClick={() => deleteFood(i)} style={{ marginLeft: "8px" }}>❌</button>
           </li>
         ))}
       </ul>
