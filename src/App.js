@@ -383,7 +383,8 @@ function App() {
     >
       Reset
     </button>
-  </div>
-);
+ </div>
+  );
+}
 
 export default App;
