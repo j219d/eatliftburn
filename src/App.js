@@ -464,13 +464,13 @@ const navBtnStyle = {
       marginBottom: "20px"
     }}>
       <h2 style={{
-  fontSize: "16px",
-  fontWeight: "500",
+  fontSize: "18px",
+  fontWeight: "600",
   marginTop: "0px",
   marginBottom: "12px"
 }}>
-        📊 Today
-      </h2>
+  📊 Today
+</h2>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
         <strong>Calories Eaten:</strong> {calories}
@@ -498,13 +498,14 @@ const navBtnStyle = {
       marginBottom: "24px"
     }}>
       <h3 style={{
-  fontSize: "16px",
-  fontWeight: "500",
+  fontSize: "18px",
+  fontWeight: "600",
   marginTop: "0px",
   marginBottom: "12px"
 }}>
   ☑️ Checklist
 </h3>
+
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {["sunlight", "supplements"].map((key) => (
           <label key={key} style={{ fontSize: "16px" }}>
