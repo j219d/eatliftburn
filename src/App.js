@@ -286,7 +286,7 @@ const navBtnStyle = {
             onChange={(e) =>
               setCustomWorkout({ ...customWorkout, [type]: e.target.value })
             }
-            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ width: "80px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <button
             onClick={() => {
