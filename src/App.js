@@ -332,65 +332,58 @@ function App() {
   }
 
   return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
-      <h1 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "4px" }}>EatLiftBurn</h1>
-      <div style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>
-        an app by Jon Deutsch
-      </div>
-      <h2>Today's Overview</h2>
-      <p style={overviewStyle}>Calories Eaten: {calories}</p>
-      <p style={overviewStyle}>Calories Burned: {totalBurned}</p>
-      <p style={overviewStyle}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-      <p style={overviewStyle}>Protein: {protein} / {proteinGoal}</p>
-      <p style={overviewStyle}>Steps: {steps} / {stepGoal}</p>
+  <div style={{ padding: "16px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+    <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "2px" }}>EatLiftBurn</h1>
+    <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>an app by Jon Deutsch</p>
 
-      <h3 style={{ marginTop: "20px" }}>Checklist</h3>
-      {Object.keys(checklist).map((key) => (
-        <div key={key}>
-          <label>
-            <input
-              type="checkbox"
-              checked={checklist[key]}
-              onChange={() =>
-                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-              }
-            />{" "}
-            {key}
-          </label>
-        </div>
-      ))}
-
-      <div style={{ marginTop: "24px" }}>
-        <button style={navBtnStyle} onClick={() => setScreen("food")}>
-          🍽️ Food Log
-        </button>
-        <button style={navBtnStyle} onClick={() => setScreen("workouts")}>
-          🏋️ Workouts
-        </button>
-        <button style={navBtnStyle} onClick={() => setScreen("weight")}>
-          ⚖️ Weight
-        </button>
-        <button style={navBtnStyle} onClick={() => setScreen("summary")}>
-          📊 Summary
-        </button>
-      </div>
-
-      <button
-        onClick={resetDay}
-        style={{
-          backgroundColor: "#d32f2f",
-          color: "white",
-          padding: "12px",
-          fontSize: "16px",
-          border: "none",
-          borderRadius: "8px",
-          marginTop: "20px"
-        }}
-      >
-        Reset
-      </button>
+    <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "10px" }}>Today's Overview</h2>
+    <div style={{ fontSize: "16px", lineHeight: "1.8" }}>
+      <p>Calories Eaten: {calories}</p>
+      <p>Calories Burned: {manualBurn}</p>
+      <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
+      <p>Protein: {protein} / {proteinGoal}</p>
+      <p>Steps: {steps} / {stepGoal}</p>
     </div>
-  );
-}
+
+    <h3 style={{ marginTop: "24px", fontSize: "18px" }}>Checklist</h3>
+    <div style={{ marginBottom: "16px" }}>
+      {Object.keys(checklist).map((key) => (
+        <label key={key} style={{ display: "block", marginBottom: "8px" }}>
+          <input
+            type="checkbox"
+            checked={checklist[key]}
+            onChange={() =>
+              setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+            }
+            style={{ marginRight: "8px" }}
+          />
+          {key.charAt(0).toUpperCase() + key.slice(1)}
+        </label>
+      ))}
+    </div>
+
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
+      <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
+      <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
+      <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
+      <button style={navBtnStyle} onClick={() => setScreen("summary")}>📊 Summary</button>
+    </div>
+
+    <button
+      onClick={resetDay}
+      style={{
+        backgroundColor: "#d32f2f",
+        color: "white",
+        padding: "12px",
+        fontSize: "16px",
+        border: "none",
+        borderRadius: "8px",
+        width: "100%"
+      }}
+    >
+      Reset
+    </button>
+  </div>
+);
 
 export default App;
