@@ -193,10 +193,10 @@ const navBtnStyle = {
   if (screen === "food") {
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-      <HomeButton />
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "16px" }}>
-  <img src="/logo.png" alt="Logo" style={{ height: "28px" }} />
-  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>Food Log</h1>
+  <HomeButton />
+  <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
+    🍽️ Food Log
+  </h1>
 </div>
 
       <div style={{ marginBottom: "20px" }}>
