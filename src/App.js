@@ -196,7 +196,7 @@ const navBtnStyle = {
       <HomeButton />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "16px" }}>
   <img src="/logo.png" alt="Logo" style={{ height: "28px" }} />
-  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>🍽️ Food Log</h1>
+  <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>Food Log</h1>
 </div>
 
       <div style={{ marginBottom: "20px" }}>
