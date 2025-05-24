@@ -156,10 +156,10 @@ function App() {
   };
 
 const navBtnStyle = {
-  fontSize: "18px",
-  padding: "16px",
-  margin: "8px 0",
-  borderRadius: "12px",
+  fontSize: "16px",
+  padding: "10px",
+  margin: "6px 0",
+  borderRadius: "10px",
   width: "100%",
   backgroundColor: "#eee",
   color: "#0070f3",
