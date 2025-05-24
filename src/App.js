@@ -368,7 +368,7 @@ const navBtnStyle = {
   ))}
 </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px", marginBottom: "0" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px", marginBottom: "8px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
@@ -380,11 +380,11 @@ const navBtnStyle = {
   style={{
     backgroundColor: "#d32f2f",
     color: "white",
-    padding: "10px 20px",
+    padding: "10px 24px",
     fontSize: "16px",
     border: "none",
     borderRadius: "8px",
-    marginTop: "16px",
+    marginTop: "12px",
     alignSelf: "center",
     width: "160px",
     maxWidth: "90%",
