@@ -457,7 +457,7 @@ const navBtnStyle = {
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
-      padding: "16px",
+      padding: "12px 16px 16px 16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "20px"
     }}>
@@ -484,7 +484,7 @@ const navBtnStyle = {
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
-      padding: "16px",
+      padding: "12px 16px 16px 16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "24px"
     }}>
