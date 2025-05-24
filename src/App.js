@@ -339,7 +339,10 @@ const navBtnStyle = {
   return (
   <div style={{ padding: "16px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <h1 style={{ fontSize: "26px", fontWeight: "bold", marginBottom: "2px" }}>EatLiftBurn</h1>
-    <p style={{ fontSize: "14px", marginBottom: "20px", color: "#555" }}>an app by Jon Deutsch</p>
+    <p style={{ fontSize: "14px", marginTop: "-6px", marginBottom: "12px", color: "#555" }}>
+  an app by Jon Deutsch
+</p>
+
 
 <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "6px" }}>Today's Overview</h2>
 <p style={overviewStyle}>Calories Eaten: {calories}</p>
