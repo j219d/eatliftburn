@@ -354,7 +354,7 @@ const navBtnStyle = {
 <h3 style={{ marginTop: "24px", fontSize: "18px", marginBottom: "4px" }}>Checklist</h3>
 <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
   {["sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px", lineHeight: "1.8" }}>
+    <label key={key} style={{ fontSize: "16px", lineHeight: "1.4", marginBottom: "4px" }}>
       <input
         type="checkbox"
         checked={checklist[key]}
@@ -368,7 +368,7 @@ const navBtnStyle = {
   ))}
 </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "20px", marginBottom: "16px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>🍽️ Food Log</button>
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
