@@ -464,12 +464,12 @@ const navBtnStyle = {
       marginBottom: "20px"
     }}>
       <h2 style={{
-        fontSize: "20px",
-        fontWeight: "600",
-        marginTop: "0px",     // 👈 tightened this
-        marginBottom: "12px"
-      }}>
-        📊 Today's Overview
+  fontSize: "16px",
+  fontWeight: "500",
+  marginTop: "0px",
+  marginBottom: "12px"
+}}>
+        📊 Today
       </h2>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
@@ -498,13 +498,13 @@ const navBtnStyle = {
       marginBottom: "24px"
     }}>
       <h3 style={{
-        fontSize: "18px",
-        fontWeight: "600",
-        marginTop: "0px",     // 👈 tightened this too
-        marginBottom: "12px"
-      }}>
-        ☑️ Checklist
-      </h3>
+  fontSize: "16px",
+  fontWeight: "500",
+  marginTop: "0px",
+  marginBottom: "12px"
+}}>
+  ☑️ Checklist
+</h3>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {["sunlight", "supplements"].map((key) => (
           <label key={key} style={{ fontSize: "16px" }}>
