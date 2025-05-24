@@ -457,11 +457,18 @@ const navBtnStyle = {
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
-      padding: "12px 16px 16px 16px",
+      padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "20px"
     }}>
-      <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>📊 Today's Overview</h2>
+      <h2 style={{
+        fontSize: "20px",
+        fontWeight: "600",
+        marginTop: "0px",     // 👈 tightened this
+        marginBottom: "12px"
+      }}>
+        📊 Today's Overview
+      </h2>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
         <strong>Calories Eaten:</strong> {calories}
@@ -484,11 +491,18 @@ const navBtnStyle = {
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
-      padding: "12px 16px 16px 16px",
+      padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "24px"
     }}>
-      <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "12px" }}>☑️ Checklist</h3>
+      <h3 style={{
+        fontSize: "18px",
+        fontWeight: "600",
+        marginTop: "0px",     // 👈 tightened this too
+        marginBottom: "12px"
+      }}>
+        ☑️ Checklist
+      </h3>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {["sunlight", "supplements"].map((key) => (
           <label key={key} style={{ fontSize: "16px" }}>
