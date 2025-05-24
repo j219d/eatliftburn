@@ -1,9 +1,3 @@
-# Let's generate the full, corrected React app code based on all confirmed fixes.
-# It will include: fixed food log delete logic, fixed workout log delete logic, calories/steps sync,
-# and all features previously confirmed.
-
-full_code = """
-// EatLiftBurn – Fully Fixed App with Food & Workout Deletion Sync
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -95,10 +89,19 @@ function App() {
     setChecklist({ supplements: false, sunlight: false });
   };
 
+  const logWorkout = (type, reps) => {
+    const burn = Math.round(workouts[type] * reps);
+    setWorkoutLog(prev => {
+      const updated = { ...prev };
+      updated[type] = (updated[type] || 0) + reps;
+      return updated;
+    });
+    setManualBurn(b => b + burn);
+    if (type === "Steps") setSteps(prev => prev + reps);
+  };
+
   const HomeButton = () => (
-    <button style={{ fontSize: "18px", padding: "10px 16px", marginBottom: "16px" }} onClick={() => setScreen("home")}>
-      ⬅ Home
-    </button>
+    <button style={{ fontSize: "18px", padding: "10px 16px", marginBottom: "16px" }} onClick={() => setScreen("home")}>⬅ Home</button>
   );
 
   if (screen === "food") {
@@ -115,7 +118,7 @@ function App() {
           <option value="" disabled>Select Food</option>
           {foodOptions.map((f, i) => <option key={i} value={JSON.stringify(f)}>{f.name}</option>)}
         </select>
-        <div>
+        <div style={{ marginTop: '10px' }}>
           <input placeholder="Name" value={customFood.name} onChange={e => setCustomFood({ ...customFood, name: e.target.value })} />
           <input placeholder="Calories" type="number" value={customFood.cal} onChange={e => setCustomFood({ ...customFood, cal: e.target.value })} />
           <input placeholder="Protein" type="number" value={customFood.prot} onChange={e => setCustomFood({ ...customFood, prot: e.target.value })} />
@@ -140,9 +143,7 @@ function App() {
                 setCalories(c => c - removed.cal);
                 setProtein(p => p - removed.prot);
                 setFoodLog(foodLog.filter((_, idx) => idx !== i));
-              }}>
-                ❌
-              </button>
+              }}>❌</button>
             </li>
           ))}
         </ul>
@@ -155,40 +156,35 @@ function App() {
       <div style={{ padding: '20px' }}>
         <HomeButton />
         <h2>Workout Log</h2>
-        {Object.keys(workouts).map(type => (
-          <div key={type}>
+        {Object.keys(workouts).map((type, i) => (
+          <div key={i}>
             <label>{type}: </label>
-            <input type="number" onChange={e => {
-              const reps = parseInt(e.target.value);
-              if (!isNaN(reps)) {
-                const burn = Math.round(workouts[type] * reps);
-                setWorkoutLog(prev => {
-                  const updated = { ...prev };
-                  updated[type] = (updated[type] || 0) + reps;
-                  return updated;
-                });
-                setManualBurn(b => b + burn);
-                if (type === "Steps") setSteps(prev => prev + reps);
-              }
-            }} />
-            <button>Add</button>
+            <input
+              type="number"
+              placeholder="Reps"
+              onChange={e => setCustomSteps(e.target.value)}
+            />
+            <button onClick={() => {
+              const reps = parseInt(customSteps);
+              if (!isNaN(reps)) logWorkout(type, reps);
+              setCustomSteps("");
+            }}>Add</button>
           </div>
         ))}
-        <h3>Logged Workouts:</h3>
+
+        <h3 style={{ marginTop: '20px' }}>Logged Workouts</h3>
         <ul>
-          {Object.entries(workoutLog).map(([type, reps]) => (
-            <li key={type}>
+          {Object.entries(workoutLog).map(([type, reps], i) => (
+            <li key={i}>
               {type}: {reps} reps, {Math.round(reps * workouts[type])} cal{" "}
               <button onClick={() => {
-                const caloriesToRemove = Math.round(reps * workouts[type]);
-                const updatedLog = { ...workoutLog };
-                delete updatedLog[type];
-                setWorkoutLog(updatedLog);
-                setManualBurn(b => b - caloriesToRemove);
+                const burn = Math.round(reps * workouts[type]);
+                const updated = { ...workoutLog };
+                delete updated[type];
+                setWorkoutLog(updated);
+                setManualBurn(m => m - burn);
                 if (type === "Steps") setSteps(0);
-              }}>
-                ❌
-              </button>
+              }}>❌</button>
             </li>
           ))}
         </ul>
@@ -197,38 +193,102 @@ function App() {
     );
   }
 
-  // Return Home screen
+  if (screen === "weight") {
+    const data = {
+      labels: weightLog.map(w => w.date),
+      datasets: [
+        {
+          label: "Weight (lbs)",
+          data: weightLog.map(w => w.weight),
+          fill: false,
+          borderColor: "blue",
+          tension: 0.1
+        }
+      ]
+    };
+
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Weight Tracker</h2>
+        <input
+          placeholder="Enter weight"
+          value={newWeight}
+          onChange={e => setNewWeight(e.target.value)}
+        />
+        <button onClick={() => {
+          const val = parseFloat(newWeight);
+          if (!isNaN(val)) {
+            setWeightLog(w => [...w, { date: new Date().toLocaleDateString(), weight: val }]);
+            setNewWeight("");
+          }
+        }}>Log Weight</button>
+
+        <ul style={{ marginTop: '10px' }}>
+          {weightLog.map((w, i) => (
+            <li key={i}>
+              {w.date}: {w.weight} lbs{" "}
+              <button onClick={() => setWeightLog(weightLog.filter((_, idx) => idx !== i))}>❌</button>
+            </li>
+          ))}
+        </ul>
+
+        <div style={{ marginTop: '20px' }}>
+          <Line data={data} />
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "summary") {
+    const avgWeight = weightLog.length > 0
+      ? weightLog.reduce((sum, w) => sum + w.weight, 0) / weightLog.length
+      : 0;
+
+    return (
+      <div style={{ padding: '20px' }}>
+        <HomeButton />
+        <h2>Weekly Summary</h2>
+        <p>Avg Deficit: {estimatedDeficit}</p>
+        <p>Avg Protein: {protein}</p>
+        <p>Steps: {steps}</p>
+        <p>Avg Weight: {avgWeight.toFixed(1)} lbs</p>
+      </div>
+    );
+  }
+
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>EatLiftBurn</h1>
-      <p style={{ fontSize: '14px', color: '#666' }}>an app by Jon Deutsch</p>
-      <h2>Today's Overview</h2>
-      <p>Calories Eaten: {calories}</p>
-      <p>Calories Burned: {totalBurned}</p>
-      <p>Deficit: {estimatedDeficit} / {deficitGoal}</p>
-      <p>Protein: {protein} / {proteinGoal}</p>
-      <p>Steps: {steps} / {stepGoal}</p>
-      <h3>Checklist</h3>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto', fontFamily: 'Arial, sans-serif' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '4px' }}>EatLiftBurn</h1>
+      <div style={{ fontSize: '14px', marginBottom: '12px', color: '#555' }}>an app by Jon Deutsch</div>
+      <h2 style={{ fontWeight: 'bold', fontSize: '20px', marginBottom: '4px' }}>Today's Overview</h2>
+      <p style={{ margin: '4px 0' }}>Calories Eaten: {calories}</p>
+      <p style={{ margin: '4px 0' }}>Calories Burned: {totalBurned}</p>
+      <p style={{ margin: '4px 0' }}>Deficit: {estimatedDeficit} / {deficitGoal}</p>
+      <p style={{ margin: '4px 0' }}>Protein: {protein} / {proteinGoal}</p>
+      <p style={{ margin: '4px 0' }}>Steps: {steps} / {stepGoal}</p>
+
+      <h3 style={{ marginTop: '12px', marginBottom: '4px' }}>Checklist</h3>
       {Object.keys(checklist).map(key => (
         <div key={key}>
           <label>
-            <input type="checkbox" checked={checklist[key]} onChange={() =>
-              setChecklist(c => ({ ...c, [key]: !c[key] }))
-            } /> {key}
+            <input type="checkbox" checked={checklist[key]} onChange={() => setChecklist(c => ({ ...c, [key]: !c[key] }))} /> {key}
           </label>
         </div>
       ))}
-      <div style={{ marginTop: '20px' }}>
-        <button onClick={() => setScreen("food")}>🍽️ Food Log</button>
-        <button onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
-        {/* Add weight and summary screens here as needed */}
+
+      <div style={{ marginTop: '24px' }}>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("food")}>🍽️ Food Log</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("weight")}>⚖️ Weight</button>
+        <button style={{ fontSize: '18px', padding: '14px 20px', margin: '6px' }} onClick={() => setScreen("summary")}>📊 Summary</button>
       </div>
-      <button onClick={resetDay} style={{ marginTop: '10px', backgroundColor: 'red', color: 'white' }}>Reset</button>
+
+      <button onClick={resetDay} style={{ backgroundColor: '#f44336', color: 'white', fontSize: '16px', padding: '10px', borderRadius: '6px', marginTop: '10px' }}>
+        Reset
+      </button>
     </div>
   );
 }
 
 export default App;
-"""
-
-full_code
