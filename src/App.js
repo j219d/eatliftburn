@@ -61,7 +61,7 @@ function App() {
     { name: "Protein ice cream", cal: 400, prot: 52 },
     { name: "2 eggs + butter", cal: 175, prot: 12 },
     { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
-    { name: "Yogurt 0%", cal: 117, prot: 20 }
+    { name: "Yogurt 0%", cal: 117, prot: 20 },
     { name: "Cottage cheese", cal: 100, prot: 11 },
   { name: "Quest Chips", cal: 140, prot: 20 },
 { name: "Spinach (cooked portion)", cal: 15, prot: 1.5 },
@@ -69,7 +69,7 @@ function App() {
 { name: "Carrot (1 medium)", cal: 25, prot: 0.5 },
 { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
 { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
-{ name: "Walnut (1 whole)", cal: 26, prot: 0.6 },
+{ name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
   ];
 
   const totalBurned = manualBurn;
