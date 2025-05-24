@@ -314,45 +314,82 @@ const navBtnStyle = {
   }
 
   if (screen === "weight") {
-    const data = {
-      labels: weightLog.map((w) => w.date),
-      datasets: [
-        {
-          label: "Weight (lbs)",
-          data: weightLog.map((w) => w.weight),
-          fill: false,
-          borderColor: "#4caf50",
-          tension: 0.1,
-        },
-      ],
-    };
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
+  const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
-    return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
-        <HomeButton />
-        <h2>Weight Tracker</h2>
+  const data = {
+    labels: weightLog.map((w) => w.date),
+    datasets: [
+      {
+        label: "Weight (lbs)",
+        data: weightLog.map((w) => w.weight),
+        borderColor: "#0070f3",
+        backgroundColor: "#0070f3",
+        fill: false,
+        tension: 0.3,
+      },
+    ],
+  };
+
+  return (
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+      <HomeButton />
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
+
+      {/* Latest weight */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>{latestWeight} lb</div>
+        <div style={{ fontSize: "14px", color: "#666" }}>{latestDate}</div>
+      </div>
+
+      {/* Input */}
+      <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
         <input
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
-        <button onClick={addWeight}>Log Weight</button>
-        <ul>
-          {weightLog.map((w, i) => (
-            <li key={i}>
-              {w.date}: {w.weight} lbs{" "}
-              <button onClick={() => deleteWeight(i)}>❌</button>
-            </li>
-          ))}
-        </ul>
-        {weightLog.length > 0 && (
-          <div style={{ marginTop: "24px" }}>
-            <Line data={data} />
-          </div>
-        )}
+        <button
+          onClick={addWeight}
+          style={{
+            padding: "10px 16px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Log
+        </button>
       </div>
-    );
-  }
+
+      {/* Chart */}
+      {weightLog.length > 0 && (
+        <div style={{
+          backgroundColor: "#fff",
+          padding: "16px",
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          marginBottom: "24px"
+        }}>
+          <Line data={data} />
+        </div>
+      )}
+
+      {/* History */}
+      <ul style={{ paddingLeft: "16px" }}>
+        {weightLog.map((w, i) => (
+          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+            {w.date}: {w.weight} lbs{" "}
+            <button onClick={() => deleteWeight(i)} style={{ marginLeft: "8px" }}>❌</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
   return (
   <div style={{ padding: "16px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
