@@ -210,42 +210,44 @@ const navBtnStyle = {
           ))}
         </select>
         <div>
-          <input
-            placeholder="Name"
-            value={customFood.name}
-            onChange={e =>
-              setCustomFood({ ...customFood, name: e.target.value })
-            }
-          />
-          <input
-            placeholder="Calories"
-            type="number"
-            value={customFood.cal}
-            onChange={e =>
-              setCustomFood({ ...customFood, cal: e.target.value })
-            }
-          />
-          <input
-            placeholder="Protein"
-            type="number"
-            value={customFood.prot}
-            onChange={e =>
-              setCustomFood({ ...customFood, prot: e.target.value })
-            }
-          />
-          <button
-            onClick={() => {
-              const { name, cal, prot } = customFood;
-              const parsedCal = parseInt(cal);
-              const parsedProt = parseInt(prot);
-              if (name && parsedCal && parsedProt) {
-                addFood({ name, cal: parsedCal, prot: parsedProt });
-                setCustomFood({ name: "", cal: "", prot: "" });
-              }
-            }}
-          >
-            Add
-          </button>
+  <input
+    placeholder="Name"
+    value={customFood.name}
+    onChange={e =>
+      setCustomFood({ ...customFood, name: e.target.value })
+    }
+  />
+  <input
+    placeholder="Calories"
+    type="number"
+    value={customFood.cal}
+    onChange={e =>
+      setCustomFood({ ...customFood, cal: e.target.value })
+    }
+  />
+  <input
+    placeholder="Protein"
+    type="number"
+    value={customFood.prot}
+    onChange={e =>
+      setCustomFood({ ...customFood, prot: e.target.value })
+    }
+  />
+  <button
+    onClick={() => {
+      const { name, cal, prot } = customFood;
+      const parsedCal = parseInt(cal);
+      const parsedProt = parseInt(prot);
+      if (name && parsedCal && parsedProt) {
+        setCalories(c => c + parsedCal);
+        setProtein(p => p + parsedProt);
+        setFoodLog(f => [...f, { name, cal: parsedCal, prot: parsedProt }]);
+        setCustomFood({ name: "", cal: "", prot: "" });
+      }
+    }}
+  >
+    Add
+  </button>
         </div>
         <ul>
           {foodLog.map((f, i) => (
