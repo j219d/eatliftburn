@@ -62,9 +62,8 @@ function App() {
     { name: "Yogurt 0%", cal: 117, prot: 20 }
   ];
 
-  const stepCalories = Math.round(steps * 0.04);
-  const totalBurned = stepCalories + manualBurn;
-  const estimatedDeficit = 1740 + totalBurned - calories;
+const totalBurned = manualBurn;
+const estimatedDeficit = 1740 + totalBurned - calories;
 
   useEffect(() => {
     localStorage.setItem("calories", calories);
