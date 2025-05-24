@@ -35,14 +35,14 @@ function App() {
   const [customSteps, setCustomSteps] = useState("");
 
   const workouts = {
-    "Push-ups": 0.29,
-    "Pull-ups": 0.5,
-    "Biceps": 0.25,
-    "Bench Press": 0.42,
-    "Triceps": 0.3,
-    "Leg Press": 0.35,
-    "Steps": 0.04
-  };
+  "Push-ups": 0.5,
+  "Pull-ups": 1,
+  "Biceps": 0.5,
+  "Bench Press": 0.5,
+  "Triceps": 0.5,
+  "Leg Press": 0.5,
+  "Run": "run" // special handling
+};
 
   const foodOptions = [
    // 🥩 Mains (proteins, eggs, dairy)
@@ -306,14 +306,15 @@ const navBtnStyle = {
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workout Log</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
 
       {Object.keys(workouts).map((type, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
           <input
             type="number"
-            placeholder="Reps"
+            step={type === "Run" ? "0.01" : "1"}
+            placeholder={type === "Run" ? "Kilometers" : "Reps"}
             value={customWorkout[type] || ""}
             onChange={(e) =>
               setCustomWorkout({ ...customWorkout, [type]: e.target.value })
@@ -322,9 +323,16 @@ const navBtnStyle = {
           />
           <button
             onClick={() => {
-              const reps = parseInt(customWorkout[type]);
-              if (!isNaN(reps)) {
-                logWorkout(type, reps);
+              const input = parseFloat(customWorkout[type]);
+              if (!isNaN(input)) {
+                const cal = type === "Run"
+                  ? Math.round(input * 70)
+                  : Math.round(input * workouts[type]);
+                setManualBurn(prev => prev + cal);
+                setWorkoutLog(prev => ({
+                  ...prev,
+                  [type]: (prev[type] || 0) + input
+                }));
                 setCustomWorkout({ ...customWorkout, [type]: "" });
               }
             }}
@@ -346,12 +354,18 @@ const navBtnStyle = {
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, reps], i) => (
-              <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-                {type}: {reps} reps — {Math.round(reps * workouts[type])} cal{" "}
-                <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
-              </li>
-            ))}
+            {Object.entries(workoutLog).map(([type, value], i) => {
+              const unit = type === "Run" ? "km" : "reps";
+              const cal = type === "Run"
+                ? Math.round(value * 70)
+                : Math.round(value * workouts[type]);
+              return (
+                <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                  {type}: {value} {unit} — {cal} cal{" "}
+                  <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+                </li>
+              );
+            })}
           </ul>
 
           <div style={{
