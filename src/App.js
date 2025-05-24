@@ -191,15 +191,26 @@ const navBtnStyle = {
   );
 
   if (screen === "food") {
-    return (
-      <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif" }}>
-        <HomeButton />
-        <h2>Food Log</h2>
+  return (
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+      <HomeButton />
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🍽️ Food Log</h1>
+
+      <div style={{ marginBottom: "20px" }}>
         <select
           defaultValue=""
           onChange={(e) => {
             const selected = JSON.parse(e.target.value);
-            addFood(selected);
+            addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+            e.target.value = "";
+          }}
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "16px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff"
           }}
         >
           <option value="" disabled>Select Food</option>
@@ -209,66 +220,93 @@ const navBtnStyle = {
             </option>
           ))}
         </select>
-        <div>
-  <input
-  placeholder="Name"
-  value={customFood.name}
-  onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-  style={{ display: "block", marginBottom: "8px", padding: "8px", width: "100%" }}
-/>
-
-<input
-  placeholder="Calories"
-  type="number"
-  value={customFood.cal}
-  onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-  style={{ display: "block", marginBottom: "8px", padding: "8px", width: "100%" }}
-/>
-
-<input
-  placeholder="Protein"
-  type="number"
-  value={customFood.prot}
-  onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-  style={{ display: "block", marginBottom: "12px", padding: "8px", width: "100%" }}
-/>
-
-<button
-  onClick={() => {
-    const { name, cal, prot } = customFood;
-    const parsedCal = parseInt(cal);
-    const parsedProt = parseInt(prot);
-    if (name && parsedCal && parsedProt) {
-      setCalories(c => c + parsedCal);
-      setProtein(p => p + parsedProt);
-      setFoodLog(f => [...f, { name, cal: parsedCal, prot: parsedProt }]);
-      setCustomFood({ name: "", cal: "", prot: "" });
-    }
-  }}
-  style={{
-    padding: "10px 16px",
-    backgroundColor: "#0070f3",
-    color: "white",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "8px",
-    width: "100%",
-  }}
->
-  Add
-</button>
-        </div>
-        <ul>
-          {foodLog.map((f, i) => (
-            <li key={i}>
-              {f.name} - {f.cal} cal, {f.prot}g{" "}
-              <button onClick={() => deleteFood(i)}>❌</button>
-            </li>
-          ))}
-        </ul>
       </div>
-    );
-  }
+
+      <div style={{ marginBottom: "24px" }}>
+        <input
+          placeholder="Custom food name"
+          value={customFood.name}
+          onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+          style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <input
+          placeholder="Calories"
+          type="number"
+          value={customFood.cal}
+          onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+          style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <input
+          placeholder="Protein"
+          type="number"
+          value={customFood.prot}
+          onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+          style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => {
+            const { name, cal, prot } = customFood;
+            const parsedCal = parseInt(cal);
+            const parsedProt = parseInt(prot);
+            if (name && parsedCal && parsedProt) {
+              setCalories(c => c + parsedCal);
+              setProtein(p => p + parsedProt);
+              setFoodLog(f => [...f, {
+                name,
+                cal: parsedCal,
+                prot: parsedProt,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              }]);
+              setCustomFood({ name: "", cal: "", prot: "" });
+            }
+          }}
+          style={{
+            padding: "10px 16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            fontSize: "16px",
+            border: "none",
+            borderRadius: "8px",
+            width: "100%"
+          }}
+        >
+          Add Custom Food
+        </button>
+      </div>
+
+      <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
+      <ul style={{ paddingLeft: "16px" }}>
+        {foodLog.map((f, i) => (
+          <li key={i} style={{ fontSize: "16px", marginBottom: "6px", cursor: "pointer" }} onClick={() => addFood({
+            name: f.name,
+            cal: f.cal,
+            prot: f.prot,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          })}>
+            {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
+            {f.name} — {f.cal} cal, {f.prot}g{" "}
+            <button onClick={(e) => {
+              e.stopPropagation();
+              deleteFood(i);
+            }} style={{ marginLeft: "8px" }}>❌</button>
+          </li>
+        ))}
+      </ul>
+
+      <div style={{
+        marginTop: "24px",
+        backgroundColor: "#f1f1f1",
+        padding: "12px 16px",
+        borderRadius: "10px",
+        textAlign: "center",
+        fontSize: "18px",
+        fontWeight: "bold"
+      }}>
+        Total: {calories} cal / {protein}g protein
+      </div>
+    </div>
+  );
+}
 
   if (screen === "workouts") {
   return (
