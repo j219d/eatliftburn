@@ -336,19 +336,25 @@ const navBtnStyle = {
           />
           <button
             onClick={() => {
-              const input = parseFloat(customWorkout[type]);
-              if (!isNaN(input)) {
-                const cal = type === "Run"
-                  ? Math.round(input * 70)
-                  : Math.round(input * workouts[type]);
-                setManualBurn(prev => prev + cal);
-                setWorkoutLog(prev => ({
-                  ...prev,
-                  [type]: (prev[type] || 0) + input
-                }));
-                setCustomWorkout({ ...customWorkout, [type]: "" });
-              }
-            }}
+  const input = parseFloat(customWorkout[type]);
+  if (!isNaN(input)) {
+    let cal = 0;
+    if (type === "Run") {
+      cal = Math.round(input * 70); // burn
+      const runSteps = Math.round(input * 800); // steps from run
+      setSteps(prev => prev + runSteps); // ✅ Push steps to home
+    } else {
+      cal = Math.round(input * workouts[type]);
+    }
+
+    setManualBurn(prev => prev + cal);
+    setWorkoutLog(prev => ({
+      ...prev,
+      [type]: (prev[type] || 0) + input
+    }));
+    setCustomWorkout({ ...customWorkout, [type]: "" });
+  }
+}}
             style={{
               padding: "8px 12px",
               fontSize: "16px",
