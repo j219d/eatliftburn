@@ -647,7 +647,7 @@ const navBtnStyle = {
   maxWidth: "100%",
   display: "block",
   margin: "0 auto",
-  marginTop: "8px"
+  marginTop: "4px"
 }}
     >
       Reset
