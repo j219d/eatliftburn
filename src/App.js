@@ -67,7 +67,8 @@ function App() {
 
   // 🍎 Fruits
   { name: "Apple", cal: 95, prot: 1 },
-  { name: "Banana", cal: 105, prot: 1 },
+  { name: "Banana", cal: 105, prot: 1 }
+  { name: "Watermelon triangle", cal: 50, prot: 1 },
 
   // 🥗 Veggies & Salads
   { name: "Tomato", cal: 20, prot: 1 },
