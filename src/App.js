@@ -570,7 +570,9 @@ const navBtnStyle = {
     {estimatedDeficit}
   </span>
   <span> / {deficitGoal}</span>
-  {estimatedDeficit >= deficitGoal && " ✅"}
+  {estimatedDeficit >= deficitGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
@@ -579,7 +581,9 @@ const navBtnStyle = {
     {protein}
   </span>
   <span> / {proteinGoal}</span>
-  {protein >= proteinGoal && " ✅"}
+  {protein >= proteinGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px" }}>
@@ -588,7 +592,9 @@ const navBtnStyle = {
     {steps}
   </span>
   <span> / {stepGoal}</span>
-  {steps >= stepGoal && " ✅"}
+  {steps >= stepGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
     </div>
