@@ -94,8 +94,7 @@ function App() {
   { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
   ];
 
-  const totalBurned = manualBurn;
-  const estimatedDeficit = 1740 + totalBurned - calories;
+  const estimatedDeficit = 1740 + manualBurn - calories;
 
   useEffect(() => {
     localStorage.setItem("calories", calories);
