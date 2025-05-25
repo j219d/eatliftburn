@@ -247,21 +247,23 @@ const navBtnStyle = {
         />
         <button
           onClick={() => {
-            const { name, cal, prot } = customFood;
-            const parsedCal = parseInt(cal);
-            const parsedProt = parseInt(prot);
-            if (name && parsedCal && parsedProt) {
-              setCalories(c => c + parsedCal);
-              setProtein(p => p + parsedProt);
-              setFoodLog(f => [...f, {
-                name,
-                cal: parsedCal,
-                prot: parsedProt,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              }]);
-              setCustomFood({ name: "", cal: "", prot: "" });
-            }
-          }}
+  const { name, cal, prot } = customFood;
+  const parsedCal = parseInt(cal);
+  const parsedProt = parseInt(prot);
+
+  if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
+    setCalories(c => c + parsedCal);
+    setProtein(p => p + parsedProt);
+    setFoodLog(f => [...f, {
+      name,
+      cal: parsedCal,
+      prot: parsedProt,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }]);
+    setCustomFood({ name: "", cal: "", prot: "" });
+  }
+}}
+
           style={{
             padding: "10px 16px",
             backgroundColor: "#0070f3",
