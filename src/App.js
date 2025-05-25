@@ -517,6 +517,29 @@ const navBtnStyle = {
   );
 }
 
+<style>
+{`
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) translate(-50%, -50%);
+    }
+    25% {
+      opacity: 1;
+      transform: scale(1.2) translate(-50%, -50%);
+    }
+    75% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5) translate(-50%, -50%);
+    }
+  }
+`}
+</style>
+
 {emojiToShow && (
   <div style={{
     position: "fixed",
