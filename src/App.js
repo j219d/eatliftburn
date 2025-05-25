@@ -626,7 +626,7 @@ const navBtnStyle = {
     </div>
 
     {/* Navigation Buttons */}
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>
   🍽️ Food Log
 </button>
