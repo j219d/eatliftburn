@@ -637,17 +637,18 @@ const navBtnStyle = {
     <button
       onClick={resetDay}
       style={{
-        backgroundColor: "#d32f2f",
-        color: "white",
-        padding: "10px 24px",
-        fontSize: "16px",
-        border: "none",
-        borderRadius: "8px",
-        width: "160px",
-        maxWidth: "100%",
-        display: "block",
-        margin: "0 auto"
-      }}
+  backgroundColor: "#d32f2f",
+  color: "white",
+  padding: "8px 20px",
+  fontSize: "15px",
+  border: "none",
+  borderRadius: "8px",
+  width: "140px",
+  maxWidth: "100%",
+  display: "block",
+  margin: "0 auto",
+  marginTop: "8px"
+}}
     >
       Reset
     </button>
