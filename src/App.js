@@ -565,14 +565,26 @@ const navBtnStyle = {
         <strong>Calories Burned:</strong> {manualBurn}
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-        <strong>Deficit:</strong> {estimatedDeficit} / {deficitGoal}
-      </div>
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-        <strong>Protein:</strong> {protein} / {proteinGoal}
-      </div>
-      <div style={{ fontSize: "16px" }}>
-        <strong>Steps:</strong> {steps} / {stepGoal}
-      </div>
+  <strong>Deficit:</strong>{" "}
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
+    {estimatedDeficit} / {deficitGoal}
+  </span>
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Protein:</strong>{" "}
+  <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
+    {protein} / {proteinGoal}
+  </span>
+</div>
+
+<div style={{ fontSize: "16px" }}>
+  <strong>Steps:</strong>{" "}
+  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
+    {steps} / {stepGoal}
+  </span>
+</div>
+
     </div>
 
     {/* Checklist Box */}
