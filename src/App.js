@@ -567,22 +567,28 @@ const navBtnStyle = {
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Deficit:</strong>{" "}
   <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
-    {estimatedDeficit} / {deficitGoal}
+    {estimatedDeficit}
   </span>
+  <span> / {deficitGoal}</span>
+  {estimatedDeficit >= deficitGoal && " ✅"}
 </div>
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
   <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
-    {protein} / {proteinGoal}
+    {protein}
   </span>
+  <span> / {proteinGoal}</span>
+  {protein >= proteinGoal && " ✅"}
 </div>
 
 <div style={{ fontSize: "16px" }}>
   <strong>Steps:</strong>{" "}
   <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
-    {steps} / {stepGoal}
+    {steps}
   </span>
+  <span> / {stepGoal}</span>
+  {steps >= stepGoal && " ✅"}
 </div>
 
     </div>
@@ -633,7 +639,7 @@ const navBtnStyle = {
       <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
       <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
     </div>
-
+    
     <button
       onClick={resetDay}
       style={{
@@ -647,7 +653,7 @@ const navBtnStyle = {
   maxWidth: "100%",
   display: "block",
   margin: "0 auto",
-  marginTop: "4px"
+  marginTop: "3px"
 }}
     >
       Reset
