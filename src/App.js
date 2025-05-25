@@ -136,18 +136,31 @@ function App() {
   };
 
   const deleteWorkout = (type) => {
-    const reps = workoutLog[type];
-    const burn = Math.round(workouts[type] * reps);
-    setManualBurn(prev => prev - burn);
-    if (type === "Steps") {
-      setSteps(prev => prev - reps);
-    }
-    setWorkoutLog(prev => {
-      const updated = { ...prev };
-      delete updated[type];
-      return updated;
-    });
-  };
+  const reps = workoutLog[type];
+  const burn = type === "Run"
+    ? Math.round(reps * 70)
+    : type === "Steps"
+    ? Math.round(reps * 0.04)
+    : Math.round(reps * workouts[type]);
+
+  setManualBurn(prev => prev - burn);
+
+  // ✅ Fix step count for Run
+  if (type === "Run") {
+    const runSteps = Math.round(reps * 800);
+    setSteps(prev => prev - runSteps);
+  }
+
+  if (type === "Steps") {
+    setSteps(prev => prev - reps);
+  }
+
+  setWorkoutLog(prev => {
+    const updated = { ...prev };
+    delete updated[type];
+    return updated;
+  });
+};
 
   const addFood = (food) => {
     setCalories(prev => prev + food.cal);
