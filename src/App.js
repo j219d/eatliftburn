@@ -33,6 +33,7 @@ function App() {
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
+  const [emojiToShow, setEmojiToShow] = useState(null);
 
   const workouts = {
   "Push-ups": 0.5,
@@ -516,6 +517,21 @@ const navBtnStyle = {
   );
 }
 
+{emojiToShow && (
+  <div style={{
+    position: "fixed",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "64px",
+    animation: "fadeInOut 2s ease-in-out",
+    pointerEvents: "none",
+    zIndex: 9999
+  }}>
+    {emojiToShow}
+  </div>
+)}
+
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
@@ -573,22 +589,54 @@ const navBtnStyle = {
   ☑️ Checklist
 </h3>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {["sunlight", "supplements"].map((key) => (
-          <label key={key} style={{ fontSize: "16px" }}>
-            <input
-              type="checkbox"
-              checked={checklist[key]}
-              onChange={() =>
-                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-              }
-              style={{ marginRight: "10px" }}
-            />
-            {key.charAt(0).toUpperCase() + key.slice(1)}
-          </label>
-        ))}
-      </div>
-    </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+  {["sunlight", "supplements"].map((key) => (
+    <label
+      key={key}
+      style={{
+        fontSize: "16px",
+        lineHeight: "1.2",
+        marginBottom: "4px",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={checklist[key]}
+        onChange={() => {
+          if (!checklist[key]) {
+            if (key === "sunlight") {
+              setEmojiToShow("☀️");
+            } else if (key === "supplements") {
+              setEmojiToShow("💊");
+            }
+            setTimeout(() => setEmojiToShow(null), 2000);
+          }
+
+          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }));
+        }}
+        style={{ marginRight: "10px" }}
+      />
+      {key.charAt(0).toUpperCase() + key.slice(1)}
+    </label>
+  ))}
+</div>
+
+{emojiToShow && (
+  <div style={{
+    position: "fixed",
+    top: "40%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "64px",
+    opacity: 1,
+    animation: "popFade 2s ease-out forwards",
+    zIndex: 9999
+  }}>
+    {emojiToShow}
+  </div>
+)}
 
     {/* Navigation Buttons */}
     <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
