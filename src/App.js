@@ -593,7 +593,7 @@ const navBtnStyle = {
       borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-      marginBottom: "24px"
+      marginBottom: "12px"
     }}>
       <h3 style={{
   fontSize: "18px",
