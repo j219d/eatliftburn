@@ -606,18 +606,22 @@ const navBtnStyle = {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {["sunlight", "supplements"].map((key) => (
-          <label key={key} style={{ fontSize: "16px" }}>
-            <input
-              type="checkbox"
-              checked={checklist[key]}
-              onChange={() =>
-                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-              }
-              style={{ marginRight: "10px" }}
-            />
-            {key.charAt(0).toUpperCase() + key.slice(1)}
-          </label>
-        ))}
+  <label key={key} style={{ fontSize: "16px" }}>
+    <input
+      type="checkbox"
+      checked={checklist[key]}
+      onChange={() =>
+        setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+      }
+      style={{ marginRight: "10px" }}
+    />
+    {key === "sunlight"
+      ? "Sunlight 🌞"
+      : key === "supplements"
+      ? "Supplements 💊"
+      : key}
+  </label>
+))}
       </div>
     </div>
 
