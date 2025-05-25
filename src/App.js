@@ -537,8 +537,8 @@ const navBtnStyle = {
 
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-    <div style={{ display: "flex", justifyContent: "center", marginBottom: "24px" }}>
-  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "50%", height: "auto" }} />
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "45%", height: "auto" }} />
 </div>
 
     {/* Overview Box */}
@@ -550,10 +550,10 @@ const navBtnStyle = {
       marginBottom: "20px"
     }}>
       <h2 style={{
-  fontSize: "18px",
+  fontSize: "17px",
   fontWeight: "600",
   marginTop: "0px",
-  marginBottom: "12px"
+  marginBottom: "8px"
 }}>
   📊 Today
 </h2>
@@ -626,7 +626,7 @@ const navBtnStyle = {
     </div>
 
     {/* Navigation Buttons */}
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "24px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "12px" }}>
       <button style={navBtnStyle} onClick={() => setScreen("food")}>
   🍽️ Food Log
 </button>
