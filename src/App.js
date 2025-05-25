@@ -308,6 +308,7 @@ const navBtnStyle = {
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
 
+      {/* Strength + Run entries */}
       {Object.keys(workouts).map((type, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
@@ -319,7 +320,7 @@ const navBtnStyle = {
             onChange={(e) =>
               setCustomWorkout({ ...customWorkout, [type]: e.target.value })
             }
-            style={{ width: "80px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <button
             onClick={() => {
@@ -350,14 +351,56 @@ const navBtnStyle = {
         </div>
       ))}
 
+      {/* Steps section - separate from workouts */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
+        <input
+          type="number"
+          placeholder="Steps"
+          value={customWorkout["Steps"] || ""}
+          onChange={(e) =>
+            setCustomWorkout({ ...customWorkout, Steps: e.target.value })
+          }
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => {
+            const steps = parseInt(customWorkout["Steps"]);
+            if (!isNaN(steps)) {
+              const stepCalories = Math.round(steps * 0.04); // flat walking only
+              setSteps(prev => prev + steps); // steps tracker
+              setManualBurn(prev => prev + stepCalories);
+              setWorkoutLog(prev => ({
+                ...prev,
+                Steps: (prev["Steps"] || 0) + steps
+              }));
+              setCustomWorkout({ ...customWorkout, Steps: "" });
+            }
+          }}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Workout Summary */}
       {Object.keys(workoutLog).length > 0 && (
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
             {Object.entries(workoutLog).map(([type, value], i) => {
-              const unit = type === "Run" ? "km" : "reps";
+              const unit = type === "Run" ? "km" : type === "Steps" ? "steps" : "reps";
               const cal = type === "Run"
                 ? Math.round(value * 70)
+                : type === "Steps"
+                ? Math.round(value * 0.04)
                 : Math.round(value * workouts[type]);
               return (
                 <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
