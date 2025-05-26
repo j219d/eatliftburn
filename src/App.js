@@ -282,14 +282,14 @@ const navBtnStyle = {
         />
         <input
           placeholder="Calories"
-          type="number"
+          type=
           value={customFood.cal}
           onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
           style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <input
           placeholder="Protein"
-          type="number"
+          type=
           value={customFood.prot}
           onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
           style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
@@ -451,32 +451,34 @@ const navBtnStyle = {
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
   <input
-    type="number"
-    placeholder="Calories"
-    value={customWorkout.treadCal || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-    style={{
-      width: "100px",
-      padding: "8px",
-      fontSize: "16px",
-      borderRadius: "8px",
-      border: "1px solid #ccc"
-    }}
-  />
-  <input
-    type="number"
-    placeholder="KM"
-    step="0.01"
-    value={customWorkout.treadKm || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-    style={{
-      width: "80px",
-      padding: "8px",
-      fontSize: "16px",
-      borderRadius: "8px",
-      border: "1px solid #ccc"
-    }}
-  />
+  type="number"
+  placeholder="Calories"
+  value={customWorkout.treadCal || ""}
+  onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+  style={{
+    width: "80px",
+    padding: "8px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    border: "1px solid #ccc"
+  }}
+/>
+
+<input
+  type="number"
+  placeholder="KM"
+  step="0.01"
+  value={customWorkout.treadKm || ""}
+  onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+  style={{
+    width: "60px",
+    padding: "8px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    border: "1px solid #ccc"
+  }}
+/>
+
   <button
     onClick={() => {
       const cal = parseInt(customWorkout.treadCal);
