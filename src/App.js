@@ -23,9 +23,10 @@ function App() {
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
-    supplements: false,
-    sunlight: false
-  });
+  supplements: false,
+  sunlight: false,
+  concentrace: false
+});
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
@@ -629,7 +630,7 @@ const navBtnStyle = {
 </h3>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {["sunlight", "supplements"].map((key) => (
+        {["sunlight", "supplements", "concentrace"].map((key) => (
   <label key={key} style={{ fontSize: "16px" }}>
     <input
       type="checkbox"
@@ -643,6 +644,8 @@ const navBtnStyle = {
       ? "Sunlight 🌞"
       : key === "supplements"
       ? "Supplements 💊"
+      : key === "concentrace"
+      ? "Concentrace 💧"
       : key}
   </label>
 ))}
