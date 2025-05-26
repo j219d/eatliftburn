@@ -18,7 +18,6 @@ function App() {
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [manualBurn, setManualBurn] = useState(() => parseInt(localStorage.getItem("manualBurn")) || 0);
   const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
@@ -122,7 +121,6 @@ const estimatedDeficit = 1620 + totalBurn - calories;
     localStorage.setItem("calories", calories);
     localStorage.setItem("protein", protein);
     localStorage.setItem("steps", steps);
-    localStorage.setItem("manualBurn", manualBurn);
     localStorage.setItem("deficitGoal", deficitGoal);
     localStorage.setItem("proteinGoal", proteinGoal);
     localStorage.setItem("checklist", JSON.stringify(checklist));
@@ -147,7 +145,6 @@ const estimatedDeficit = 1620 + totalBurn - calories;
   localStorage.removeItem("calories");
   localStorage.removeItem("protein");
   localStorage.removeItem("steps");
-  localStorage.removeItem("manualBurn");
   localStorage.removeItem("foodLog");
   localStorage.removeItem("workoutLog");
   localStorage.removeItem("checklist");
@@ -155,21 +152,20 @@ const estimatedDeficit = 1620 + totalBurn - calories;
   // ❗️Do NOT remove "weightLog" – it stays
 };
 
-  const logWorkout = (type, reps) => {
-    const burn = Math.round(workouts[type] * reps);
-    setWorkoutLog(prev => {
-      const updated = { ...prev };
-      updated[type] = (updated[type] || 0) + reps;
-      return updated;
+const logWorkout = (type, reps) => {
+  const burn = Math.round(workouts[type] * reps);
+  setWorkoutLog(prev => {
+    const updated = { ...prev };
+    updated[type] = (updated[type] || 0) + reps;
+    return updated;
+  });
+  if (type === "Steps") {
+    setSteps(prev => {
+      const totalSteps = prev + reps;
+      return totalSteps;
     });
-    setManualBurn(prev => prev + burn);
-    if (type === "Steps") {
-      setSteps(prev => {
-        const totalSteps = prev + reps;
-        return totalSteps;
-      });
-    }
-  };
+  }
+};
 
   const deleteWorkout = (type) => {
   const reps = workoutLog[type];
@@ -396,7 +392,6 @@ const navBtnStyle = {
       cal = Math.round(input * workouts[type]);
     }
 
-    setManualBurn(prev => prev + cal);
     setWorkoutLog(prev => ({
       ...prev,
       [type]: (prev[type] || 0) + input
