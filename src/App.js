@@ -281,19 +281,20 @@ const navBtnStyle = {
           style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <input
-          placeholder="Calories"
-          type=
-          value={customFood.cal}
-          onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-          style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <input
-          placeholder="Protein"
-          type=
-          value={customFood.prot}
-          onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-          style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
+  placeholder="Calories"
+  type="number"
+  value={customFood.cal}
+  onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+  style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
+
+<input
+  placeholder="Protein"
+  type="number"
+  value={customFood.prot}
+  onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+  style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
         <button
           onClick={() => {
   const { name, cal, prot } = customFood;
