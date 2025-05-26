@@ -475,7 +475,7 @@ const navBtnStyle = {
     value={customWorkout.treadKm || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
     style={{
-      width: "39.25px", // 🔻 halved
+      width: "39.2px", // 🔻 halved
       height: "40px",
       padding: "6px",
       fontSize: "14px",
