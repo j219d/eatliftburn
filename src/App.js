@@ -85,7 +85,8 @@ function App() {
   { name: "Carrot juice", cal: 94, prot: 2 },
 
   // 🥑 Fats & Seeds
-  { name: "Avocado", cal: 120, prot: 1.5 },
+  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
+{ name: "Avocado (1/2)", cal: 120, prot: 1.5 },
   { name: "Butter (1 tsp)", cal: 35, prot: 0 },
   { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
   { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
