@@ -84,10 +84,13 @@ function App() {
   { name: "Cucumber", cal: 16, prot: 1 },
   { name: "Carrot", cal: 25, prot: 0.5 },
   { name: "Green onions", cal: 5, prot: 0 },
+    { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
+{ name: "Sweet potato (1)", cal: 112, prot: 2 },
   { name: "Spinach (handful)", cal: 15, prot: 1.5 },
   { name: "Israeli salad (small)", cal: 40, prot: 1 },
   { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
   { name: "Israeli salad (large)", cal: 100, prot: 2 },
+    
 
   // 🥤 Drinks
   { name: "Carrot juice", cal: 94, prot: 2 },
