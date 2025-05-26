@@ -602,7 +602,16 @@ return (
             fontSize: "18px",
             fontWeight: "bold"
           }}>
-            Total Burn: {manualBurn} cal
+            Total Burn: {
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+    if (type === "Run") return sum + Math.round(value * 70);
+    if (type === "Steps") return sum + Math.round(value * 0.04);
+    if (type === "Treadmill") return sum + value;
+    if (type === "Swim") return sum + Math.round(value * 7);
+    if (workouts[type]) return sum + Math.round(value * workouts[type]);
+    return sum + value;
+  }, 0)
+} cal
           </div>
         </>
       )}
