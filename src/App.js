@@ -513,6 +513,52 @@ const navBtnStyle = {
   </button>
 </div>
 
+{/* Swim Entry (50m laps, 7 cal/lap) */}
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+
+  <input
+    type="number"
+    placeholder="Laps"
+    value={customWorkout["Swim"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+    style={{
+      width: "60px",
+      height: "40px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      textAlign: "center"
+    }}
+  />
+
+  <button
+    onClick={() => {
+      const laps = parseInt(customWorkout["Swim"]);
+      if (!isNaN(laps)) {
+        const cal = Math.round(laps * 7); // 7 cal per 50m lap
+        setManualBurn(prev => prev + cal);
+        setWorkoutLog(prev => ({
+          ...prev,
+          Swim: (prev.Swim || 0) + laps
+        }));
+        setCustomWorkout({ ...customWorkout, Swim: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
+
       {/* Workout Summary */}
       {Object.keys(workoutLog).length > 0 && (
         <>
@@ -529,8 +575,12 @@ if (type === "Run") {
   cal = Math.round(value * 0.04);
   display = `${value} steps — ${cal} cal`;
 } else if (type === "Treadmill") {
-  cal = value; // already stored as calories
+  cal = value;
   display = `${cal} cal`;
+} else if (type === "Swim") {
+  const laps = value;
+  cal = Math.round(laps * 7);
+  display = `${laps} laps — ${cal} cal`;
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
