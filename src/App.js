@@ -60,6 +60,9 @@ function App() {
   { name: "Egg white", cal: 15, prot: 3 },
   { name: "Yogurt 0%", cal: 117, prot: 20 },
   { name: "Protein ice cream", cal: 400, prot: 52 },
+{ name: "Protein scoop (1)", cal: 75, prot: 15 },
+{ name: "Protein scoop (2)", cal: 150, prot: 30 },
+
 
   // 🍫 Snacks / Packaged protein
   { name: "Promix bar", cal: 150, prot: 15 },
