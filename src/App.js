@@ -127,7 +127,7 @@ const estimatedDeficit = 1620 + totalBurn - calories;
     localStorage.setItem("foodLog", JSON.stringify(foodLog));
     localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
     localStorage.setItem("weightLog", JSON.stringify(weightLog));
-  }, [calories, protein, steps, manualBurn, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
+  }, [calories, protein, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
@@ -136,7 +136,6 @@ const estimatedDeficit = 1620 + totalBurn - calories;
   setCalories(0);
   setProtein(0);
   setSteps(0);
-  setManualBurn(0);
   setFoodLog([]);
   setWorkoutLog({});
   setChecklist({ supplements: false, sunlight: false, concentrace: false });
@@ -174,8 +173,6 @@ const logWorkout = (type, reps) => {
     : type === "Steps"
     ? Math.round(reps * 0.04)
     : Math.round(reps * workouts[type]);
-
-  setManualBurn(prev => prev - burn);
 
   // ✅ Fix step count for Run
   if (type === "Run") {
@@ -431,7 +428,6 @@ const navBtnStyle = {
             if (!isNaN(steps)) {
               const stepCalories = Math.round(steps * 0.04); // flat walking only
               setSteps(prev => prev + steps); // steps tracker
-              setManualBurn(prev => prev + stepCalories);
               setWorkoutLog(prev => ({
                 ...prev,
                 Steps: (prev["Steps"] || 0) + steps
@@ -493,7 +489,6 @@ const navBtnStyle = {
       const km = parseFloat(customWorkout.treadKm);
       if (!isNaN(cal) && !isNaN(km)) {
         const estimatedSteps = Math.round(km * 1250);
-        setManualBurn(prev => prev + cal);
         setSteps(prev => prev + estimatedSteps);
         setWorkoutLog(prev => ({
           ...prev,
@@ -538,7 +533,6 @@ const navBtnStyle = {
       const laps = parseInt(customWorkout["Swim"]);
       if (!isNaN(laps)) {
         const cal = Math.round(laps * 7); // 7 cal per 50m lap
-        setManualBurn(prev => prev + cal);
         setWorkoutLog(prev => ({
           ...prev,
           Swim: (prev.Swim || 0) + laps
