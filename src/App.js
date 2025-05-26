@@ -454,15 +454,16 @@ const navBtnStyle = {
   
   <input
     type="number"
-    placeholder="Calories"
+    placeholder="Cal"
     value={customWorkout.treadCal || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
     style={{
-      width: "80px", // ✅ slightly narrower
-      padding: "8px",
-      fontSize: "16px",
+      width: "40px", // 🔻 halved
+      padding: "6px",
+      fontSize: "14px",
       borderRadius: "8px",
-      border: "1px solid #ccc"
+      border: "1px solid #ccc",
+      textAlign: "center"
     }}
   />
   
@@ -473,11 +474,12 @@ const navBtnStyle = {
     value={customWorkout.treadKm || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
     style={{
-      width: "60px", // ✅ narrower to match layout
-      padding: "8px",
-      fontSize: "16px",
+      width: "30px", // 🔻 halved
+      padding: "6px",
+      fontSize: "14px",
       borderRadius: "8px",
-      border: "1px solid #ccc"
+      border: "1px solid #ccc",
+      textAlign: "center"
     }}
   />
   
