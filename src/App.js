@@ -450,35 +450,36 @@ const navBtnStyle = {
 {/* Treadmill Entry */}
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  
   <input
-  type="number"
-  placeholder="Calories"
-  value={customWorkout.treadCal || ""}
-  onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-  style={{
-    width: "80px",
-    padding: "8px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    border: "1px solid #ccc"
-  }}
-/>
-
-<input
-  type="number"
-  placeholder="KM"
-  step="0.01"
-  value={customWorkout.treadKm || ""}
-  onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-  style={{
-    width: "60px",
-    padding: "8px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    border: "1px solid #ccc"
-  }}
-/>
-
+    type="number"
+    placeholder="Calories"
+    value={customWorkout.treadCal || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+    style={{
+      width: "80px", // ✅ slightly narrower
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  
+  <input
+    type="number"
+    placeholder="KM"
+    step="0.01"
+    value={customWorkout.treadKm || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+    style={{
+      width: "60px", // ✅ narrower to match layout
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  
   <button
     onClick={() => {
       const cal = parseInt(customWorkout.treadCal);
