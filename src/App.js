@@ -107,7 +107,16 @@ function App() {
   { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
   ];
 
-  const estimatedDeficit = 1620 + manualBurn - calories;
+  const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
+  if (type === "Run") return sum + Math.round(value * 70);
+  if (type === "Steps") return sum + Math.round(value * 0.04);
+  if (type === "Treadmill") return sum + value;
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum + value;
+}, 0);
+
+const estimatedDeficit = 1620 + totalBurn - calories;
 
   useEffect(() => {
     localStorage.setItem("calories", calories);
