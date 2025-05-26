@@ -523,7 +523,7 @@ const navBtnStyle = {
     value={customWorkout["Swim"] || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
     style={{
-      width: "60px",
+      width: "100px",
       padding: "8px",
       fontSize: "16px",
       borderRadius: "8px",
