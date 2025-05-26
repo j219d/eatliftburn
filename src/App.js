@@ -447,57 +447,6 @@ const navBtnStyle = {
         </button>
       </div>
 
-      {/* Workout Summary */}
-      {Object.keys(workoutLog).length > 0 && (
-        <>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
-          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value], i) => {
-              let cal;
-let display;
-
-if (type === "Run") {
-  cal = Math.round(value * 70);
-  display = `${value} km — ${cal} cal`;
-} else if (type === "Steps") {
-  cal = Math.round(value * 0.04);
-  display = `${value} steps — ${cal} cal`;
-} else if (type === "Treadmill") {
-  cal = value; // already stored as calories
-  display = `${cal} cal`;
-} else if (workouts[type]) {
-  cal = Math.round(value * workouts[type]);
-  display = `${value} reps — ${cal} cal`;
-} else {
-  cal = value;
-  display = `${cal} cal`;
-}
-
-return (
-  <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-    {type}: {display}{" "}
-    <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
-  </li>
-);
-            })}
-          </ul>
-
-          <div style={{
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total Burn: {manualBurn} cal
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
 {/* Treadmill Entry */}
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
@@ -555,6 +504,57 @@ return (
     Add
   </button>
 </div>
+
+      {/* Workout Summary */}
+      {Object.keys(workoutLog).length > 0 && (
+        <>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
+          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+            {Object.entries(workoutLog).map(([type, value], i) => {
+              let cal;
+let display;
+
+if (type === "Run") {
+  cal = Math.round(value * 70);
+  display = `${value} km — ${cal} cal`;
+} else if (type === "Steps") {
+  cal = Math.round(value * 0.04);
+  display = `${value} steps — ${cal} cal`;
+} else if (type === "Treadmill") {
+  cal = value; // already stored as calories
+  display = `${cal} cal`;
+} else if (workouts[type]) {
+  cal = Math.round(value * workouts[type]);
+  display = `${value} reps — ${cal} cal`;
+} else {
+  cal = value;
+  display = `${cal} cal`;
+}
+
+return (
+  <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+    {type}: {display}{" "}
+    <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+  </li>
+);
+            })}
+          </ul>
+
+          <div style={{
+            backgroundColor: "#f1f1f1",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            textAlign: "center",
+            fontSize: "18px",
+            fontWeight: "bold"
+          }}>
+            Total Burn: {manualBurn} cal
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
