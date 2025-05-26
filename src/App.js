@@ -123,14 +123,28 @@ function App() {
   }, [calories, protein, steps, manualBurn, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
 
   const resetDay = () => {
-    setCalories(0);
-    setProtein(0);
-    setSteps(0);
-    setManualBurn(0);
-    setFoodLog([]);
-    setWorkoutLog({});
-    setChecklist({ supplements: false, sunlight: false });
-  };
+  const confirmReset = window.confirm("Are you sure?");
+  if (!confirmReset) return;
+
+  setCalories(0);
+  setProtein(0);
+  setSteps(0);
+  setManualBurn(0);
+  setFoodLog([]);
+  setWorkoutLog({});
+  setChecklist({ supplements: false, sunlight: false, concentrace: false });
+
+  // Clear localStorage for daily data
+  localStorage.removeItem("calories");
+  localStorage.removeItem("protein");
+  localStorage.removeItem("steps");
+  localStorage.removeItem("manualBurn");
+  localStorage.removeItem("foodLog");
+  localStorage.removeItem("workoutLog");
+  localStorage.removeItem("checklist");
+
+  // ❗️Do NOT remove "weightLog" – it stays
+};
 
   const logWorkout = (type, reps) => {
     const burn = Math.round(workouts[type] * reps);
