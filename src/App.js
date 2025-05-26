@@ -484,6 +484,64 @@ const navBtnStyle = {
   );
 }
 
+{/* Treadmill Entry */}
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  <input
+    type="number"
+    placeholder="Calories"
+    value={customWorkout.treadCal || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+    style={{
+      width: "100px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    type="number"
+    placeholder="KM"
+    step="0.01"
+    value={customWorkout.treadKm || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+    style={{
+      width: "80px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <button
+    onClick={() => {
+      const cal = parseInt(customWorkout.treadCal);
+      const km = parseFloat(customWorkout.treadKm);
+      if (!isNaN(cal) && !isNaN(km)) {
+        const estimatedSteps = Math.round(km * 1250);
+        setManualBurn(prev => prev + cal);
+        setSteps(prev => prev + estimatedSteps);
+        setWorkoutLog(prev => ({
+          ...prev,
+          Treadmill: (prev.Treadmill || 0) + cal
+        }));
+        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
+
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
