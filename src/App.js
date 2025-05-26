@@ -464,7 +464,6 @@ const navBtnStyle = {
       fontSize: "14px",
       borderRadius: "8px",
       border: "1px solid #ccc",
-      textAlign: "center"
     }}
   />
   
@@ -481,7 +480,6 @@ const navBtnStyle = {
       fontSize: "14px",
       borderRadius: "8px",
       border: "1px solid #ccc",
-      textAlign: "center"
     }}
   />
   
@@ -528,7 +526,6 @@ const navBtnStyle = {
       fontSize: "16px",
       borderRadius: "8px",
       border: "1px solid #ccc",
-      textAlign: "center"
     }}
   />
 
