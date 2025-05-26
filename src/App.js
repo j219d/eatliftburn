@@ -62,6 +62,11 @@ function App() {
   { name: "Protein ice cream", cal: 400, prot: 52 },
 { name: "Protein scoop (1)", cal: 75, prot: 15 },
 { name: "Protein scoop (2)", cal: 150, prot: 30 },
+    { name: "Ground beef 90/10 (50g)", cal: 125, prot: 13 },
+{ name: "Ground beef 90/10 (100g)", cal: 250, prot: 26 },
+{ name: "Ground beef 90/10 (150g)", cal: 375, prot: 39 },
+{ name: "Ground beef 90/10 (200g)", cal: 500, prot: 52 },
+
 
 
   // 🍫 Snacks / Packaged protein
