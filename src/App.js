@@ -18,7 +18,7 @@ function App() {
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
+  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 500);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
@@ -45,10 +45,15 @@ function App() {
   "Run": "run" // special handling
 };
 
-  const foodOptions = [
-  // 🥩 Mains (proteins, eggs, dairy)
-  { name: "2 eggs + butter", cal: 175, prot: 12 },
-  { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
+  
+const foodOptions = [
+  { name: "Apple", cal: 95, prot: 1 },
+  { name: "Avocado (1/2)", cal: 120, prot: 1.5 },
+  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
+  { name: "Banana", cal: 105, prot: 1 },
+  { name: "Butter (1 tsp)", cal: 35, prot: 0 },
+  { name: "Carrot", cal: 25, prot: 0.5 },
+  { name: "Carrot juice", cal: 94, prot: 2 },
   { name: "Chicken breast (50g)", cal: 82, prot: 15 },
   { name: "Chicken breast (100g)", cal: 165, prot: 31 },
   { name: "Chicken breast (150g)", cal: 248, prot: 46 },
@@ -56,55 +61,38 @@ function App() {
   { name: "Cottage cheese (47g)", cal: 48, prot: 5.5 },
   { name: "Cottage cheese (95g)", cal: 95, prot: 11 },
   { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5 },
+  { name: "Cucumber", cal: 16, prot: 1 },
   { name: "Egg", cal: 70, prot: 6 },
   { name: "Egg white", cal: 15, prot: 3 },
-  { name: "Yogurt 0%", cal: 117, prot: 20 },
-  { name: "Protein ice cream", cal: 400, prot: 52 },
-{ name: "Protein scoop (1)", cal: 75, prot: 15 },
-{ name: "Protein scoop (2)", cal: 150, prot: 30 },
-    { name: "Ground beef 90/10 (50g)", cal: 125, prot: 13 },
-{ name: "Ground beef 90/10 (100g)", cal: 250, prot: 26 },
-{ name: "Ground beef 90/10 (150g)", cal: 375, prot: 39 },
-{ name: "Ground beef 90/10 (200g)", cal: 500, prot: 52 },
-
-
-
-  // 🍫 Snacks / Packaged protein
-  { name: "Promix bar", cal: 150, prot: 15 },
-  { name: "Quest bar", cal: 190, prot: 21 },
-  { name: "Quest chips", cal: 140, prot: 20 },
-
-  // 🍎 Fruits
-  { name: "Apple", cal: 95, prot: 1 },
-  { name: "Banana", cal: 105, prot: 1 },
-  { name: "Watermelon triangle", cal: 50, prot: 1 },
-
-  // 🥗 Veggies & Salads
-  { name: "Tomato", cal: 20, prot: 1 },
-  { name: "Cucumber", cal: 16, prot: 1 },
-  { name: "Carrot", cal: 25, prot: 0.5 },
-  { name: "Green onions", cal: 5, prot: 0 },
-    { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
-{ name: "Sweet potato (1)", cal: 112, prot: 2 },
-  { name: "Spinach (handful)", cal: 15, prot: 1.5 },
-  { name: "Israeli salad (small)", cal: 40, prot: 1 },
-  { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
-  { name: "Israeli salad (large)", cal: 100, prot: 2 },
-    
-
-  // 🥤 Drinks
-  { name: "Carrot juice", cal: 94, prot: 2 },
-
-  // 🥑 Fats & Seeds
-  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
-{ name: "Avocado (1/2)", cal: 120, prot: 1.5 },
-  { name: "Butter (1 tsp)", cal: 35, prot: 0 },
+  { name: "Eggs (2) + butter", cal: 175, prot: 12 },
+  { name: "Eggs (2), Egg white (1) + butter", cal: 190, prot: 15 },
   { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
-  { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
+  { name: "Green onions", cal: 5, prot: 0 },
+  { name: "Ground beef 90/10 (50g)", cal: 73, prot: 9.3 },
+  { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6 },
+  { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9 },
+  { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2 },
+  { name: "Israeli salad (large)", cal: 100, prot: 2 },
+  { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
+  { name: "Israeli salad (small)", cal: 40, prot: 1 },
   { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
+  { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
+  { name: "Promix protein bar", cal: 150, prot: 15 },
+  { name: "Protein ice cream", cal: 400, prot: 52 },
+  { name: "Protein scoop (1)", cal: 75, prot: 15 },
+  { name: "Protein scoop (2)", cal: 150, prot: 30 },
   { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
-  { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
-  ];
+  { name: "Quest chips", cal: 140, prot: 20 },
+  { name: "Quest protein bar", cal: 190, prot: 21 },
+  { name: "Spinach (handful)", cal: 15, prot: 1.5 },
+  { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
+  { name: "Sweet potato (1)", cal: 112, prot: 2 },
+  { name: "Tomato", cal: 20, prot: 1 },
+  { name: "Walnut (1 whole)", cal: 26, prot: 0.6 },
+  { name: "Watermelon triangle", cal: 50, prot: 1 },
+  { name: "Yogurt 0%", cal: 117, prot: 20 }
+];
+
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
   if (type === "Run") return sum + Math.round(value * 70);
