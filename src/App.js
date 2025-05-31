@@ -42,9 +42,14 @@ function App() {
   "Bench Press": 0.5,
   "Triceps": 0.5,
   "Leg Press": 0.5,
-  "Run": "run" // special handling
+  "Romanian Deadlifts": 0.5,
+  "Glute Kickbacks": 0.4,
+  "Glute Bridge": 0.4,
+  "Lunges": 0.5,
+  "Plank": "plank", // handled as seconds
+  "Row Machine": "row", // handled as minutes
+  "Run": "run"
 };
-
   
 const foodOptions = [
   { name: "Apple", cal: 95, prot: 1 },
@@ -140,19 +145,31 @@ const estimatedDeficit = 1620 + totalBurn - calories;
 };
 
 const logWorkout = (type, reps) => {
-  const burn = Math.round(workouts[type] * reps);
+  let burn;
+  if (type === "Plank") {
+    burn = Math.round(reps * 0.04); // ~2.4 cal/min
+  } else if (type === "Row Machine") {
+    burn = Math.round(reps * 6); // 6 cal per min
+  } else {
+    burn = Math.round(workouts[type] * reps);
+  }
+
   setWorkoutLog(prev => {
     const updated = { ...prev };
     updated[type] = (updated[type] || 0) + reps;
     return updated;
   });
+
   if (type === "Steps") {
-    setSteps(prev => {
-      const totalSteps = prev + reps;
-      return totalSteps;
-    });
+    setSteps(prev => prev + reps);
+  }
+
+  if (type === "Run") {
+    const runSteps = Math.round(reps * 800);
+    setSteps(prev => prev + runSteps);
   }
 };
+
 
   const deleteWorkout = (type) => {
   const reps = workoutLog[type];
@@ -563,6 +580,12 @@ if (type === "Run") {
   const laps = value;
   cal = Math.round(laps * 7);
   display = `${laps} laps — ${cal} cal`;
+} else if (type === "Plank") {
+  cal = Math.round(value * 0.04);
+  display = `${value} sec — ${cal} cal`;
+} else if (type === "Row Machine") {
+  cal = Math.round(value * 6);
+  display = `${value} min — ${cal} cal`;
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
