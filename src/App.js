@@ -43,7 +43,7 @@ function App() {
   "Triceps": 0.5,
   "Leg Press": 0.5,
   "Lunges": 0.5,
-  "Plank": "plank", // handled as seconds
+  "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
   "Run": "run",
   "Low Pull": 4,
   "Glute Abductor": 3,
