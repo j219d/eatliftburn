@@ -45,9 +45,6 @@ function App() {
   "Lunges": 0.5,
   "Plank": "plank", // handled as seconds
   "Run": "run",
-  "Steps": 0.04,
-  "Treadmill": "treadmill", // 2-box handled
-  "Swim": "swim",
   "Low Pull": 4,
   "Glute Abductor": 3,
   "Core Pull": 4,
