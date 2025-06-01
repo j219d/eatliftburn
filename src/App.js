@@ -551,28 +551,49 @@ if (type === "Run") {
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
-} else {
-  cal = value;
-  display = `${cal} cal`;
-}
-
 return (
-  <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-    {type}: {display}{" "}
-    <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
-  </li>)}
-          </ul>
+  <ul>
+    {Object.entries(workoutLog).map(([type, val], i) => {
+      const rate = burnRates[type];
+      let cal = 0;
+      let display = "";
+      const value = parseFloat(val);
+      if (!isNaN(value)) {
+        if (typeof rate === "function") {
+          cal = rate(value);
+        } else {
+          cal = value * rate;
+        }
+        display = `${cal} cal`;
+      }
+      return (
+        <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+          {type}: {display}{" "}
+          <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+        </li>
+      );
+    })}
+  </ul>
 
-          <div style={{
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total Burn: {
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+  <div style={{
+    backgroundColor: "#f1f1f1",
+    padding: "12px 16px",
+    borderRadius: "10px",
+    textAlign: "center",
+    fontSize: "18px",
+    fontWeight: "bold"
+  }}>
+    Total Burn: {
+      Object.entries(workoutLog).reduce((sum, [type, value]) => {
+        const rate = burnRates[type];
+        if (!isNaN(value)) {
+          const v = parseFloat(value);
+          return sum + (typeof rate === "function" ? rate(v) : v * rate);
+        }
+        return sum;
+      }, 0)
+    } cal
+  </div>
     if (type === "Run") return sum + Math.round(value * 70);
     if (type === "Steps") return sum + Math.round(value * 0.04);
     if (type === "Treadmill") return sum + value;
