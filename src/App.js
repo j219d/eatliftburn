@@ -405,7 +405,7 @@ const navBtnStyle = {
 
     setWorkoutLog(prev => ({
       ...prev,
-      [type]: (prev[type] || 0) + input
+      [type]: (prev[type] || 0) + parseFloat(input)
     }));
     setCustomWorkout({ ...customWorkout, [type]: "" });
   }
