@@ -129,7 +129,6 @@ const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
   }, 0);
 
 
-
 const estimatedDeficit = 1620 + totalBurn - calories;
 
   useEffect(() => {
@@ -193,20 +192,11 @@ const logWorkout = (type, reps) => {
 };
 
 
-  const deleteWorkout = (type) => {
-    const reps = workoutLog[type];
-    const calc = burnRates[type];
-    const num = Number(reps);
+const deleteWorkout = (type) => {
+const reps = workoutLog[type];
+const calc = burnRates[type];
+const num = Number(reps);
 const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
-    ? Math.round(reps * 70)
-    : type === "Steps"
-    ? Math.round(reps * 0.04)
-    : type === "Plank"
-    ? Math.round(reps * 0.04)
-    : type === "Row Machine"
-    ? Math.round(reps * 6)
-    : Math.round(reps * workouts[type]);
-
 
   // ✅ Fix step count for Run
   if (type === "Run") {
@@ -225,11 +215,11 @@ const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
   });
 };
 
-  const addFood = (food) => {
-    setCalories(prev => prev + food.cal);
-    setProtein(prev => prev + food.prot);
-    setFoodLog(prev => [...prev, food]);
-  };
+const addFood = (food) => {
+setCalories(prev => prev + food.cal);
+setProtein(prev => prev + food.prot);
+setFoodLog(prev => [...prev, food]);
+};
 
   const deleteFood = (index) => {
     const removed = foodLog[index];
