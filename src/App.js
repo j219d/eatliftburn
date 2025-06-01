@@ -367,8 +367,6 @@ const navBtnStyle = {
         Total: {calories} cal / {protein}g protein
       </div>
     </div>
-  );
-}
 
   if (screen === "workouts") {
   return (
@@ -562,9 +560,7 @@ return (
   <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
     {type}: {display}{" "}
     <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
-  </li>
-);
-            })}
+  </li>)}
           </ul>
 
           <div style={{
@@ -589,8 +585,6 @@ return (
         </>
       )}
     </div>
-  );
-}
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
@@ -667,8 +661,6 @@ return (
         ))}
       </ul>
     </div>
-  );
-}
 
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
@@ -812,8 +804,6 @@ return (
       Reset
     </button>
   </div>
-);
-}
 
 export default App;
 
@@ -840,3 +830,100 @@ export default App;
     <span>{type}</span>
   </div>
 ))}
+
+
+{screen === "workouts" && (
+  <div style={{ padding: "24px", fontFamily: "Inter, Arial", maxWidth: "500px", margin: "auto" }}>
+    <button onClick={() => setScreen('home')} style={{ fontSize: "18px", padding: "10px 20px", marginBottom: '20px' }}>⬅️ Home</button>
+    <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
+    {[
+      "Push-ups", "Pull-ups", "Biceps", "Bench Press", "Triceps",
+      "Leg Press", "Lunges", "Smith Machine Squats", "RDLs", "Glute Abductor",
+      "Low Pull", "Back Extensions", "Core Pull", "Plank",
+      "Run", "Steps", "Swim", "Treadmill"
+    ].map((type, index) => (
+      <div key={index} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "140px", fontSize: "16px" }}>{type}</label>
+        {type === "Treadmill" ? (
+          <>
+            <input
+              type="number"
+              placeholder="Cal"
+              value={customWorkout["TreadmillCal"] || ""}
+              onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
+              style={{ width: "60px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+            <input
+              type="number"
+              placeholder="KM"
+              value={customWorkout["TreadmillKm"] || ""}
+              onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
+              style={{ width: "60px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+          </>
+        ) : (
+          <input
+            type="number"
+            placeholder={
+              type === "Plank" ? "Seconds"
+              : type === "Run" ? "Kilometers"
+              : type === "Swim" ? "Laps"
+              : type === "Steps" ? "Steps"
+              : "Reps"
+            }
+            value={customWorkout[type] || ""}
+            onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
+            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+        )}
+        <button
+          onClick={() => {
+            let input = parseFloat(customWorkout[type]);
+            if (type === "Treadmill") {
+              const cal = parseFloat(customWorkout["TreadmillCal"]);
+              const km = parseFloat(customWorkout["TreadmillKm"]);
+              if (!isNaN(cal) && !isNaN(km)) {
+                const stepsToAdd = Math.round(km * 1250);
+                setSteps(prev => prev + stepsToAdd);
+                setWorkoutLog(prev => ({ ...prev, Treadmill: (prev.Treadmill || 0) + cal }));
+                setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
+              }
+              return;
+            }
+            if (!isNaN(input)) {
+              const rate = burnRates[type];
+              const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
+              if (type === "Steps") setSteps(prev => prev + input);
+              if (type === "Run") setSteps(prev => prev + Math.round(input * 800));
+              setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
+              setCustomWorkout({ ...customWorkout, [type]: "" });
+            }
+          }}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Add
+        </button>
+      </div>
+    ))}
+    <h3 style={{ marginTop: "30px", fontSize: "18px" }}>Today's Workout Log:</h3>
+    <ul>
+      {Object.entries(workoutLog).map(([type, val]) => (
+        <li key={type}>{type}: {val}</li>
+      ))}
+    </ul>
+    <p style={{ fontWeight: "bold" }}>Total Burn: {
+      Object.entries(workoutLog).reduce((acc, [type, val]) => {
+        const rate = burnRates[type];
+        const cal = typeof rate === "function" ? rate(parseFloat(val)) : Math.round(parseFloat(val) * rate);
+        return acc + cal;
+      }, 0)
+    } cal</p>
+  </div>
+)}
