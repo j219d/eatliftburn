@@ -123,7 +123,8 @@ const foodOptions = [
   
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
     const calc = burnRates[type];
-    const burn = typeof calc === "function" ? calc(value) : Math.round(value * calc);
+    const num = Number(value);
+const burn = typeof calc === \"function\" ? calc(num) : Math.round(num * calc);
     return sum + (isNaN(burn) ? 0 : burn);
   }, 0);
 
@@ -195,7 +196,8 @@ const logWorkout = (type, reps) => {
   const deleteWorkout = (type) => {
     const reps = workoutLog[type];
     const calc = burnRates[type];
-    const burn = typeof calc === "function" ? calc(reps) : Math.round(reps * calc);type === "Run"
+    const num = Number(reps);
+const burn = typeof calc === \"function\" ? calc(num) : Math.round(num * calc);type === "Run"
     ? Math.round(reps * 70)
     : type === "Steps"
     ? Math.round(reps * 0.04)
