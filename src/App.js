@@ -816,3 +816,27 @@ return (
 }
 
 export default App;
+
+
+{workoutList.map((type, index) => (
+  <div key={index}>
+    <input
+      type="number"
+      value={customWorkout[type] || ""}
+      onChange={(e) =>
+        setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+      }
+      placeholder={
+        type === "Run"
+          ? "Kilometers"
+          : type === "Plank"
+          ? "Seconds"
+          : type === "Treadmill"
+          ? "Minutes"
+          : "Reps"
+      }
+    />
+    <button onClick={() => logWorkout(type)}>Add</button>
+    <span>{type}</span>
+  </div>
+))}
