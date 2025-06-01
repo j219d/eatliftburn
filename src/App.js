@@ -43,6 +43,11 @@ function App() {
   "Triceps": 0.5,
   "Leg Press": 0.5,
   "Lunges": 0.5,
+  "Smith Machine Squats": 0.6,
+  "Plank": "plank", // uses seconds
+  "Low Pull": 4,
+  "Glute Abductor": 3,
+  "Core Pull": 4,
   "Run": "run"
 };
 
@@ -385,8 +390,10 @@ const navBtnStyle = {
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
           <input
             type="number"
-            step={type === "Run" ? "0.01" : "1"}
-            placeholder={type === "Run" ? "Kilometers" : "Reps"}
+           step={type === "Run" ? "0.01" : "1"}
+placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : "Reps"}
+
+
             value={customWorkout[type] || ""}
             onChange={(e) =>
               setCustomWorkout({ ...customWorkout, [type]: e.target.value })
