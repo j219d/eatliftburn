@@ -43,8 +43,7 @@ function App() {
   "Triceps": 0.5,
   "Leg Press": 0.5,
   "Lunges": 0.5,
-  "Smith Machine Squats": 0.6,
-  "Plank": "plank", // uses seconds
+  "Plank": 0.04, // uses seconds
   "Low Pull": 4,
   "Glute Abductor": 3,
   "Core Pull": 4,
@@ -59,7 +58,6 @@ function App() {
     "Triceps": 0.5,
     "Leg Press": 0.5,
     "Lunges": 0.5,
-    "Smith Machine Squats": 0.6,
     "Plank": (seconds) => Math.round(seconds * 0.04),
     "Run": (km) => Math.round(km * 70),
     "Steps": (steps) => Math.round(steps * 0.04),
