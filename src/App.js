@@ -1,17 +1,61 @@
 
-import React, { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+const burnRates = {
+  "Push-ups": 0.5,
+  "Pull-ups": 1,
+  "Biceps": 0.3,
+  "Bench Press": 0.4,
+  "Triceps": 0.3,
+  "Leg Press": 0.6,
+  "Low Pull": 0.4,
+  "Glute Abductor": 0.3,
+  "Core Pull": 0.3,
+  "Smith Machine Squats": 0.5,
+  "RDLs": 0.5,
+  "Back Extensions": 0.4,
+  "Run": (km) => Math.round(km * 60),
+  "Plank": (seconds) => Math.round(seconds * 0.15),
+  "Swim": (laps) => Math.round(laps * 8),
+  "Steps": 0.04,
+  };
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+
+
+const workoutCategories = {
+  "Upper Body – Push": {
+    "Push-ups": true,
+    "Bench Press": true,
+    "Triceps": true
+  },
+  "Upper Body – Pull": {
+    "Pull-ups": true,
+    "Biceps": true,
+    "Low Pull": true
+  },
+  "Core": {
+    "Plank": true,
+    "Core Pull": true
+  },
+  "Lower Body – Quads": {
+    "Leg Press": true,
+    "Smith Machine Squats": true
+  },
+  "Lower Body – Glutes": {
+    "Glute Abductor": true
+  },
+  "Lower Body – Hamstrings": {
+    "RDLs": true
+  },
+  "Lower Back": {
+    "Back Extensions": true
+  },
+  "Cardio": {
+    "Steps": true,
+    "Run": true,
+    "Swim": true,
+    "Treadmill": true
+  }
+};
+
 
 function App() {
   const [screen, setScreen] = useState("home");
