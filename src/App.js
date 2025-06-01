@@ -599,25 +599,19 @@ cal = typeof calc === "function" ? calc(value) : Math.round(value * calc);
 
 if (type === "Run") {
   display = `${value} km — ${cal} cal`;
- {
-  cal = Math.round(value * 70);
-  display = `${value} km — ${cal} cal`;
 } else if (type === "Steps") {
-  cal = Math.round(value * 0.04);
   display = `${value} steps — ${cal} cal`;
 } else if (type === "Treadmill") {
-  cal = value;
   display = `${cal} cal`;
 } else if (type === "Swim") {
-  const laps = value;
-  cal = Math.round(laps * 7);
-  display = `${laps} laps — ${cal} cal`;
+  display = `${value} laps — ${cal} cal`;
 } else if (type === "Plank") {
-  cal = Math.round(value * 0.04);
   display = `${value} sec — ${cal} cal`;
 } else if (type === "Row Machine") {
-  cal = Math.round(value * 6);
   display = `${value} min — ${cal} cal`;
+} else {
+  display = `${value} reps — ${cal} cal`;
+} min — ${cal} cal`;
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
