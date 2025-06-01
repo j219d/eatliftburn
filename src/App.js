@@ -18,7 +18,7 @@ function App() {
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
+  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 500);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
@@ -367,7 +367,7 @@ const navBtnStyle = {
         {foodLog.map((f, i) => (
           <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
             {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
-            {f.name} — {f.cal} cal, {f.prot}g{" "}
+            {f.name} - {f.cal} cal, {f.prot}g{" "}
             <button onClick={() => deleteFood(i)} style={{ marginLeft: "8px" }}>❌</button>
           </li>
         ))}
@@ -598,19 +598,22 @@ const calc = burnRates[type];
 cal = typeof calc === "function" ? calc(value) : Math.round(value * calc);
 
 if (type === "Run") {
-  display = `${value} km — ${cal} cal`;
+  display = `${value} km - ${cal} cal`;
 } else if (type === "Steps") {
-  display = `${value} steps — ${cal} cal`;
+  display = `${value} steps - ${cal} cal`;
 } else if (type === "Treadmill") {
   display = `${cal} cal`;
 } else if (type === "Swim") {
-  display = `${value} laps — ${cal} cal`;
+  display = `${value} laps - ${cal} cal`;
 } else if (type === "Plank") {
-  display = `${value} sec — ${cal} cal`;
+  display = `${value} sec - ${cal} cal`;
 } else if (type === "Row Machine") {
 } else {
-  display = `${value} reps — ${cal} cal`;
- else {
+  display = `${value} reps - ${cal} cal`;
+} else if (workouts[type]) {
+  cal = Math.round(value * workouts[type]);
+  display = `${value} reps - ${cal} cal`;
+} else {
   cal = value;
   display = `${cal} cal`;
 }
@@ -650,7 +653,7 @@ return (
 }
 
   if (screen === "weight") {
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "-";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
   const data = {
