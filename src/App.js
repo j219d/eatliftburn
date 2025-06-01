@@ -38,14 +38,22 @@ function App() {
   const workouts = {
   "Push-ups": 0.5,
   "Pull-ups": 1,
-  "Biceps": 0.5,
-  "Bench Press": 0.5,
-  "Triceps": 0.5,
-  "Leg Press": 0.5,
-  "Romanian Deadlifts": 0.5,  "Lunges": 0.5,
-  "Plank": "plank", // handled as seconds
-  "Row Machine": "row", // handled as minutes
-  "Run": "run"
+  "Bench Press": 0.4,
+  "Triceps": 0.3,
+  "Biceps": 0.3,
+  "Leg Press": 0.6,
+  "Low Pull": 0.4,
+  "Glute Abductor": 0.3,
+  "Core Pull": 0.3,
+  "Smith Machine Squats": 0.5,
+  "RDLs": 0.5,
+  "Back Extensions": 0.4,
+  "Lunges": 0.5,
+  "Plank": "plank",  // handled as seconds
+  "Run": "run",      // handled as km
+  "Swim": "swim",    // handled as laps
+  "Steps": 0.04,
+  "Treadmill": "treadmill" // handled by dual-input UI
 };
   
 const foodOptions = [
