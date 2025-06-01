@@ -610,9 +610,6 @@ if (type === "Run") {
 } else if (type === "Row Machine") {
 } else {
   display = `${value} reps - ${cal} cal`;
-} else if (workouts[type]) {
-  cal = Math.round(value * workouts[type]);
-  display = `${value} reps - ${cal} cal`;
 } else {
   cal = value;
   display = `${cal} cal`;
