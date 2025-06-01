@@ -29,8 +29,7 @@ const burnRates = {
   "Run": (km) => Math.round(km * 60),
   "Plank": (seconds) => Math.round(seconds * 0.15),
   "Swim": (laps) => Math.round(laps * 8),
-  "Steps": 0.04,
-  "Treadmill": (min) => min // placeholder; your original logic will still apply
+  "Steps": 0.04
 };
 
 const workoutCategories = {
