@@ -49,11 +49,11 @@ function App() {
   "RDLs": 0.5,
   "Back Extensions": 0.4,
   "Lunges": 0.5,
-  "Plank": "plank",  // handled as seconds
-  "Run": "run",      // handled as km
-  "Swim": "swim",    // handled as laps
+  "Plank": "plank",
+  "Run": "run",
+  "Swim": "swim",
   "Steps": 0.04,
-  "Treadmill": "treadmill" // handled by dual-input UI
+  "Treadmill": "treadmill"
 };
   
 const foodOptions = [
