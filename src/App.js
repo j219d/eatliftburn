@@ -18,7 +18,7 @@ function App() {
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 500);
+  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
@@ -610,10 +610,7 @@ if (type === "Run") {
 } else if (type === "Row Machine") {
 } else {
   display = `${value} reps — ${cal} cal`;
-} else if (workouts[type]) {
-  cal = Math.round(value * workouts[type]);
-  display = `${value} reps — ${cal} cal`;
-} else {
+ else {
   cal = value;
   display = `${cal} cal`;
 }
