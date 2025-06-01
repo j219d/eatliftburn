@@ -372,30 +372,13 @@ const navBtnStyle = {
 
   
 if (screen === "workouts") {
-  const allWorkouts = [
-    "Push-ups",
-    "Pull-ups",
-    "Biceps",
-    "Bench Press",
-    "Triceps",
-    "Leg Press",
-    "Smith Machine Squats",
-    "RDLs",
-    "Glute Abductor",
-    "Low Pull",
-    "Back Extensions",
-    "Core Pull",
-    "Plank",
-    "Run",
-    "Steps",
-    "Swim",
-    "Treadmill"
-  ];
+  const workoutList = ['Push-ups', 'Pull-ups', 'Biceps', 'Bench Press', 'Triceps', 'Leg Press', 'Smith Machine Squats', 'RDLs', 'Glute Abductor', 'Low Pull', 'Back Extensions', 'Core Pull', 'Plank', 'Run', 'Steps', 'Swim', 'Treadmill'];
+
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial", maxWidth: "500px", margin: "auto" }}>
       <button onClick={() => setScreen('home')} style={{ fontSize: "18px", padding: "10px 20px", marginBottom: '20px' }}>⬅️ Home</button>
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
-      {allWorkouts.map((type) => (
+      {workoutList.map((type) => (
         <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "140px", fontSize: "16px" }}>{type}</label>
           {type === "Treadmill" ? (
@@ -419,10 +402,15 @@ if (screen === "workouts") {
             <input
               type="number"
               step={type === "Run" ? "0.01" : "1"}
-              placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : type === "Swim" ? "Laps" : type === "Steps" ? "Steps" : "Reps"}
+              placeholder={
+                type === "Run" ? "Kilometers" :
+                type === "Plank" ? "Seconds" :
+                type === "Swim" ? "Laps" :
+                type === "Steps" ? "Steps" : "Reps"
+              }
               value={customWorkout[type] || ""}
               onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-              style={{ width: "120px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+              style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
             />
           )}
           <button
