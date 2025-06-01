@@ -391,10 +391,9 @@ const navBtnStyle = {
     ? "Seconds"
     : type === "Swim"
     ? "Laps"
-    : type === "Treadmill"
-    ? "Calories"
     : "Reps"
 )}
+
   value={customWorkout[type] || ""}
   onChange={(e) =>
     setCustomWorkout({ ...customWorkout, [type]: e.target.value })
