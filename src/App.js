@@ -50,6 +50,27 @@ function App() {
   "Row Machine": "row", // handled as minutes
   "Run": "run"
 };
+
+  const burnRates = {
+    "Push-ups": 0.5,
+    "Pull-ups": 1,
+    "Biceps": 0.5,
+    "Bench Press": 0.5,
+    "Triceps": 0.5,
+    "Leg Press": 0.5,
+    "Romanian Deadlifts": 0.5,
+    "Glute Kickbacks": 0.4,
+    "Glute Bridge": 0.4,
+    "Lunges": 0.5,
+    "Smith Machine Squats": 0.6,
+    "Plank": (seconds) => Math.round(seconds * 0.04),
+    "Row Machine": (minutes) => Math.round(minutes * 6),
+    "Run": (km) => Math.round(km * 70),
+    "Steps": (steps) => Math.round(steps * 0.04),
+    "Treadmill": (cals) => cals,
+    "Swim": (laps) => Math.round(laps * 7)
+  };
+
   
 const foodOptions = [
   { name: "Apple", cal: 95, prot: 1 },
@@ -99,16 +120,13 @@ const foodOptions = [
 ];
 
 
+  
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (type === "Run") return sum + Math.round(value * 70);
-  if (type === "Steps") return sum + Math.round(value * 0.04);
-  if (type === "Treadmill") return sum + value;
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (type === "Row Machine") return sum + Math.round(value * 6);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum + value;
-}, 0);
+    const calc = burnRates[type];
+    const burn = typeof calc === "function" ? calc(value) : Math.round(value * calc);
+    return sum + (isNaN(burn) ? 0 : burn);
+  }, 0);
+
 
 
 const estimatedDeficit = 1620 + totalBurn - calories;
@@ -175,9 +193,9 @@ const logWorkout = (type, reps) => {
 
 
   const deleteWorkout = (type) => {
-  const reps = workoutLog[type];
-  const burn =
-  type === "Run"
+    const reps = workoutLog[type];
+    const calc = burnRates[type];
+    const burn = typeof calc === "function" ? calc(reps) : Math.round(reps * calc);type === "Run"
     ? Math.round(reps * 70)
     : type === "Steps"
     ? Math.round(reps * 0.04)
@@ -573,10 +591,15 @@ const navBtnStyle = {
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
             {Object.entries(workoutLog).map(([type, value], i) => {
-              let cal;
+              
+let cal;
 let display;
+const calc = burnRates[type];
+cal = typeof calc === "function" ? calc(value) : Math.round(value * calc);
 
 if (type === "Run") {
+  display = `${value} km — ${cal} cal`;
+ {
   cal = Math.round(value * 70);
   display = `${value} km — ${cal} cal`;
 } else if (type === "Steps") {
