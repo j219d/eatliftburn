@@ -13,6 +13,28 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
+const burnRates = {
+  "Push-ups": 0.5,
+  "Pull-ups": 1,
+  "Biceps": 0.3,
+  "Bench Press": 0.4,
+  "Triceps": 0.3,
+  "Leg Press": 0.6,
+  "Low Pull": 0.4,
+  "Glute Abductor": 0.3,
+  "Core Pull": 0.3,
+  "Smith Machine Squats": 0.5,
+  "RDLs": 0.5,
+  "Back Extensions": 0.4,
+  "Lunges": 0.5,
+  "Run": (km) => Math.round(km * 60),
+  "Plank": (seconds) => Math.round(seconds * 0.15),
+  "Swim": (laps) => Math.round(laps * 8),
+  "Steps": 0.04,
+  "Treadmill": (min) => min // placeholder; original treadmill logic is preserved
+};
+
+
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
