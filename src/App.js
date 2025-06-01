@@ -25,7 +25,6 @@ function App() {
   supplements: false,
   sunlight: false,
   concentrace: false
-// removed suspicious closing token
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
@@ -161,7 +160,6 @@ const logWorkout = (type, reps) => {
     const updated = { ...prev };
     updated[type] = (updated[type] || 0) + reps;
     return updated;
-// removed suspicious closing token
 
   if (type === "Steps") {
     setSteps(prev => prev + reps);
@@ -202,7 +200,6 @@ const logWorkout = (type, reps) => {
     const updated = { ...prev };
     delete updated[type];
     return updated;
-// removed suspicious closing token
 };
 
   const addFood = (food) => {
@@ -253,10 +250,9 @@ const navBtnStyle = {
 
   const HomeButton = () => (
     <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅ Home</button>
-// removed suspicious closing token
 
   if (screen === "food") {
-  // removed duplicate return (
+// removed extra return
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
   <HomeButton />
   <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
@@ -365,7 +361,7 @@ const navBtnStyle = {
         Total: {calories} cal / {protein}g protein
 
   if (screen === "workouts") {
-// removed duplicate return (
+// removed extra return
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
@@ -560,14 +556,14 @@ if (type === "Run") {
         }
         display = `${cal} cal`;
       }
-// removed duplicate return (
+// removed extra return
         <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
           {type}: {display}{" "}
           <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
         </li>
       
     })}
-  </>
+// removed extra fragment close
   </ul>
 
   <div style={{
@@ -597,7 +593,6 @@ if (type === "Run") {
   }, 0)
 } cal
         </>
-// removed suspicious closing token
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
@@ -617,7 +612,7 @@ if (type === "Run") {
     ],
   };
 
-// removed duplicate return (
+// removed extra return
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
@@ -659,7 +654,6 @@ if (type === "Run") {
           marginBottom: "24px"
         }}>
           <Line data={data} />
-// removed suspicious closing token
 
       {/* History */}
       <ul style={{ paddingLeft: "16px" }}>
@@ -715,7 +709,6 @@ if (type === "Run") {
   <span> / {deficitGoal}</span>
   {estimatedDeficit >= deficitGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-// removed suspicious closing token
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
@@ -725,7 +718,6 @@ if (type === "Run") {
   <span> / {proteinGoal}</span>
   {protein >= proteinGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-// removed suspicious closing token
 
 <div style={{ fontSize: "16px" }}>
   <strong>Steps:</strong>{" "}
@@ -735,7 +727,6 @@ if (type === "Run") {
   <span> / {stepGoal}</span>
   {steps >= stepGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-// removed suspicious closing token
 
 
     {/* Checklist Box */}
@@ -872,7 +863,6 @@ export default App;
             onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
             style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
-// removed suspicious closing token
         <button
           onClick={() => {
             let input = parseFloat(customWorkout[type]);
@@ -921,6 +911,36 @@ export default App;
         return acc + cal;
       }, 0)
     } cal</p>
-// removed extra </div>
-// removed suspicious closing token
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+  </>
+</div>
+// removed suspicious token
+}
+
+export default App;
