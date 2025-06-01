@@ -38,18 +38,18 @@ function App() {
   const workouts = {
   "Push-ups": 0.5,
   "Pull-ups": 1,
+  "Low Pull": 4,
   "Biceps": 0.5,
   "Bench Press": 0.5,
   "Triceps": 0.5,
   "Leg Press": 0.5,
   "Lunges": 0.5,
-  "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
-  "Run": "run",
-  "Low Pull": 4,
+  "RDLs": 0.5,
+  "Back Extensions": 0.4,
   "Glute Abductor": 3,
   "Core Pull": 4,
-  "RDLs": 0.5,
-  "Back Extensions": 0.4
+  "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
+  "Run": "run"
 };
   
 const foodOptions = [
