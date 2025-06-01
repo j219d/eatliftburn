@@ -439,7 +439,7 @@ const navBtnStyle = {
           <input
             type="number"
             step={type === "Run" ? "0.01" : "1"}
-            placeholder={type === "Run" ? "Kilometers" : "Reps"}
+            placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : "Reps"}
             value={customWorkout[type] || ""}
             onChange={(e) =>
               setCustomWorkout({ ...customWorkout, [type]: e.target.value })
