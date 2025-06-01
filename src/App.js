@@ -104,9 +104,12 @@ const foodOptions = [
   if (type === "Steps") return sum + Math.round(value * 0.04);
   if (type === "Treadmill") return sum + value;
   if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (type === "Row Machine") return sum + Math.round(value * 6);
   if (workouts[type]) return sum + Math.round(value * workouts[type]);
   return sum + value;
 }, 0);
+
 
 const estimatedDeficit = 1620 + totalBurn - calories;
 
@@ -173,11 +176,17 @@ const logWorkout = (type, reps) => {
 
   const deleteWorkout = (type) => {
   const reps = workoutLog[type];
-  const burn = type === "Run"
+  const burn =
+  type === "Run"
     ? Math.round(reps * 70)
     : type === "Steps"
     ? Math.round(reps * 0.04)
+    : type === "Plank"
+    ? Math.round(reps * 0.04)
+    : type === "Row Machine"
+    ? Math.round(reps * 6)
     : Math.round(reps * workouts[type]);
+
 
   // ✅ Fix step count for Run
   if (type === "Run") {
