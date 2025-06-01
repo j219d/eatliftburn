@@ -43,7 +43,6 @@ function App() {
   "Triceps": 0.5,
   "Leg Press": 0.5,
   "Lunges": 0.5,
-  "Plank": "plank", // handled as seconds
   "Run": "run"
 };
 
@@ -60,7 +59,7 @@ function App() {
     "Run": (km) => Math.round(km * 70),
     "Steps": (steps) => Math.round(steps * 0.04),
     "Treadmill": (cals) => cals,
-    "Swim": (laps) => Math.round(laps * 7)
+    "Swim": (laps) => Math.round(laps * 7),
   "Low Pull": 4,
   "Glute Abductor": 3,
   "Core Pull": 4,
@@ -165,7 +164,6 @@ const logWorkout = (type, reps) => {
   let burn;
   if (type === "Plank") {
     burn = Math.round(reps * 0.04); // ~2.4 cal/min
-    burn = Math.round(reps * 6); // 6 cal per min
   } else {
     burn = Math.round(workouts[type] * reps);
   }
@@ -191,8 +189,6 @@ const deleteWorkout = (type) => {
 const reps = workoutLog[type];
 const calc = burnRates[type];
   const num = Number(reps);
-    if (isNaN(num)) return;
-  if (isNaN(num)) return;
 const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
 
   // ✅ Fix step count for Run
