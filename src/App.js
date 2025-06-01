@@ -608,13 +608,10 @@ if (type === "Run") {
 } else if (type === "Plank") {
   display = `${value} sec - ${cal} cal`;
 } else if (type === "Row Machine") {
+  display = `${value} min - ${cal} cal`;
 } else {
   display = `${value} reps - ${cal} cal`;
-} else {
-  cal = value;
-  display = `${cal} cal`;
 }
-
 return (
   <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
     {type}: {display}{" "}
