@@ -382,15 +382,25 @@ const navBtnStyle = {
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
           <input
-            type="number"
-            step={type === "Run" ? "0.01" : "1"}
-            placeholder={type === "Run" ? "Kilometers" : "Reps"}
-            value={customWorkout[type] || ""}
-            onChange={(e) =>
-              setCustomWorkout({ ...customWorkout, [type]: e.target.value })
-            }
-            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-          />
+  type="number"
+  step={type === "Run" ? "0.01" : "1"}
+  placeholder={(
+  type === "Run"
+    ? "Kilometers"
+    : type === "Plank"
+    ? "Seconds"
+    : type === "Swim"
+    ? "Laps"
+    : type === "Treadmill"
+    ? "Calories"
+    : "Reps"
+)}
+  value={customWorkout[type] || ""}
+  onChange={(e) =>
+    setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+  }
+  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
           <button
             onClick={() => {
   const input = parseFloat(customWorkout[type]);
