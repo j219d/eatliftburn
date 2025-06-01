@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -11,7 +12,6 @@ import {
 } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
-
 
 const burnRates = {
   "Push-ups": 0.5,
@@ -30,9 +30,8 @@ const burnRates = {
   "Plank": (seconds) => Math.round(seconds * 0.15),
   "Swim": (laps) => Math.round(laps * 8),
   "Steps": 0.04,
-  };
-
-
+  "Treadmill": (min) => min // placeholder; your original logic will still apply
+};
 
 const workoutCategories = {
   "Upper Body – Push": {
@@ -70,13 +69,12 @@ const workoutCategories = {
   }
 };
 
-
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 1000);
+  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 500);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
@@ -100,13 +98,23 @@ function App() {
   "Bench Press": 0.5,
   "Triceps": 0.5,
   "Leg Press": 0.5,
-  "Run": "run" // special handling
+  "Romanian Deadlifts": 0.5,
+  "Glute Kickbacks": 0.4,
+  "Glute Bridge": 0.4,
+  "Lunges": 0.5,
+  "Plank": "plank", // handled as seconds
+  "Row Machine": "row", // handled as minutes
+  "Run": "run"
 };
-
-  const foodOptions = [
-  // 🥩 Mains (proteins, eggs, dairy)
-  { name: "2 eggs + butter", cal: 175, prot: 12 },
-  { name: "2 eggs, 1 egg white + butter", cal: 190, prot: 15 },
+  
+const foodOptions = [
+  { name: "Apple", cal: 95, prot: 1 },
+  { name: "Avocado (1/2)", cal: 120, prot: 1.5 },
+  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
+  { name: "Banana", cal: 105, prot: 1 },
+  { name: "Butter (1 tsp)", cal: 35, prot: 0 },
+  { name: "Carrot", cal: 25, prot: 0.5 },
+  { name: "Carrot juice", cal: 94, prot: 2 },
   { name: "Chicken breast (50g)", cal: 82, prot: 15 },
   { name: "Chicken breast (100g)", cal: 165, prot: 31 },
   { name: "Chicken breast (150g)", cal: 248, prot: 46 },
@@ -114,64 +122,50 @@ function App() {
   { name: "Cottage cheese (47g)", cal: 48, prot: 5.5 },
   { name: "Cottage cheese (95g)", cal: 95, prot: 11 },
   { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5 },
+  { name: "Cucumber", cal: 16, prot: 1 },
   { name: "Egg", cal: 70, prot: 6 },
   { name: "Egg white", cal: 15, prot: 3 },
-  { name: "Yogurt 0%", cal: 117, prot: 20 },
-  { name: "Protein ice cream", cal: 400, prot: 52 },
-{ name: "Protein scoop (1)", cal: 75, prot: 15 },
-{ name: "Protein scoop (2)", cal: 150, prot: 30 },
-    { name: "Ground beef 90/10 (50g)", cal: 125, prot: 13 },
-{ name: "Ground beef 90/10 (100g)", cal: 250, prot: 26 },
-{ name: "Ground beef 90/10 (150g)", cal: 375, prot: 39 },
-{ name: "Ground beef 90/10 (200g)", cal: 500, prot: 52 },
-
-
-
-  // 🍫 Snacks / Packaged protein
-  { name: "Promix bar", cal: 150, prot: 15 },
-  { name: "Quest bar", cal: 190, prot: 21 },
-  { name: "Quest chips", cal: 140, prot: 20 },
-
-  // 🍎 Fruits
-  { name: "Apple", cal: 95, prot: 1 },
-  { name: "Banana", cal: 105, prot: 1 },
-  { name: "Watermelon triangle", cal: 50, prot: 1 },
-
-  // 🥗 Veggies & Salads
-  { name: "Tomato", cal: 20, prot: 1 },
-  { name: "Cucumber", cal: 16, prot: 1 },
-  { name: "Carrot", cal: 25, prot: 0.5 },
-  { name: "Green onions", cal: 5, prot: 0 },
-    { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
-{ name: "Sweet potato (1)", cal: 112, prot: 2 },
-  { name: "Spinach (handful)", cal: 15, prot: 1.5 },
-  { name: "Israeli salad (small)", cal: 40, prot: 1 },
-  { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
-  { name: "Israeli salad (large)", cal: 100, prot: 2 },
-    
-
-  // 🥤 Drinks
-  { name: "Carrot juice", cal: 94, prot: 2 },
-
-  // 🥑 Fats & Seeds
-  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
-{ name: "Avocado (1/2)", cal: 120, prot: 1.5 },
-  { name: "Butter (1 tsp)", cal: 35, prot: 0 },
+  { name: "Eggs (2) + butter", cal: 175, prot: 12 },
+  { name: "Eggs (2), Egg white (1) + butter", cal: 190, prot: 15 },
   { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
-  { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
+  { name: "Green onions", cal: 5, prot: 0 },
+  { name: "Ground beef 90/10 (50g)", cal: 73, prot: 9.3 },
+  { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6 },
+  { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9 },
+  { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2 },
+  { name: "Israeli salad (large)", cal: 100, prot: 2 },
+  { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
+  { name: "Israeli salad (small)", cal: 40, prot: 1 },
   { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
+  { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
+  { name: "Promix protein bar", cal: 150, prot: 15 },
+  { name: "Protein ice cream", cal: 400, prot: 52 },
+  { name: "Protein scoop (1)", cal: 75, prot: 15 },
+  { name: "Protein scoop (2)", cal: 150, prot: 30 },
   { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
-  { name: "Walnut (1 whole)", cal: 26, prot: 0.6 }
-  ];
+  { name: "Quest chips", cal: 140, prot: 20 },
+  { name: "Quest protein bar", cal: 190, prot: 21 },
+  { name: "Spinach (handful)", cal: 15, prot: 1.5 },
+  { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
+  { name: "Sweet potato (1)", cal: 112, prot: 2 },
+  { name: "Tomato", cal: 20, prot: 1 },
+  { name: "Walnut (1 whole)", cal: 26, prot: 0.6 },
+  { name: "Watermelon triangle", cal: 50, prot: 1 },
+  { name: "Yogurt 0%", cal: 117, prot: 20 }
+];
+
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
   if (type === "Run") return sum + Math.round(value * 70);
   if (type === "Steps") return sum + Math.round(value * 0.04);
   if (type === "Treadmill") return sum + value;
   if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (type === "Row Machine") return sum + Math.round(value * 6);
   if (workouts[type]) return sum + Math.round(value * workouts[type]);
   return sum + value;
 }, 0);
+
 
 const estimatedDeficit = 1620 + totalBurn - calories;
 
@@ -210,27 +204,45 @@ const estimatedDeficit = 1620 + totalBurn - calories;
 };
 
 const logWorkout = (type, reps) => {
-  const burn = Math.round(workouts[type] * reps);
+  let burn;
+  if (type === "Plank") {
+    burn = Math.round(reps * 0.04); // ~2.4 cal/min
+  } else if (type === "Row Machine") {
+    burn = Math.round(reps * 6); // 6 cal per min
+  } else {
+    burn = Math.round(workouts[type] * reps);
+  }
+
   setWorkoutLog(prev => {
     const updated = { ...prev };
     updated[type] = (updated[type] || 0) + reps;
     return updated;
   });
+
   if (type === "Steps") {
-    setSteps(prev => {
-      const totalSteps = prev + reps;
-      return totalSteps;
-    });
+    setSteps(prev => prev + reps);
+  }
+
+  if (type === "Run") {
+    const runSteps = Math.round(reps * 800);
+    setSteps(prev => prev + runSteps);
   }
 };
 
+
   const deleteWorkout = (type) => {
   const reps = workoutLog[type];
-  const burn = type === "Run"
+  const burn =
+  type === "Run"
     ? Math.round(reps * 70)
     : type === "Steps"
     ? Math.round(reps * 0.04)
+    : type === "Plank"
+    ? Math.round(reps * 0.04)
+    : type === "Row Machine"
+    ? Math.round(reps * 6)
     : Math.round(reps * workouts[type]);
+
 
   // ✅ Fix step count for Run
   if (type === "Run") {
@@ -414,80 +426,248 @@ const navBtnStyle = {
   );
 }
 
-  
-if (screen === "workouts") {
+  if (screen === "workouts") {
   return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial", maxWidth: "500px", margin: "auto" }}>
-      <button onClick={() => setScreen('home')} style={{ marginBottom: '20px' }}>⬅️ Home</button>
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+      <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
 
-      {Object.entries(workoutCategories).map(([category, exercises]) => (
-        <div key={category}>
-          <h3 style={{ marginTop: "20px", marginBottom: "8px", fontSize: "18px", color: "#555" }}>{category}</h3>
-          {Object.keys(exercises).map((type) => (
-            <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-              <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
-              <input
-                type="number"
-                step={type === "Run" ? "0.01" : "1"}
-                placeholder={
-                  type === "Run" ? "Kilometers" :
-                  type === "Swim" ? "Laps" :
-                  type === "Plank" ? "Seconds" :
-                  type === "Steps" ? "Steps" : "Reps"
-                }
-                value={customWorkout[type] || ""}
-                onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-                style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-              />
-              <button
-                onClick={() => {
-                  const input = parseFloat(customWorkout[type]);
-                  if (!isNaN(input)) {
-                    const rate = burnRates[type];
-                    const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
+      {/* Strength + Run entries */}
+      {Object.keys(workouts).map((type, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+          <input
+            type="number"
+            step={type === "Run" ? "0.01" : "1"}
+            placeholder={type === "Run" ? "Kilometers" : "Reps"}
+            value={customWorkout[type] || ""}
+            onChange={(e) =>
+              setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+            }
+            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <button
+            onClick={() => {
+  const input = parseFloat(customWorkout[type]);
+  if (!isNaN(input)) {
+    let cal = 0;
+    if (type === "Run") {
+      cal = Math.round(input * 70); // burn
+      const runSteps = Math.round(input * 800); // steps from run
+      setSteps(prev => prev + runSteps); // ✅ Push steps to home
+    } else {
+      cal = Math.round(input * workouts[type]);
+    }
 
-                    if (type === "Steps" || type === "Run") {
-                      const stepsToAdd = type === "Run" ? Math.round(input * 800) : input;
-                      setSteps(prev => prev + stepsToAdd);
-                    }
-
-                    setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
-                    setCustomWorkout({ ...customWorkout, [type]: "" });
-                  }
-                }}
-                style={{
-                  padding: "8px 12px",
-                  fontSize: "16px",
-                  backgroundColor: "#0070f3",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px"
-                }}
-              >
-                Add
-              </button>
-            </div>
-          ))}
+    setWorkoutLog(prev => ({
+      ...prev,
+      [type]: (prev[type] || 0) + input
+    }));
+    setCustomWorkout({ ...customWorkout, [type]: "" });
+  }
+}}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
         </div>
       ))}
 
+      {/* Steps section - separate from workouts */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
+        <input
+          type="number"
+          placeholder="Steps"
+          value={customWorkout["Steps"] || ""}
+          onChange={(e) =>
+            setCustomWorkout({ ...customWorkout, Steps: e.target.value })
+          }
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => {
+            const steps = parseInt(customWorkout["Steps"]);
+            if (!isNaN(steps)) {
+              const stepCalories = Math.round(steps * 0.04); // flat walking only
+              setSteps(prev => prev + steps); // steps tracker
+              setWorkoutLog(prev => ({
+                ...prev,
+                Steps: (prev["Steps"] || 0) + steps
+              }));
+              setCustomWorkout({ ...customWorkout, Steps: "" });
+            }
+          }}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Add
+        </button>
+      </div>
+
+{/* Treadmill Entry */}
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  
+  <input
+    type="number"
+    placeholder="Cal"
+    value={customWorkout.treadCal || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+    style={{
+      width: "43px", // 🔻 halved
+      height: "23.5px",
+      padding: "6px",
+      fontSize: "14px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+  
+  <input
+    type="number"
+    placeholder="KM"
+    step="0.01"
+    value={customWorkout.treadKm || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+    style={{
+      width: "39.125px", // 🔻 halved
+      height: "23.5px",
+      padding: "6px",
+      fontSize: "14px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+  
+  <button
+    onClick={() => {
+      const cal = parseInt(customWorkout.treadCal);
+      const km = parseFloat(customWorkout.treadKm);
+      if (!isNaN(cal) && !isNaN(km)) {
+        const estimatedSteps = Math.round(km * 1250);
+        setSteps(prev => prev + estimatedSteps);
+        setWorkoutLog(prev => ({
+          ...prev,
+          Treadmill: (prev.Treadmill || 0) + cal
+        }));
+        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
+
+{/* Swim Entry (50m laps, 7 cal/lap) */}
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+
+  <input
+    type="number"
+    placeholder="Laps"
+    value={customWorkout["Swim"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+    style={{
+      width: "100px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+
+  <button
+    onClick={() => {
+      const laps = parseInt(customWorkout["Swim"]);
+      if (!isNaN(laps)) {
+        const cal = Math.round(laps * 7); // 7 cal per 50m lap
+        setWorkoutLog(prev => ({
+          ...prev,
+          Swim: (prev.Swim || 0) + laps
+        }));
+        setCustomWorkout({ ...customWorkout, Swim: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
+
+      {/* Workout Summary */}
       {Object.keys(workoutLog).length > 0 && (
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value]) => {
-              const rate = burnRates[type];
-              const cal = typeof rate === "function" ? rate(value) : Math.round(value * rate);
-              let label = (type === "Run") ? "km" : (type === "Plank") ? "sec" : (type === "Swim") ? "laps" : (type === "Steps") ? "steps" : "reps";
-              return (
-                <li key={type} style={{ fontSize: "16px", marginBottom: "6px" }}>
-                  {type}: {value} {label} – {cal} cal
-                  <button onClick={() => deleteWorkout(type)}> ❌ </button>
-                </li>
-              );
+            {Object.entries(workoutLog).map(([type, value], i) => {
+              let cal;
+let display;
+
+if (type === "Run") {
+  cal = Math.round(value * 70);
+  display = `${value} km — ${cal} cal`;
+} else if (type === "Steps") {
+  cal = Math.round(value * 0.04);
+  display = `${value} steps — ${cal} cal`;
+} else if (type === "Treadmill") {
+  cal = value;
+  display = `${cal} cal`;
+} else if (type === "Swim") {
+  const laps = value;
+  cal = Math.round(laps * 7);
+  display = `${laps} laps — ${cal} cal`;
+} else if (type === "Plank") {
+  cal = Math.round(value * 0.04);
+  display = `${value} sec — ${cal} cal`;
+} else if (type === "Row Machine") {
+  cal = Math.round(value * 6);
+  display = `${value} min — ${cal} cal`;
+} else if (workouts[type]) {
+  cal = Math.round(value * workouts[type]);
+  display = `${value} reps — ${cal} cal`;
+} else {
+  cal = value;
+  display = `${cal} cal`;
+}
+
+return (
+  <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+    {type}: {display}{" "}
+    <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+  </li>
+);
             })}
           </ul>
+
           <div style={{
             backgroundColor: "#f1f1f1",
             padding: "12px 16px",
@@ -497,37 +677,23 @@ if (screen === "workouts") {
             fontWeight: "bold"
           }}>
             Total Burn: {
-              Object.entries(workoutLog).reduce((sum, [type, value]) => {
-                const rate = burnRates[type];
-                const burn = typeof rate === "function" ? rate(value) : Math.round(value * rate);
-                return sum + (isNaN(burn) ? 0 : burn);
-              }, 0)
-            } cal
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+    if (type === "Run") return sum + Math.round(value * 70);
+    if (type === "Steps") return sum + Math.round(value * 0.04);
+    if (type === "Treadmill") return sum + value;
+    if (type === "Swim") return sum + Math.round(value * 7);
+    if (workouts[type]) return sum + Math.round(value * workouts[type]);
+    return sum + value;
+  }, 0)
+} cal
           </div>
         </>
       )}
-
-      <button
-        onClick={() => {
-          setWorkoutLog({});
-          setCustomWorkout({});
-        }}
-        style={{
-          marginTop: "20px",
-          backgroundColor: "#ff4d4f",
-          color: "white",
-          padding: "8px 12px",
-          border: "none",
-          borderRadius: "8px",
-          fontSize: "16px"
-        }}
-      >
-        Reset Workouts
-      </button>
     </div>
   );
 }
-if (screen === "weight") {
+
+  if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
