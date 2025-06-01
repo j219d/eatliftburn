@@ -608,10 +608,8 @@ if (type === "Run") {
 } else if (type === "Plank") {
   display = `${value} sec — ${cal} cal`;
 } else if (type === "Row Machine") {
-  display = `${value} min — ${cal} cal`;
 } else {
   display = `${value} reps — ${cal} cal`;
-} min — ${cal} cal`;
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
