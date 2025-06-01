@@ -42,13 +42,17 @@ function App() {
   "Bench Press": 0.5,
   "Triceps": 0.5,
   "Leg Press": 0.5,
-  "Romanian Deadlifts": 0.5,
-  "Glute Kickbacks": 0.4,
-  "Glute Bridge": 0.4,
   "Lunges": 0.5,
   "Plank": "plank", // handled as seconds
-  "Row Machine": "row", // handled as minutes
-  "Run": "run"
+  "Run": "run",
+  "Steps": 0.04,
+  "Treadmill": "treadmill", // 2-box handled
+  "Swim": "swim",
+  "Low Pull": 4,
+  "Glute Abductor": 3,
+  "Core Pull": 4,
+  "RDLs": 0.5,
+  "Back Extensions": 0.4
 };
   
 const foodOptions = [
