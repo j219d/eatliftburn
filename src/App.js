@@ -369,7 +369,7 @@ const navBtnStyle = {
     </div>
 
   if (screen === "workouts") {
-  return (
+// removed duplicate return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
@@ -551,6 +551,7 @@ if (type === "Run") {
 } else if (workouts[type]) {
   cal = Math.round(value * workouts[type]);
   display = `${value} reps — ${cal} cal`;
+  <>
 return (
   <ul>
     {Object.entries(workoutLog).map(([type, val], i) => {
@@ -566,13 +567,14 @@ return (
         }
         display = `${cal} cal`;
       }
-      return (
+// removed duplicate return (
         <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
           {type}: {display}{" "}
           <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
         </li>
-      );
+      
     })}
+  </>
   </ul>
 
   <div style={{
@@ -625,7 +627,7 @@ return (
     ],
   };
 
-  return (
+// removed duplicate return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
@@ -683,7 +685,7 @@ return (
       </ul>
     </div>
 
-  return (
+// removed duplicate return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
   <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "45%", height: "auto" }} />
@@ -946,5 +948,5 @@ export default App;
         return acc + cal;
       }, 0)
     } cal</p>
-  </div>
+// removed extra </div>
 )}
