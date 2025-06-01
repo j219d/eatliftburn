@@ -42,9 +42,6 @@ function App() {
   "Bench Press": 0.5,
   "Triceps": 0.5,
   "Leg Press": 0.5,
-  "Romanian Deadlifts": 0.5,
-  "Glute Kickbacks": 0.4,
-  "Glute Bridge": 0.4,
   "Lunges": 0.5,
   "Plank": "plank", // handled as seconds
   "Run": "run"
@@ -57,9 +54,6 @@ function App() {
     "Bench Press": 0.5,
     "Triceps": 0.5,
     "Leg Press": 0.5,
-    "Romanian Deadlifts": 0.5,
-    "Glute Kickbacks": 0.4,
-    "Glute Bridge": 0.4,
     "Lunges": 0.5,
     "Smith Machine Squats": 0.6,
     "Plank": (seconds) => Math.round(seconds * 0.04),
@@ -67,6 +61,9 @@ function App() {
     "Steps": (steps) => Math.round(steps * 0.04),
     "Treadmill": (cals) => cals,
     "Swim": (laps) => Math.round(laps * 7)
+  "Low Pull": 4,
+  "Glute Abductor": 3,
+  "Core Pull": 4,
   };
 
   
@@ -122,6 +119,7 @@ const foodOptions = [
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
     const calc = burnRates[type];
     const num = Number(value);
+    if (isNaN(num)) return;
 const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
     return sum + (isNaN(burn) ? 0 : burn);
   }, 0);
@@ -193,6 +191,7 @@ const deleteWorkout = (type) => {
 const reps = workoutLog[type];
 const calc = burnRates[type];
   const num = Number(reps);
+    if (isNaN(num)) return;
   if (isNaN(num)) return;
 const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
 
