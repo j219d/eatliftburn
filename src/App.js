@@ -356,24 +356,28 @@ const navBtnStyle = {
   );
 }
 
-  // Rebuilt from clean backup (May 26)
-
+  
 if (screen === "workouts") {
   return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-      <HomeButton />
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial", maxWidth: "500px", margin: "auto" }}>
+      <button onClick={() => setScreen('home')} style={{ marginBottom: '20px' }}>⬅️ Home</button>
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
 
-      {Object.entries(workoutCategories).map(([category, items], i) => (
-        <div key={i}>
+      {Object.entries(workoutCategories).map(([category, exercises]) => (
+        <div key={category}>
           <h3 style={{ marginTop: "20px", marginBottom: "8px", fontSize: "18px", color: "#555" }}>{category}</h3>
-          {Object.keys(items).map((type, j) => (
-            <div key={j} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          {Object.keys(exercises).map((type) => (
+            <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
               <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
               <input
                 type="number"
                 step={type === "Run" ? "0.01" : "1"}
-                placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : "Reps"}
+                placeholder={
+                  type === "Run" ? "Kilometers" :
+                  type === "Swim" ? "Laps" :
+                  type === "Plank" ? "Seconds" :
+                  type === "Steps" ? "Steps" : "Reps"
+                }
                 value={customWorkout[type] || ""}
                 onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
                 style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
@@ -385,18 +389,12 @@ if (screen === "workouts") {
                     const rate = burnRates[type];
                     const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
 
-                    if (type === "Run") {
-                      const runSteps = Math.round(input * 800);
-                      setSteps(prev => prev + runSteps);
-                    }
-                    if (type === "Steps") {
-                      setSteps(prev => prev + input);
+                    if (type === "Steps" || type === "Run") {
+                      const stepsToAdd = type === "Run" ? Math.round(input * 800) : input;
+                      setSteps(prev => prev + stepsToAdd);
                     }
 
-                    setWorkoutLog(prev => ({
-                      ...prev,
-                      [type]: (prev[type] || 0) + input
-                    }));
+                    setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
                     setCustomWorkout({ ...customWorkout, [type]: "" });
                   }
                 }}
@@ -416,24 +414,18 @@ if (screen === "workouts") {
         </div>
       ))}
 
-      {/* Summary */}
       {Object.keys(workoutLog).length > 0 && (
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value], i) => {
+            {Object.entries(workoutLog).map(([type, value]) => {
               const rate = burnRates[type];
               const cal = typeof rate === "function" ? rate(value) : Math.round(value * rate);
-              let display;
-              if (type === "Run") display = `${value} km - ${cal} cal`;
-              else if (type === "Steps") display = `${value} steps - ${cal} cal`;
-              else if (type === "Swim") display = `${value} laps - ${cal} cal`;
-              else if (type === "Plank") display = `${value} sec - ${cal} cal`;
-              else display = `${value} reps - ${cal} cal`;
-
+              let label = (type === "Run") ? "km" : (type === "Plank") ? "sec" : (type === "Swim") ? "laps" : (type === "Steps") ? "steps" : "reps";
               return (
-                <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-                  {type}: {display} <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
+                <li key={type} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                  {type}: {value} {label} – {cal} cal
+                  <button onClick={() => deleteWorkout(type)}> ❌ </button>
                 </li>
               );
             })}
@@ -449,8 +441,7 @@ if (screen === "workouts") {
             Total Burn: {
               Object.entries(workoutLog).reduce((sum, [type, value]) => {
                 const rate = burnRates[type];
-                const num = Number(value);
-                const burn = typeof rate === "function" ? rate(num) : Math.round(num * rate);
+                const burn = typeof rate === "function" ? rate(value) : Math.round(value * rate);
                 return sum + (isNaN(burn) ? 0 : burn);
               }, 0)
             } cal
@@ -478,6 +469,227 @@ if (screen === "workouts") {
     </div>
   );
 }
+if (screen === "weight") {
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
+  const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
+  const data = {
+    labels: weightLog.map((w) => w.date),
+    datasets: [
+      {
+        label: "Weight (lbs)",
+        data: weightLog.map((w) => w.weight),
+        borderColor: "#0070f3",
+        backgroundColor: "#0070f3",
+        fill: false,
+        tension: 0.3,
+      },
+    ],
+  };
+
+  return (
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+      <HomeButton />
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
+
+      {/* Latest weight */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>{latestWeight} lb</div>
+        <div style={{ fontSize: "14px", color: "#666" }}>{latestDate}</div>
+      </div>
+
+      {/* Input */}
+      <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
+        <input
+          placeholder="Enter weight"
+          value={newWeight}
+          onChange={(e) => setNewWeight(e.target.value)}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={addWeight}
+          style={{
+            padding: "10px 16px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Log
+        </button>
+      </div>
+
+      {/* Chart */}
+      {weightLog.length > 0 && (
+        <div style={{
+          backgroundColor: "#fff",
+          padding: "16px",
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          marginBottom: "24px"
+        }}>
+          <Line data={data} />
+        </div>
+      )}
+
+      {/* History */}
+      <ul style={{ paddingLeft: "16px" }}>
+        {weightLog.map((w, i) => (
+          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+            {w.date}: {w.weight} lbs{" "}
+            <button onClick={() => deleteWeight(i)} style={{ marginLeft: "8px" }}>❌</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+  return (
+  <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "45%", height: "auto" }} />
+</div>
+
+    {/* Overview Box */}
+    <div style={{
+      backgroundColor: "#f9f9f9",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+      marginBottom: "20px"
+    }}>
+      <h2 style={{
+  fontSize: "17px",
+  fontWeight: "600",
+  marginTop: "0px",
+  marginBottom: "8px"
+}}>
+  📊 Today
+</h2>
+
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Eaten:</strong> {calories}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Burned:</strong>{" "}
+{
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+    if (type === "Run") return sum + Math.round(value * 70);
+    if (type === "Steps") return sum + Math.round(value * 0.04);
+    if (type === "Treadmill") return sum + value;
+    if (type === "Swim") return sum + Math.round(value * 7);
+    if (workouts[type]) return sum + Math.round(value * workouts[type]);
+    return sum + value;
+  }, 0)
+}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Deficit:</strong>{" "}
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
+    {estimatedDeficit}
+  </span>
+  <span> / {deficitGoal}</span>
+  {estimatedDeficit >= deficitGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Protein:</strong>{" "}
+  <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
+    {protein}
+  </span>
+  <span> / {proteinGoal}</span>
+  {protein >= proteinGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px" }}>
+  <strong>Steps:</strong>{" "}
+  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
+    {steps}
+  </span>
+  <span> / {stepGoal}</span>
+  {steps >= stepGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+    </div>
+
+    {/* Checklist Box */}
+    <div style={{
+      backgroundColor: "#f9f9f9",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+      marginBottom: "12px"
+    }}>
+      <h3 style={{
+  fontSize: "18px",
+  fontWeight: "600",
+  marginTop: "0px",
+  marginBottom: "12px"
+}}>
+  ☑️ Checklist
+</h3>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {["sunlight", "supplements", "concentrace"].map((key) => (
+  <label key={key} style={{ fontSize: "16px" }}>
+    <input
+      type="checkbox"
+      checked={checklist[key]}
+      onChange={() =>
+        setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+      }
+      style={{ marginRight: "10px" }}
+    />
+    {key === "sunlight"
+      ? "Sunlight 🌞"
+      : key === "supplements"
+      ? "Supplements 💊"
+      : key === "concentrace"
+      ? "Concentrace 💧"
+      : key}
+  </label>
+))}
+      </div>
+    </div>
+
+    {/* Navigation Buttons */}
+    <div style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "12px" }}>
+      <button style={navBtnStyle} onClick={() => setScreen("food")}>
+  🍽️ Food Log
+</button>
+      <button style={navBtnStyle} onClick={() => setScreen("workouts")}>🏋️ Workouts</button>
+      <button style={navBtnStyle} onClick={() => setScreen("weight")}>⚖️ Weight</button>
+    </div>
+    
+    <button
+      onClick={resetDay}
+      style={{
+  backgroundColor: "#d32f2f",
+  color: "white",
+  padding: "8px 20px",
+  fontSize: "15px",
+  border: "none",
+  borderRadius: "8px",
+  width: "140px",
+  maxWidth: "100%",
+  display: "block",
+  margin: "0 auto",
+  marginTop: "3px"
+}}
+    >
+      Reset
+    </button>
+  </div>
+);
+}
 
 export default App;
