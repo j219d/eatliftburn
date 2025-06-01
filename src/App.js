@@ -101,16 +101,16 @@ const foodOptions = [
 
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (type === "Run") return sum + Math.round(value * 70);
-  if (type === "Steps") return sum + Math.round(value * 0.04);
-  if (type === "Treadmill") return sum + value;
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (type === "Row Machine") return sum + Math.round(value * 6);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum + value;
+  if (type === "Run") sum += Math.round(value * 70);
+  else if (type === "Steps") sum += Math.round(value * 0.04);
+  else if (type === "Treadmill") sum += value;
+  else if (type === "Swim") sum += Math.round(value * 7);
+  else if (type === "Plank") sum += Math.round(value * 0.04); // 👈 should be value * 0.04
+  else if (type === "Row Machine") sum += Math.round(value * 6);
+  else if (workouts[type]) sum += Math.round(value * workouts[type]);
+  else sum += value;
+  return sum;
 }, 0);
-
 
 const estimatedDeficit = 1620 + totalBurn - calories;
 
