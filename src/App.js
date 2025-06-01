@@ -910,37 +910,8 @@ export default App;
         const cal = typeof rate === "function" ? rate(parseFloat(val)) : Math.round(parseFloat(val) * rate);
         return acc + cal;
       }, 0)
-    } cal</p>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-  </>
-</div>
-// removed suspicious token
+    </>
+  );
 }
 
 export default App;
