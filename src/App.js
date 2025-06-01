@@ -416,39 +416,78 @@ const navBtnStyle = {
     {Object.keys(items).map((type, j) => (
       <div key={j} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
-        <input
-          type="number"
-          step={type === "Run" ? "0.01" : "1"}
-          placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : "Reps"}
-          value={customWorkout[type] || ""}
-          onChange={(e) =>
-            setCustomWorkout({ ...customWorkout, [type]: e.target.value })
-          }
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <button
-          onClick={() => {
-            const input = parseFloat(customWorkout[type]);
-            if (!isNaN(input)) {
-              const flatWorkouts = Object.assign({}, ...Object.values(workoutCategories));
-              const rate = flatWorkouts[type];
-              const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
+        {type === "Treadmill" ? (
+  <>
+    <input
+      type="number"
+      placeholder="Calories"
+      value={customWorkout["TreadmillCal"] || ""}
+      onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
+      style={{ width: "50%", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+    />
+    <input
+      type="number"
+      step="0.01"
+      placeholder="KM"
+      value={customWorkout["TreadmillKm"] || ""}
+      onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
+      style={{ width: "40%", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+    />
+  </>
+) : (
+  <input
+    type="number"
+    step={type === "Run" ? "0.01" : "1"}
+    placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : "Reps"}
+    value={customWorkout[type] || ""}
+    onChange={(e) =>
+      setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+    }
+    style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+)}
 
-              if (type === "Run") {
-                const runSteps = Math.round(input * 800);
-                setSteps(prev => prev + runSteps);
-              }
-              if (type === "Steps") {
-                setSteps(prev => prev + input);
-              }
+        onClick={() => {
+  if (type === "Treadmill") {
+    const cal = parseInt(customWorkout["TreadmillCal"]);
+    const km = parseFloat(customWorkout["TreadmillKm"]);
+    if (!isNaN(cal) && !isNaN(km)) {
+      const steps = Math.round(km * 1250);
+      setSteps(prev => prev + steps);
+      setWorkoutLog(prev => ({
+        ...prev,
+        Treadmill: (prev.Treadmill || 0) + cal
+      }));
+      setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
+      return;
+    } else {
+      return;
+    }
+  }
 
-              setWorkoutLog(prev => ({
-                ...prev,
-                [type]: (prev[type] || 0) + input
-              }));
-              setCustomWorkout({ ...customWorkout, [type]: "" });
-            }
-          }}
+  const input = parseFloat(customWorkout[type]);
+  if (!isNaN(input)) {
+    const flatWorkouts = Object.assign({}, ...Object.values(workoutCategories));
+    const rate = flatWorkouts[type];
+    const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
+
+    if (type === "Run") {
+      const runSteps = Math.round(input * 800);
+      setSteps(prev => prev + runSteps);
+    }
+
+    if (type === "Steps") {
+      setSteps(prev => prev + input);
+    }
+
+    setWorkoutLog(prev => ({
+      ...prev,
+      [type]: (prev[type] || 0) + input
+    }));
+    setCustomWorkout({ ...customWorkout, [type]: "" });
+  }
+}}
+
           style={{
             padding: "8px 12px",
             fontSize: "16px",
