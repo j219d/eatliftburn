@@ -13,61 +13,6 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const burnRates = {
-  "Push-ups": 0.5,
-  "Pull-ups": 1,
-  "Biceps": 0.3,
-  "Bench Press": 0.4,
-  "Triceps": 0.3,
-  "Leg Press": 0.6,
-  "Low Pull": 0.4,
-  "Glute Abductor": 0.3,
-  "Core Pull": 0.3,
-  "Smith Machine Squats": 0.5,
-  "RDLs": 0.5,
-  "Back Extensions": 0.4,
-  "Run": (km) => Math.round(km * 60),
-  "Plank": (seconds) => Math.round(seconds * 0.15),
-  "Swim": (laps) => Math.round(laps * 8),
-  "Steps": 0.04
-};
-
-const workoutCategories = {
-  "Upper Body – Push": {
-    "Push-ups": true,
-    "Bench Press": true,
-    "Triceps": true
-  },
-  "Upper Body – Pull": {
-    "Pull-ups": true,
-    "Biceps": true,
-    "Low Pull": true
-  },
-  "Core": {
-    "Plank": true,
-    "Core Pull": true
-  },
-  "Lower Body – Quads": {
-    "Leg Press": true,
-    "Smith Machine Squats": true
-  },
-  "Lower Body – Glutes": {
-    "Glute Abductor": true
-  },
-  "Lower Body – Hamstrings": {
-    "RDLs": true
-  },
-  "Lower Back": {
-    "Back Extensions": true
-  },
-  "Cardio": {
-    "Steps": true,
-    "Run": true,
-    "Swim": true,
-    "Treadmill": true
-  }
-};
-
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
@@ -427,85 +372,112 @@ const navBtnStyle = {
 
   
 if (screen === "workouts") {
+  const allWorkouts = [
+    "Push-ups",
+    "Pull-ups",
+    "Biceps",
+    "Bench Press",
+    "Triceps",
+    "Leg Press",
+    "Smith Machine Squats",
+    "RDLs",
+    "Glute Abductor",
+    "Low Pull",
+    "Back Extensions",
+    "Core Pull",
+    "Plank",
+    "Run",
+    "Steps",
+    "Swim",
+    "Treadmill"
+  ];
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial", maxWidth: "500px", margin: "auto" }}>
-      <button onClick={() => setScreen('home')} style={{ marginBottom: '20px' }}>⬅️ Home</button>
+      <button onClick={() => setScreen('home')} style={{ fontSize: "18px", padding: "10px 20px", marginBottom: '20px' }}>⬅️ Home</button>
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
+      {allWorkouts.map((type) => (
+        <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "140px", fontSize: "16px" }}>{type}</label>
+          {type === "Treadmill" ? (
+            <>
+              <input
+                type="number"
+                placeholder="Cal"
+                value={customWorkout["TreadmillCal"] || ""}
+                onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
+                style={{ width: "60px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+              />
+              <input
+                type="number"
+                placeholder="KM"
+                value={customWorkout["TreadmillKm"] || ""}
+                onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
+                style={{ width: "60px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+              />
+            </>
+          ) : (
+            <input
+              type="number"
+              step={type === "Run" ? "0.01" : "1"}
+              placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : type === "Swim" ? "Laps" : type === "Steps" ? "Steps" : "Reps"}
+              value={customWorkout[type] || ""}
+              onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
+              style={{ width: "120px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+          )}
+          <button
+            onClick={() => {
+              if (type === "Treadmill") {
+                const cal = parseFloat(customWorkout["TreadmillCal"]);
+                const km = parseFloat(customWorkout["TreadmillKm"]);
+                if (!isNaN(cal) && !isNaN(km)) {
+                  const stepsToAdd = Math.round(km * 1250);
+                  setSteps(prev => prev + stepsToAdd);
+                  setWorkoutLog(prev => ({ ...prev, Treadmill: (prev.Treadmill || 0) + cal }));
+                  setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
+                }
+                return;
+              }
 
-      {Object.entries(workoutCategories).map(([category, exercises]) => (
-        <div key={category}>
-          <h3 style={{ marginTop: "20px", marginBottom: "8px", fontSize: "18px", color: "#555" }}>{category}</h3>
-          {Object.keys(exercises).map((type) => (
-            <div key={type} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-              <label style={{ width: "140px", fontSize: "16px" }}>{type}</label>
-              {type === "Treadmill" ? (
-                <>
-                  <input
-                    type="number"
-                    placeholder="Cal"
-                    value={customWorkout["TreadmillCal"] || ""}
-                    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
-                    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-                  />
-                  <input
-                    type="number"
-                    placeholder="KM"
-                    value={customWorkout["TreadmillKm"] || ""}
-                    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
-                    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-                  />
-                </>
-              ) : (
-                <input
-                  type="number"
-                  step={type === "Run" ? "0.01" : "1"}
-                  placeholder={type === "Run" ? "Kilometers" : type === "Plank" ? "Seconds" : type === "Swim" ? "Laps" : type === "Steps" ? "Steps" : "Reps"}
-                  value={customWorkout[type] || ""}
-                  onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-                  style={{ width: "120px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-                />
-              )}
-              <button
-                onClick={() => {
-                  if (type === "Treadmill") {
-                    const cal = parseFloat(customWorkout["TreadmillCal"]);
-                    const km = parseFloat(customWorkout["TreadmillKm"]);
-                    if (!isNaN(cal) && !isNaN(km)) {
-                      const stepsToAdd = Math.round(km * 1250);
-                      setSteps(prev => prev + stepsToAdd);
-                      setWorkoutLog(prev => ({ ...prev, Treadmill: (prev.Treadmill || 0) + cal }));
-                      setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
-                    }
-                    return;
-                  }
+              const input = parseFloat(customWorkout[type]);
+              if (!isNaN(input)) {
+                const rate = burnRates[type];
+                const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
 
-                  const input = parseFloat(customWorkout[type]);
-                  if (!isNaN(input)) {
-                    const rate = burnRates[type];
-                    const cal = typeof rate === "function" ? rate(input) : Math.round(input * rate);
+                if (type === "Steps") setSteps(prev => prev + input);
+                if (type === "Run") setSteps(prev => prev + Math.round(input * 800));
 
-                    if (type === "Steps") setSteps(prev => prev + input);
-                    if (type === "Run") setSteps(prev => prev + Math.round(input * 800));
-
-                    setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
-                    setCustomWorkout({ ...customWorkout, [type]: "" });
-                  }
-                }}
-                style={{
-                  padding: "8px 12px",
-                  fontSize: "16px",
-                  backgroundColor: "#0070f3",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px"
-                }}
-              >
-                Add
-              </button>
-            </div>
-          ))}
+                setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
+                setCustomWorkout({ ...customWorkout, [type]: "" });
+              }
+            }}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
         </div>
       ))}
+
+      <h3 style={{ marginTop: "30px", fontSize: "18px" }}>Today's Workout Log:</h3>
+      <ul>
+        {Object.entries(workoutLog).map(([type, val]) => (
+          <li key={type}>{type}: {val}</li>
+        ))}
+      </ul>
+      <p style={{ fontWeight: "bold" }}>Total Burn: {
+        Object.entries(workoutLog).reduce((acc, [type, val]) => {
+          const rate = burnRates[type];
+          const cal = typeof rate === "function" ? rate(val) : Math.round(val * rate);
+          return acc + cal;
+        }, 0)
+      } cal</p>
     </div>
   );
 }
