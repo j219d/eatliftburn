@@ -47,7 +47,6 @@ function App() {
   "Glute Bridge": 0.4,
   "Lunges": 0.5,
   "Plank": "plank", // handled as seconds
-  "Row Machine": "row", // handled as minutes
   "Run": "run"
 };
 
@@ -64,7 +63,6 @@ function App() {
     "Lunges": 0.5,
     "Smith Machine Squats": 0.6,
     "Plank": (seconds) => Math.round(seconds * 0.04),
-    "Row Machine": (minutes) => Math.round(minutes * 6),
     "Run": (km) => Math.round(km * 70),
     "Steps": (steps) => Math.round(steps * 0.04),
     "Treadmill": (cals) => cals,
@@ -169,7 +167,6 @@ const logWorkout = (type, reps) => {
   let burn;
   if (type === "Plank") {
     burn = Math.round(reps * 0.04); // ~2.4 cal/min
-  } else if (type === "Row Machine") {
     burn = Math.round(reps * 6); // 6 cal per min
   } else {
     burn = Math.round(workouts[type] * reps);
@@ -195,7 +192,8 @@ const logWorkout = (type, reps) => {
 const deleteWorkout = (type) => {
 const reps = workoutLog[type];
 const calc = burnRates[type];
-const num = Number(reps);
+  const num = Number(reps);
+  if (isNaN(num)) return;
 const burn = typeof calc === "function" ? calc(num) : Math.round(num * calc);
 
   // ✅ Fix step count for Run
@@ -599,7 +597,6 @@ if (type === "Run") {
   display = `${value} laps - ${cal} cal`;
 } else if (type === "Plank") {
   display = `${value} sec - ${cal} cal`;
-} else if (type === "Row Machine") {
   display = `${value} min - ${cal} cal`;
 } else {
   display = `${value} reps - ${cal} cal`;
