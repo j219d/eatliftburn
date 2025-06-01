@@ -730,47 +730,6 @@ export default App;
 
 
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-  <input
-    type="number"
-    placeholder="Cal"
-    value={customWorkout["TreadmillCal"] || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
-    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-  />
-  <input
-    type="number"
-    placeholder="KM"
-    value={customWorkout["TreadmillKm"] || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
-    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-  />
-  <button
-    onClick={() => {
-      const cal = parseInt(customWorkout["TreadmillCal"]);
-      const km = parseFloat(customWorkout["TreadmillKm"]);
-      if (!isNaN(cal) && !isNaN(km)) {
-        const steps = Math.round(km * 1250);
-        setSteps(prev => prev + steps);
-        setWorkoutLog(prev => ({
-          ...prev,
-          Treadmill: (prev.Treadmill || 0) + cal
-        }));
-        setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
-      }
-    }}
-    style={{
-      padding: "8px 12px", fontSize: "16px",
-      backgroundColor: "#0070f3", color: "white",
-      border: "none", borderRadius: "8px"
-    }}
-  >
-    Add
-  </button>
-</div>
-
-
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
   <input
     type="number"
@@ -823,6 +782,48 @@ export default App;
         setManualBurn(prev => prev + cal);
       }
       setCustomWorkout({ ...customWorkout, Steps: "" });
+    }}
+    style={{
+      padding: "8px 12px", fontSize: "16px",
+      backgroundColor: "#0070f3", color: "white",
+      border: "none", borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
+
+
+
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  <input
+    type="number"
+    placeholder="Cal"
+    value={customWorkout["TreadmillCal"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillCal: e.target.value })}
+    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    type="number"
+    placeholder="KM"
+    value={customWorkout["TreadmillKm"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, TreadmillKm: e.target.value })}
+    style={{ width: "70px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <button
+    onClick={() => {
+      const cal = parseInt(customWorkout["TreadmillCal"]);
+      const km = parseFloat(customWorkout["TreadmillKm"]);
+      if (!isNaN(cal) && !isNaN(km)) {
+        const steps = Math.round(km * 1250);
+        setSteps(prev => prev + steps);
+        setWorkoutLog(prev => ({
+          ...prev,
+          Treadmill: (prev.Treadmill || 0) + cal
+        }));
+        setCustomWorkout({ ...customWorkout, TreadmillCal: "", TreadmillKm: "" });
+      }
     }}
     style={{
       padding: "8px 12px", fontSize: "16px",
