@@ -41,7 +41,7 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
-  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+  const [, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
 
@@ -310,86 +310,131 @@ const navBtnStyle = {
       </div>
 
     return (
-  <div>
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", rowGap: "16px", marginBottom: "16px", justifyContent: "space-between" }}>
-      <input
-        placeholder="Custom food name"
-        value={customFood.name}
-        onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <input
-        placeholder="Calories"
-        type="number"
-        value={customFood.cal}
-        onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <input
-        placeholder="Protein"
-        type="number"
-        value={customFood.prot}
-        onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <input
-        placeholder="Fat"
-        type="number"
-        value={customFood.fat}
-        onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <input
-        placeholder="Carbs"
-        type="number"
-        value={customFood.carbs}
-        onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <input
-        placeholder="Fiber"
-        type="number"
-        value={customFood.fiber}
-        onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
-        style={{ flex: "1 1 calc(33.333% - 12px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-    </div>
+ <div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "12px",
+    rowGap: "16px",
+    marginBottom: "16px",
+    justifyContent: "space-between"
+  }}
+>
+  <input
+    placeholder="Custom food name"
+    value={customFood.name}
+    onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+    style={{
+      flex: "1 1 100%",
+      maxWidth: "100%",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    placeholder="Calories"
+    type="number"
+    value={customFood.cal}
+    onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+    style={{
+      flex: "1 1 calc(50% - 12px)",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    placeholder="Protein"
+    type="number"
+    value={customFood.prot}
+    onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+    style={{
+      flex: "1 1 calc(50% - 12px)",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    placeholder="Fat"
+    type="number"
+    value={customFood.fat}
+    onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
+    style={{
+      flex: "1 1 calc(50% - 12px)",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    placeholder="Carbs"
+    type="number"
+    value={customFood.carbs}
+    onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
+    style={{
+      flex: "1 1 calc(50% - 12px)",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+  <input
+    placeholder="Fiber"
+    type="number"
+    value={customFood.fiber}
+    onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
+    style={{
+      flex: "1 1 calc(50% - 12px)",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc"
+    }}
+  />
+</div>
 
-    <button
-      onClick={() => {
-        const { name, cal, prot, fat, carbs, fiber } = customFood;
-        const parsedCal = parseInt(cal);
-        const parsedProt = parseInt(prot);
-        const parsedFat = parseFloat(fat);
-        const parsedCarbs = parseFloat(carbs);
-        const parsedFiber = parseFloat(fiber);
+<button
+  onClick={() => {
+    const { name, cal, prot, fat, carbs, fiber } = customFood;
+    const parsedCal = parseInt(cal);
+    const parsedProt = parseInt(prot);
+    const parsedFat = parseFloat(fat);
+    const parsedCarbs = parseFloat(carbs);
+    const parsedFiber = parseFloat(fiber);
 
-        if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
-          const food = {
-            name,
-            cal: parsedCal,
-            prot: parsedProt,
-            fat: isNaN(parsedFat) ? 0 : parsedFat,
-            carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
-            fiber: isNaN(parsedFiber) ? 0 : parsedFiber
-          };
+    if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
+      const food = {
+        name,
+        cal: parsedCal,
+        prot: parsedProt,
+        fat: isNaN(parsedFat) ? 0 : parsedFat,
+        carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
+        fiber: isNaN(parsedFiber) ? 0 : parsedFiber
+      };
 
-          addFood(food);
-          setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
-        }
-      }}
-      style={{
-        padding: "10px 16px",
-        backgroundColor: "#0070f3",
-        color: "white",
-        fontSize: "16px",
-        border: "none",
-        borderRadius: "8px",
-        width: "100%"
-      }}
-    >
-      Add Custom Food
-    </button>
+      addFood(food);
+      setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+    }
+  }}
+  style={{
+    padding: "10px 16px",
+    backgroundColor: "#0070f3",
+    color: "white",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
+    width: "100%"
+  }}
+>
+  Add Custom Food
+</button>
   </div>
 );
 
