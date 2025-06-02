@@ -277,34 +277,34 @@ const navBtnStyle = {
 
   if (screen === "food") {
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "16px" }}>
       <button
         onClick={() => setScreen("home")}
         style={{
-          marginBottom: "16px",
           backgroundColor: "#eee",
+          color: "#333",
           padding: "8px 12px",
           borderRadius: "8px",
-          fontSize: "16px",
+          marginBottom: "16px",
           border: "1px solid #ccc",
-          cursor: "pointer"
+          fontWeight: "600"
         }}
       >
-        ⬅️ Home
+        ⬅ Home
       </button>
 
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
-        🍽️ Food Log
-      </h1>
-
       <select
-        value=""
-        onChange={e => {
+        onChange={(e) => {
           const selected = foodOptions.find(f => f.name === e.target.value);
           if (selected) {
-            addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+            const food = {
+              ...selected,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            addFood(food);
           }
         }}
+        defaultValue=""
         style={{
           width: "100%",
           padding: "10px",
@@ -314,10 +314,10 @@ const navBtnStyle = {
           marginBottom: "16px"
         }}
       >
-        <option value="">Select Food</option>
-        {foodOptions.map((food, index) => (
-          <option key={index} value={food.name}>
-            {food.name}
+        <option value="" disabled>Select a food</option>
+        {foodOptions.map((f, i) => (
+          <option key={i} value={f.name}>
+            {f.name} – {f.cal} cal / {f.prot}g prot / {f.fat || 0}g fat / {f.carbs || 0}g carb / {f.fiber || 0}g fib
           </option>
         ))}
       </select>
@@ -327,16 +327,32 @@ const navBtnStyle = {
           display: "flex",
           flexWrap: "wrap",
           gap: "12px",
-          rowGap: "12px",
           marginBottom: "16px"
         }}
       >
-        <input placeholder="Custom food name" value={customFood.name} onChange={e => setCustomFood({ ...customFood, name: e.target.value })} style={{ flex: "1 1 100%", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
-        <input placeholder="Calories" type="number" value={customFood.cal} onChange={e => setCustomFood({ ...customFood, cal: e.target.value })} style={{ flex: "1 1 calc(33.333% - 8px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
-        <input placeholder="Protein" type="number" value={customFood.prot} onChange={e => setCustomFood({ ...customFood, prot: e.target.value })} style={{ flex: "1 1 calc(33.333% - 8px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
-        <input placeholder="Fat" type="number" value={customFood.fat} onChange={e => setCustomFood({ ...customFood, fat: e.target.value })} style={{ flex: "1 1 calc(33.333% - 8px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
-        <input placeholder="Carbs" type="number" value={customFood.carbs} onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })} style={{ flex: "1 1 calc(33.333% - 8px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
-        <input placeholder="Fiber" type="number" value={customFood.fiber} onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })} style={{ flex: "1 1 calc(33.333% - 8px)", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }} />
+        {[
+          { name: "name", placeholder: "Food name" },
+          { name: "cal", placeholder: "Calories" },
+          { name: "prot", placeholder: "Protein" },
+          { name: "fat", placeholder: "Fat" },
+          { name: "carbs", placeholder: "Carbs" },
+          { name: "fiber", placeholder: "Fiber" },
+        ].map((field, index) => (
+          <input
+            key={field.name}
+            placeholder={field.placeholder}
+            type={field.name === "name" ? "text" : "number"}
+            value={customFood[field.name]}
+            onChange={e => setCustomFood({ ...customFood, [field.name]: e.target.value })}
+            style={{
+              flex: "1 1 calc(33.33% - 12px)",
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              border: "1px solid #ccc"
+            }}
+          />
+        ))}
       </div>
 
       <button
@@ -364,14 +380,14 @@ const navBtnStyle = {
           }
         }}
         style={{
-          padding: "10px 16px",
+          width: "100%",
+          padding: "12px",
           backgroundColor: "#0070f3",
           color: "white",
           fontSize: "16px",
           border: "none",
           borderRadius: "8px",
-          width: "100%",
-          marginBottom: "20px"
+          marginBottom: "24px"
         }}
       >
         Add Custom Food
@@ -379,53 +395,57 @@ const navBtnStyle = {
 
       {foodLog.length > 0 && (
         <>
-          <h3 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h3>
-          <ul style={{ paddingLeft: 0, listStyleType: "none" }}>
-            {foodLog.map((f, i) => (
-              <li key={i} style={{
-                backgroundColor: "#f5f5f5",
-                padding: "10px",
+          <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h3>
+          {foodLog.map((f, i) => (
+            <div
+              key={i}
+              style={{
+                backgroundColor: "#f1f1f1",
+                padding: "10px 12px",
                 borderRadius: "8px",
-                marginBottom: "8px",
+                marginBottom: "10px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                fontSize: "16px"
-              }}>
-                <div>
-                  <strong>{f.name}</strong><br />
-                  {f.cal} cal / {f.prot}g prot / {f.fat || 0}g fat / {f.carbs || 0}g carb / {f.fiber || 0}g fib<br />
+                fontSize: "15px"
+              }}
+            >
+              <div>
+                <div><strong>{f.name}</strong></div>
+                <div style={{ fontSize: "14px", color: "#333" }}>
+                  {f.cal} cal / {f.prot}g prot / {f.fat || 0}g fat / {f.carbs || 0}g carb / {f.fiber || 0}g fib
+                  <br />
                   <span style={{ fontSize: "12px", color: "#888" }}>{f.time || ""}</span>
                 </div>
-                <button
-                  onClick={() => deleteFood(i)}
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    color: "#d00",
-                    fontSize: "18px",
-                    cursor: "pointer"
-                  }}
-                >
-                  ❌
-                </button>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <button
+                onClick={() => deleteFood(i)}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  fontSize: "18px",
+                  cursor: "pointer",
+                  color: "#d00"
+                }}
+              >
+                ❌
+              </button>
+            </div>
+          ))}
+
+          <div style={{
+            marginTop: "24px",
+            backgroundColor: "#e0e0e0",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            textAlign: "center",
+            fontSize: "16px",
+            fontWeight: "bold"
+          }}>
+            Total: {calories} cal / {protein}g prot / {fat}g fat / {carbs}g carbs / {fiber}g fiber
+          </div>
         </>
       )}
-
-      <div style={{
-        marginTop: "24px",
-        backgroundColor: "#f1f1f1",
-        padding: "12px 16px",
-        borderRadius: "10px",
-        textAlign: "center",
-        fontSize: "18px",
-        fontWeight: "bold"
-      }}>
-        Total: {calories} cal / {protein}g protein
-      </div>
     </div>
   );
 }
