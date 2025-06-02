@@ -438,8 +438,48 @@ const navBtnStyle = {
     >
       Add Custom Food
     </button>
-  </div>
-);
+ <h3 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h3>
+<div style={{ marginBottom: "16px" }}>
+  {foodLog.length === 0 ? (
+    <p style={{ fontStyle: "italic", color: "#888" }}>No foods logged yet.</p>
+  ) : (
+    foodLog.map((item, index) => (
+      <div
+        key={index}
+        style={{
+          backgroundColor: "#f5f5f5",
+          padding: "10px",
+          borderRadius: "8px",
+          marginBottom: "8px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
+      >
+        <div>
+          <strong>{item.name}</strong>
+          <div style={{ fontSize: "14px", color: "#333" }}>
+            {item.cal} cal / {item.prot}g prot / {item.fat || 0}g fat / {item.carbs || 0}g carb / {item.fiber || 0}g fib
+            <br />
+            <span style={{ fontSize: "12px", color: "#888" }}>{item.time || ""}</span>
+          </div>
+        </div>
+        <button
+          onClick={() => deleteFood(index)}
+          style={{
+            backgroundColor: "transparent",
+            border: "none",
+            color: "#d00",
+            fontSize: "18px",
+            cursor: "pointer"
+          }}
+        >
+          ❌
+        </button>
+      </div>
+    ))
+  )}
+</div>
 
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
       <ul style={{ paddingLeft: "16px" }}>
