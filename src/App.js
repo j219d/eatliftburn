@@ -41,7 +41,7 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
-  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "" });
+  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
 
@@ -331,24 +331,55 @@ const navBtnStyle = {
   onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
   style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
 />
+
+  <input
+  placeholder="Fat"
+  type="number"
+  value={customFood.fat}
+  onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
+  style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
+
+<input
+  placeholder="Carbs"
+  type="number"
+  value={customFood.carbs}
+  onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
+  style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
+
+<input
+  placeholder="Fiber"
+  type="number"
+  value={customFood.fiber}
+  onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
+  style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
+
         <button
           onClick={() => {
-  const { name, cal, prot } = customFood;
+  const { name, cal, prot, fat, carbs, fiber } = customFood;
   const parsedCal = parseInt(cal);
   const parsedProt = parseInt(prot);
+  const parsedFat = parseFloat(fat);
+  const parsedCarbs = parseFloat(carbs);
+  const parsedFiber = parseFloat(fiber);
 
   if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
-    setCalories(c => c + parsedCal);
-    setProtein(p => p + parsedProt);
-    setFoodLog(f => [...f, {
+    const food = {
       name,
       cal: parsedCal,
       prot: parsedProt,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }]);
-    setCustomFood({ name: "", cal: "", prot: "" });
+      fat: isNaN(parsedFat) ? 0 : parsedFat,
+      carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
+      fiber: isNaN(parsedFiber) ? 0 : parsedFiber
+    };
+
+    addFood(food);
+    setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   }
 }}
+
 
           style={{
             padding: "10px 16px",
@@ -836,7 +867,7 @@ return (
   <span style={{ color: water >= waterGoal ? "green" : "red" }}>
     {water}
   </span>
-  <span> / {waterGoal} bottles (27oz)</span>
+  <span> / {waterGoal} bottles</span>
 </div>
 
 <div style={{ fontSize: "16px" }}>
