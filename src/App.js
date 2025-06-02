@@ -36,18 +36,18 @@ function App() {
   const [customSteps, setCustomSteps] = useState("");
 
   const workouts = {
-  "Push-ups": 0.5,
-  "Pull-ups": 1,
-  "Low Pull": 4,
-  "Biceps": 0.5,
-  "Bench Press": 0.5,
-  "Triceps": 0.5,
-  "Leg Press": 0.5,
-  "Lunges": 0.5,
-  "RDLs": 0.5,
-  "Back Extensions": 0.4,
-  "Glute Abductor": 3,
-  "Core Pull": 4,
+  "Push-ups": 0.3,
+  "Pull-ups": 0.3,
+  "Low Pull": 0.3,
+  "Biceps": 0.3,
+  "Bench Press": 0.3,
+  "Triceps": 0.3,
+  "Leg Press": 0.4,
+  "Lunges": 0.4,
+  "RDLs": 0.4,
+  "Back Extensions": 0.3,
+  "Glute Abductor": 0.3,
+  "Core Pull": 0.3,
   "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
   "Run": "run"
 };
