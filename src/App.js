@@ -63,50 +63,51 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
 };
   
 const foodOptions = [
-  { name: "Apple", cal: 95, prot: 1 },
-  { name: "Avocado (1/2)", cal: 120, prot: 1.5 },
-  { name: "Avocado (1 whole)", cal: 240, prot: 3 },
-  { name: "Banana", cal: 105, prot: 1 },
-  { name: "Butter (1 tsp)", cal: 35, prot: 0 },
-  { name: "Carrot", cal: 25, prot: 0.5 },
-  { name: "Carrot juice", cal: 94, prot: 2 },
-  { name: "Chicken breast (50g)", cal: 82, prot: 15 },
-  { name: "Chicken breast (100g)", cal: 165, prot: 31 },
-  { name: "Chicken breast (150g)", cal: 248, prot: 46 },
-  { name: "Chicken breast (200g)", cal: 330, prot: 62 },
-  { name: "Cottage cheese (47g)", cal: 48, prot: 5.5 },
-  { name: "Cottage cheese (95g)", cal: 95, prot: 11 },
-  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5 },
-  { name: "Cucumber", cal: 16, prot: 1 },
-  { name: "Egg", cal: 70, prot: 6 },
-  { name: "Egg white", cal: 15, prot: 3 },
-  { name: "Eggs (2) + butter", cal: 175, prot: 12 },
-  { name: "Eggs (2), Egg white (1) + butter", cal: 190, prot: 15 },
-  { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2 },
-  { name: "Green onions", cal: 5, prot: 0 },
-  { name: "Ground beef 90/10 (50g)", cal: 73, prot: 9.3 },
-  { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6 },
-  { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9 },
-  { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2 },
-  { name: "Israeli salad (large)", cal: 100, prot: 2 },
-  { name: "Israeli salad (medium)", cal: 70, prot: 1.5 },
-  { name: "Israeli salad (small)", cal: 40, prot: 1 },
-  { name: "Olive oil (1 tbsp)", cal: 120, prot: 0 },
-  { name: "Olive oil (1 tsp)", cal: 40, prot: 0 },
-  { name: "Promix protein bar", cal: 150, prot: 15 },
-  { name: "Protein ice cream", cal: 400, prot: 52 },
-  { name: "Protein scoop (1)", cal: 75, prot: 15 },
-  { name: "Protein scoop (2)", cal: 150, prot: 30 },
-  { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3 },
-  { name: "Quest chips", cal: 140, prot: 20 },
-  { name: "Quest protein bar", cal: 190, prot: 21 },
-  { name: "Spinach (handful)", cal: 15, prot: 1.5 },
-  { name: "Sweet potato (1/2)", cal: 56, prot: 1 },
-  { name: "Sweet potato (1)", cal: 112, prot: 2 },
-  { name: "Tomato", cal: 20, prot: 1 },
-  { name: "Walnut (1 whole)", cal: 26, prot: 0.6 },
-  { name: "Watermelon triangle", cal: 50, prot: 1 },
-  { name: "Yogurt 0%", cal: 117, prot: 20 }
+  { name: "Apple", cal: 95, prot: 1, fat: 0.3, carbs: 25, fiber: 4.4 },
+  { name: "Avocado (1/2)", cal: 120, prot: 1.5, fat: 10, carbs: 6, fiber: 5 },
+  { name: "Avocado (1 whole)", cal: 240, prot: 3, fat: 20, carbs: 12, fiber: 10 },
+  { name: "Banana", cal: 105, prot: 1, fat: 0.3, carbs: 27, fiber: 3 },
+  { name: "Butter (1 tsp)", cal: 35, prot: 0, fat: 4, carbs: 0, fiber: 0 },
+  { name: "Carrot", cal: 25, prot: 0.5, fat: 0.1, carbs: 6, fiber: 1.7 },
+  { name: "Carrot juice", cal: 94, prot: 2, fat: 0.4, carbs: 22, fiber: 2 },
+  { name: "Chicken breast (50g)", cal: 82, prot: 15, fat: 1.8, carbs: 0, fiber: 0 },
+  { name: "Chicken breast (100g)", cal: 165, prot: 31, fat: 3.6, carbs: 0, fiber: 0 },
+  { name: "Chicken breast (150g)", cal: 248, prot: 46, fat: 5.4, carbs: 0, fiber: 0 },
+  { name: "Chicken breast (200g)", cal: 330, prot: 62, fat: 7.2, carbs: 0, fiber: 0 },
+  { name: "Cottage cheese (47g)", cal: 48, prot: 5.5, fat: 1.5, carbs: 1.4, fiber: 0 },
+  { name: "Cottage cheese (95g)", cal: 95, prot: 11, fat: 3, carbs: 2.8, fiber: 0 },
+  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5, fat: 7.5, carbs: 7, fiber: 0 },
+  { name: "Cucumber", cal: 16, prot: 1, fat: 0.1, carbs: 4, fiber: 0.5 },
+  { name: "Egg", cal: 70, prot: 6, fat: 5, carbs: 0.6, fiber: 0 },
+  { name: "Egg white", cal: 15, prot: 3, fat: 0, carbs: 0.2, fiber: 0 },
+  { name: "Eggs (2) + butter", cal: 175, prot: 12, fat: 13, carbs: 0.6, fiber: 0 },
+  { name: "Eggs (2), Egg white (1) + butter", cal: 190, prot: 15, fat: 13, carbs: 0.8, fiber: 0 },
+  { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2, fat: 4.3, carbs: 3, fiber: 2.8 },
+  { name: "Green onions", cal: 5, prot: 0, fat: 0, carbs: 1, fiber: 0.3 },
+  { name: "Ground beef 90/10 (50g)", cal: 73, prot: 9.3, fat: 4, carbs: 0, fiber: 0 },
+  { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 },
+  { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9, fat: 12, carbs: 0, fiber: 0 },
+  { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2, fat: 16, carbs: 0, fiber: 0 },
+  { name: "Israeli salad (large)", cal: 100, prot: 2, fat: 0.5, carbs: 10, fiber: 3 },
+  { name: "Israeli salad (medium)", cal: 70, prot: 1.5, fat: 0.3, carbs: 7, fiber: 2 },
+  { name: "Israeli salad (small)", cal: 40, prot: 1, fat: 0.2, carbs: 4, fiber: 1 },
+  { name: "Olive oil (1 tbsp)", cal: 120, prot: 0, fat: 14, carbs: 0, fiber: 0 },
+  { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 },
+  { name: "Promix protein bar", cal: 150, prot: 15, fat: 3, carbs: 17, fiber: 5 },
+  { name: "Protein ice cream", cal: 400, prot: 52, fat: 8, carbs: 28, fiber: 5 },
+  { name: "Protein scoop (1)", cal: 75, prot: 15, fat: 0.3, carbs: 3.5, fiber: 0 },
+  { name: "Protein scoop (2)", cal: 150, prot: 30, fat: 0.5, carbs: 7, fiber: 0 },
+  { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
+  { name: "Quest chips", cal: 140, prot: 20, fat: 4.5, carbs: 4, fiber: 1 },
+  { name: "Quest protein bar", cal: 190, prot: 20, fat: 9, carbs: 22, fiber: 11 },
+  { name: "Spinach (handful)", cal: 15, prot: 1.5, fat: 0.3, carbs: 2, fiber: 1 },
+  { name: "Sweet potato (1/2)", cal: 56, prot: 1, fat: 0, carbs: 13, fiber: 2 },
+  { name: "Sweet potato (1)", cal: 112, prot: 2, fat: 0.1, carbs: 26, fiber: 4 },
+  { name: "Tomato", cal: 20, prot: 1, fat: 0.2, carbs: 5, fiber: 1.5 },
+  { name: "Walnut (1 whole)", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
+  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
+  { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
+  { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
 ];
 
 
@@ -218,14 +219,22 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
     setCalories(prev => prev + food.cal);
-    setProtein(prev => prev + food.prot);
-    setFoodLog(prev => [...prev, food]);
+setProtein(prev => prev + food.prot);
+setFat(prev => prev + (food.fat || 0));
+setCarbs(prev => prev + (food.carbs || 0));
+setFiber(prev => prev + (food.fiber || 0));
+setWater(prev => prev + (food.water || 0));
+setFoodLog(prev => [...prev, food]);
   };
 
   const deleteFood = (index) => {
     const removed = foodLog[index];
     setCalories(prev => prev - removed.cal);
-    setProtein(prev => prev - removed.prot);
+setProtein(prev => prev - removed.prot);
+setFat(prev => prev - (removed.fat || 0));
+setCarbs(prev => prev - (removed.carbs || 0));
+setFiber(prev => prev - (removed.fiber || 0));
+setWater(prev => prev - (removed.water || 0));
     setFoodLog(foodLog.filter((_, i) => i !== index));
   };
 
