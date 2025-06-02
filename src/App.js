@@ -351,7 +351,6 @@ const navBtnStyle = {
     onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
     style={{ flex: "1 1 30%", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
   />
-</div>
 
         <button
           onClick={() => {
