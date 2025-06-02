@@ -277,91 +277,104 @@ const navBtnStyle = {
 
   if (screen === "food") {
   return (
-    <div>
-  <div
-    style={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "12px",
-      rowGap: "16px",
-      marginBottom: "16px",
-      justifyContent: "space-between",
-    }}
-  >
-    <input
-      placeholder="Custom food name"
-      value={customFood.name}
-      onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+  <div>
+    <button
+      onClick={() => setCurrentPage("home")}
       style={{
-        flex: "1 1 100%",
-        maxWidth: "100%",
-        padding: "10px",
+        marginBottom: "16px",
+        padding: "8px 12px",
         fontSize: "16px",
         borderRadius: "8px",
-        border: "1px solid #ccc"
+        border: "1px solid #ccc",
+        backgroundColor: "#f0f0f0",
+        cursor: "pointer"
       }}
-    />
-    {[
-      { label: "Calories", key: "cal" },
-      { label: "Protein", key: "prot" },
-      { label: "Fat", key: "fat" },
-      { label: "Carbs", key: "carbs" },
-      { label: "Fiber", key: "fiber" }
-    ].map(({ label, key }) => (
+    >
+      ← Home
+    </button>
+
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "12px",
+        rowGap: "12px",
+        marginBottom: "16px",
+        justifyContent: "space-between"
+      }}
+    >
       <input
-        key={key}
-        placeholder={label}
-        type="number"
-        value={customFood[key]}
-        onChange={e => setCustomFood({ ...customFood, [key]: e.target.value })}
+        placeholder="Custom food name"
+        value={customFood.name}
+        onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
         style={{
-          flex: "1 1 calc(50% - 12px)",
+          flex: "1 1 100%",
           padding: "10px",
           fontSize: "16px",
           borderRadius: "8px",
           border: "1px solid #ccc"
         }}
       />
-    ))}
-  </div>
+      {[
+        { key: "cal", label: "Calories" },
+        { key: "prot", label: "Protein" },
+        { key: "fat", label: "Fat" },
+        { key: "carbs", label: "Carbs" },
+        { key: "fiber", label: "Fiber" }
+      ].map(({ key, label }) => (
+        <input
+          key={key}
+          placeholder={label}
+          type="number"
+          value={customFood[key]}
+          onChange={e => setCustomFood({ ...customFood, [key]: e.target.value })}
+          style={{
+            flex: "1 1 calc(20% - 10px)",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "8px",
+            border: "1px solid #ccc"
+          }}
+        />
+      ))}
+    </div>
 
-  <button
-    onClick={() => {
-      const { name, cal, prot, fat, carbs, fiber } = customFood;
-      const parsedCal = parseInt(cal);
-      const parsedProt = parseInt(prot);
-      const parsedFat = parseFloat(fat);
-      const parsedCarbs = parseFloat(carbs);
-      const parsedFiber = parseFloat(fiber);
+    <button
+      onClick={() => {
+        const { name, cal, prot, fat, carbs, fiber } = customFood;
+        const parsedCal = parseInt(cal);
+        const parsedProt = parseInt(prot);
+        const parsedFat = parseFloat(fat);
+        const parsedCarbs = parseFloat(carbs);
+        const parsedFiber = parseFloat(fiber);
 
-      if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
-        const food = {
-          name,
-          cal: parsedCal,
-          prot: parsedProt,
-          fat: isNaN(parsedFat) ? 0 : parsedFat,
-          carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
-          fiber: isNaN(parsedFiber) ? 0 : parsedFiber,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-
-        addFood(food);
-        setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
-      }
-    }}
-    style={{
-      padding: "10px 16px",
-      backgroundColor: "#0070f3",
-      color: "white",
-      fontSize: "16px",
-      border: "none",
-      borderRadius: "8px",
-      width: "100%",
-      marginBottom: "20px"
-    }}
-  >
-    Add Custom Food
-  </button>
+        if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
+          const food = {
+            name,
+            cal: parsedCal,
+            prot: parsedProt,
+            fat: isNaN(parsedFat) ? 0 : parsedFat,
+            carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
+            fiber: isNaN(parsedFiber) ? 0 : parsedFiber,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+          addFood(food);
+          setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+        }
+      }}
+      style={{
+        padding: "10px 16px",
+        backgroundColor: "#0070f3",
+        color: "white",
+        fontSize: "16px",
+        border: "none",
+        borderRadius: "8px",
+        width: "100%",
+        marginBottom: "20px"
+      }}
+    >
+      Add Custom Food
+    </button>
 
   <h3 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h3>
   <div style={{ marginBottom: "16px" }}>
