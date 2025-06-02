@@ -754,7 +754,6 @@ return (
     {calories}
   </span>
 </div>
-
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
         <strong>Calories Burned:</strong>{" "}
 {
