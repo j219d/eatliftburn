@@ -318,7 +318,7 @@ const navBtnStyle = {
         gap: "12px",
         rowGap: "16px",
         marginBottom: "16px",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
       }}
     >
       <input
@@ -417,7 +417,8 @@ const navBtnStyle = {
             prot: parsedProt,
             fat: isNaN(parsedFat) ? 0 : parsedFat,
             carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
-            fiber: isNaN(parsedFiber) ? 0 : parsedFiber
+            fiber: isNaN(parsedFiber) ? 0 : parsedFiber,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           };
 
           addFood(food);
@@ -431,7 +432,8 @@ const navBtnStyle = {
         fontSize: "16px",
         border: "none",
         borderRadius: "8px",
-        width: "100%"
+        width: "100%",
+        marginBottom: "20px"
       }}
     >
       Add Custom Food
