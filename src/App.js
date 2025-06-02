@@ -20,6 +20,16 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 750);
   const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
+const [fat, setFat] = useState(() => parseInt(localStorage.getItem("fat")) || 0);
+const [carbs, setCarbs] = useState(() => parseInt(localStorage.getItem("carbs")) || 0);
+const [fiber, setFiber] = useState(() => parseInt(localStorage.getItem("fiber")) || 0);
+const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
+
+// 🧠 Daily macro/water goals
+const fatGoal = 45;
+const carbGoal = 100;
+const fiberGoal = 25;
+const waterGoal = 4; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
@@ -787,6 +797,37 @@ return (
   {protein >= proteinGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
+</div>
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fat:</strong>{" "}
+  <span style={{ color: fat >= fatGoal ? "green" : "red" }}>
+    {fat}
+  </span>
+  <span> / {fatGoal}g</span>
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Carbs:</strong>{" "}
+  <span style={{ color: carbs >= carbGoal ? "green" : "red" }}>
+    {carbs}
+  </span>
+  <span> / {carbGoal}g</span>
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fiber:</strong>{" "}
+  <span style={{ color: fiber >= fiberGoal ? "green" : "red" }}>
+    {fiber}
+  </span>
+  <span> / {fiberGoal}g</span>
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Water:</strong>{" "}
+  <span style={{ color: water >= waterGoal ? "green" : "red" }}>
+    {water}
+  </span>
+  <span> / {waterGoal} bottles (27oz)</span>
 </div>
 
 <div style={{ fontSize: "16px" }}>
