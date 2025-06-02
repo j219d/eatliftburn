@@ -275,23 +275,6 @@ const navBtnStyle = {
     <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅ Home</button>
   );
 
-const inputStyleFull = {
-  flex: "1 1 100%",
-  maxWidth: "100%",
-  padding: "10px",
-  fontSize: "16px",
-  borderRadius: "8px",
-  border: "1px solid #ccc"
-};
-
-const inputStyleThird = {
-  flex: "1 1 calc(33.333% - 12px)",
-  padding: "10px",
-  fontSize: "16px",
-  borderRadius: "8px",
-  border: "1px solid #ccc"
-};
-
   if (screen === "food") {
   return (
     <div style={{ padding: "16px" }}>
