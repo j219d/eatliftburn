@@ -309,7 +309,7 @@ const navBtnStyle = {
         </select>
       </div>
 
-     return (
+    return (
   <div>
     <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", rowGap: "16px", marginBottom: "16px", justifyContent: "space-between" }}>
       <input
@@ -392,21 +392,6 @@ const navBtnStyle = {
     </button>
   </div>
 );
-
-
-          style={{
-            padding: "10px 16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            fontSize: "16px",
-            border: "none",
-            borderRadius: "8px",
-            width: "100%"
-          }}
-        >
-          Add Custom Food
-        </button>
-      </div>
 
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
       <ul style={{ paddingLeft: "16px" }}>
