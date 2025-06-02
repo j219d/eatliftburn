@@ -272,46 +272,56 @@ const navBtnStyle = {
 };
 
   const HomeButton = () => (
-    <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅ Home</button>
-  );
+  <button onClick={() => setScreen("home")} style={navBtnStyle}>⬅️ Home</button>
+);
+
+const inputStyleThird = {
+  flex: "1 1 calc(33.333% - 12px)",
+  padding: "10px",
+  fontSize: "16px",
+  borderRadius: "8px",
+  border: "1px solid #ccc"
+};
 
   if (screen === "food") {
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+    <div style={{ padding: "16px" }}>
       <button
         onClick={() => setScreen("home")}
         style={{
-          backgroundColor: "#0070f3",
-          color: "white",
-          fontSize: "16px",
-          border: "none",
-          borderRadius: "8px",
+          backgroundColor: "#eee",
           padding: "10px 16px",
+          borderRadius: "10px",
+          fontWeight: "bold",
           marginBottom: "20px",
+          border: "none",
           cursor: "pointer"
         }}
       >
-        ⬅ Home
+        ← Home
       </button>
 
+      <h2 style={{ fontSize: "22px", marginBottom: "12px" }}>Food Log</h2>
+
       <select
-        value=""
-        onChange={(e) => {
-          const selected = foodOptions.find(f => f.name === e.target.value);
-          if (selected) addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+        value={selectedFood}
+        onChange={e => {
+          const food = foodOptions.find(f => f.name === e.target.value);
+          if (food) addFood({ ...food, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) });
+          setSelectedFood("");
         }}
         style={{
-          width: "100%",
           padding: "10px",
           fontSize: "16px",
           borderRadius: "8px",
           border: "1px solid #ccc",
-          marginBottom: "16px"
+          marginBottom: "16px",
+          width: "100%"
         }}
       >
         <option value="">Select preset food</option>
-        {foodOptions.map((f, i) => (
-          <option key={i} value={f.name}>{f.name}</option>
+        {foodOptions.map((item, i) => (
+          <option key={i} value={item.name}>{item.name}</option>
         ))}
       </select>
 
@@ -320,110 +330,65 @@ const navBtnStyle = {
           display: "flex",
           flexWrap: "wrap",
           gap: "12px",
-          rowGap: "12px",
-          marginBottom: "16px",
-          justifyContent: "space-between"
+          marginBottom: "16px"
         }}
       >
         <input
-          placeholder="Custom food name"
+          placeholder="Name"
           value={customFood.name}
           onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-          style={{
-            flex: "1 1 100%",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
         <input
           placeholder="Calories"
           type="number"
           value={customFood.cal}
           onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-          style={{
-            flex: "1 1 calc(33.333% - 8px)",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
         <input
           placeholder="Protein"
           type="number"
           value={customFood.prot}
           onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-          style={{
-            flex: "1 1 calc(33.333% - 8px)",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
         <input
           placeholder="Fat"
           type="number"
           value={customFood.fat}
           onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
-          style={{
-            flex: "1 1 calc(33.333% - 8px)",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
         <input
           placeholder="Carbs"
           type="number"
           value={customFood.carbs}
           onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
-          style={{
-            flex: "1 1 calc(33.333% - 8px)",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
         <input
           placeholder="Fiber"
           type="number"
           value={customFood.fiber}
           onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
-          style={{
-            flex: "1 1 calc(33.333% - 8px)",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc"
-          }}
+          style={inputStyleThird}
         />
       </div>
 
       <button
         onClick={() => {
           const { name, cal, prot, fat, carbs, fiber } = customFood;
-          const parsedCal = parseInt(cal);
-          const parsedProt = parseInt(prot);
-          const parsedFat = parseFloat(fat);
-          const parsedCarbs = parseFloat(carbs);
-          const parsedFiber = parseFloat(fiber);
-
-          if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
+          if (name && cal && prot) {
             const food = {
               name,
-              cal: parsedCal,
-              prot: parsedProt,
-              fat: isNaN(parsedFat) ? 0 : parsedFat,
-              carbs: isNaN(parsedCarbs) ? 0 : parsedCarbs,
-              fiber: isNaN(parsedFiber) ? 0 : parsedFiber,
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              cal: parseInt(cal),
+              prot: parseInt(prot),
+              fat: parseFloat(fat) || 0,
+              carbs: parseFloat(carbs) || 0,
+              fiber: parseFloat(fiber) || 0,
+              time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
             };
-
             addFood(food);
             setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
           }
@@ -436,8 +401,7 @@ const navBtnStyle = {
           border: "none",
           borderRadius: "8px",
           width: "100%",
-          marginBottom: "20px",
-          cursor: "pointer"
+          marginBottom: "20px"
         }}
       >
         Add Custom Food
@@ -445,51 +409,57 @@ const navBtnStyle = {
 
       {foodLog.length > 0 && (
         <>
-          <h3 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "12px" }}>Food Log</h3>
-          {foodLog.map((f, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                backgroundColor: "#f5f5f5",
-                padding: "10px",
-                borderRadius: "8px",
-                marginBottom: "8px",
-                fontSize: "15px"
-              }}
-            >
-              <div>
-                <strong>{f.time || "--:--"}</strong> – {f.name}
-                <div style={{ fontSize: "13px", color: "#555" }}>
-                  {f.cal} cal / {f.prot}g prot / {f.fat || 0}g fat / {f.carbs || 0}g carb / {f.fiber || 0}g fib
-                </div>
-              </div>
-              <button
-                onClick={() => deleteFood(i)}
+          <h3 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h3>
+          <div style={{ marginBottom: "16px" }}>
+            {foodLog.map((item, index) => (
+              <div
+                key={index}
                 style={{
-                  backgroundColor: "transparent",
-                  border: "none",
-                  color: "#d00",
-                  fontSize: "18px",
-                  cursor: "pointer"
+                  backgroundColor: "#f5f5f5",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  marginBottom: "8px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
                 }}
               >
-                ❌
-              </button>
-            </div>
-          ))}
+                <div>
+                  <strong>{item.name}</strong>
+                  <div style={{ fontSize: "14px", color: "#333" }}>
+                    {item.cal} cal / {item.prot}g prot / {item.fat}g fat / {item.carbs}g carb / {item.fiber}g fib
+                    <br />
+                    <span style={{ fontSize: "12px", color: "#888" }}>{item.time || ""}</span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => deleteFood(index)}
+                  style={{
+                    backgroundColor: "transparent",
+                    border: "none",
+                    color: "#d00",
+                    fontSize: "18px",
+                    cursor: "pointer"
+                  }}
+                >
+                  ❌
+                </button>
+              </div>
+            ))}
+          </div>
 
-          <div style={{
-            marginTop: "24px",
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total: {calories} cal / {protein}g prot / {fat}g fat / {carbs}g carb / {fiber}g fib
+          <div
+            style={{
+              marginTop: "24px",
+              backgroundColor: "#f1f1f1",
+              padding: "12px 16px",
+              borderRadius: "10px",
+              textAlign: "center",
+              fontSize: "18px",
+              fontWeight: "bold"
+            }}
+          >
+            Total: {calories} cal / {protein}g prot / {fat}g fat / {carbs}g carbs / {fiber}g fiber
           </div>
         </>
       )}
