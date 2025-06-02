@@ -41,7 +41,7 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
-  const [, set] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
 
