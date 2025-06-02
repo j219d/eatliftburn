@@ -749,8 +749,12 @@ return (
 </h2>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-        <strong>Calories Eaten:</strong> {calories}
-      </div>
+  <strong>Calories Eaten:</strong>{" "}
+  <span style={{ color: calories >= 1500 ? "green" : "red" }}>
+    {calories}
+  </span>
+</div>
+
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
         <strong>Calories Burned:</strong>{" "}
 {
