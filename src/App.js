@@ -218,22 +218,22 @@ const logWorkout = (type, reps) => {
 };
 
   const addFood = (food) => {
-  const completeFood = {
-    ...food,
-    fat: food.fat ?? 0,
-    carbs: food.carbs ?? 0,
-    fiber: food.fiber ?? 0,
-    water: food.water ?? 0,
+  const parsedFood = {
+    name: food.name || "",
+    cal: parseInt(food.cal) || 0,
+    prot: parseInt(food.prot) || 0,
+    fat: parseFloat(food.fat) || 0,
+    carbs: parseFloat(food.carbs) || 0,
+    fiber: parseFloat(food.fiber) || 0,
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
-  setFoodLog(prev => [...prev, completeFood]);
-  setCalories(prev => prev + (completeFood.cal || 0));
-  setProtein(prev => prev + (completeFood.prot || 0));
-  setFat(prev => prev + completeFood.fat);
-  setCarbs(prev => prev + completeFood.carbs);
-  setFiber(prev => prev + completeFood.fiber);
-  setWater(prev => prev + completeFood.water);
+  setFoodLog(prev => [...prev, parsedFood]);
+  setCalories(prev => prev + parsedFood.cal);
+  setProtein(prev => prev + parsedFood.prot);
+  setFat(prev => prev + parsedFood.fat);
+  setCarbs(prev => prev + parsedFood.carbs);
+  setFiber(prev => prev + parsedFood.fiber);
 };
 
 const deleteFood = (index) => {
