@@ -47,9 +47,9 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
 
   const workouts = {
   "Push-ups": 0.3,
-  "Pull-ups": 0.3,
+  "Pull-ups": 0.4,
   "Low Pull": 0.3,
-  "Biceps": 0.3,
+  "Biceps": 0.2,
   "Bench Press": 0.3,
   "Triceps": 0.3,
   "Leg Press": 0.4,
@@ -57,7 +57,7 @@ const waterGoal = 4; // bottles of 27oz (~2.5L)
   "RDLs": 0.4,
   "Back Extensions": 0.3,
   "Glute Abductor": 0.3,
-  "Core Pull": 0.3,
+  "Core Pull": 0.2,
   "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
   "Run": "run"
 };
