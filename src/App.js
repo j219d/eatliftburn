@@ -396,20 +396,41 @@ const inputStyleThird = {
 
         <button
           onClick={() => {
-  const { name, cal, prot } = customFood;
+  const { name, cal, prot, fat, carbs, fiber } = customFood;
   const parsedCal = parseInt(cal);
   const parsedProt = parseInt(prot);
+  const parsedFat = parseFloat(fat) || 0;
+  const parsedCarbs = parseFloat(carbs) || 0;
+  const parsedFiber = parseFloat(fiber) || 0;
 
   if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
     setCalories(c => c + parsedCal);
     setProtein(p => p + parsedProt);
-    setFoodLog(f => [...f, {
-      name,
-      cal: parsedCal,
-      prot: parsedProt,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }]);
-    setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+    setFat(f => f + parsedFat);
+    setCarbs(c => c + parsedCarbs);
+    setFiber(f => f + parsedFiber);
+
+    setFoodLog(f => [
+      ...f,
+      {
+        name,
+        cal: parsedCal,
+        prot: parsedProt,
+        fat: parsedFat,
+        carbs: parsedCarbs,
+        fiber: parsedFiber,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ]);
+
+    setCustomFood({
+      name: "",
+      cal: "",
+      prot: "",
+      fat: "",
+      carbs: "",
+      fiber: ""
+    });
   }
 }}
 
