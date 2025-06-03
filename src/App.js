@@ -220,7 +220,7 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    ...food,
+    name: food.name ?? "Unnamed",
     cal: food.cal ?? 0,
     prot: food.prot ?? 0,
     fat: food.fat ?? 0,
@@ -312,33 +312,31 @@ const inputStyleThird = {
 
       {/* Dropdown Preset */}
       <select
-  defaultValue=""
+  value=""
   onChange={(e) => {
     const selected = foodOptions.find(f => f.name === e.target.value);
-    if (selected) {
-      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const food = { ...selected, time };
-      addFood(food);
-    }
-    e.target.value = ""; // Reset dropdown after selection
-  }}
+    if (!selected) return;
 
-        style={{
-          width: "100%",
-          padding: "10px",
-          fontSize: "16px",
-          marginBottom: "16px",
-          borderRadius: "8px",
-          border: "1px solid #ccc"
-        }}
-      >
-        <option value="">Select Food</option>
-        {foodOptions.map((item, idx) => (
-          <option key={idx} value={item.name}>
-            {item.name}
-          </option>
-        ))}
-      </select>
+    const complete = {
+      ...selected,
+      cal: selected.cal ?? 0,
+      prot: selected.prot ?? 0,
+      fat: selected.fat ?? 0,
+      carbs: selected.carbs ?? 0,
+      fiber: selected.fiber ?? 0,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    addFood(complete);
+  }}
+>
+  <option value="">Select Food</option>
+  {foodOptions.map((food, i) => (
+    <option key={i} value={food.name}>
+      {food.name}
+    </option>
+  ))}
+</select>
 
       {/* Custom Input Fields: 3 per row */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", rowGap: "16px", marginBottom: "16px" }}>
