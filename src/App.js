@@ -221,18 +221,18 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    name: food.name || "Unnamed",
-    cal: parseInt(food.cal) || 0,
-    prot: parseInt(food.prot) || 0,
-    fat: parseFloat(food.fat) || 0,
-    carbs: parseFloat(food.carbs) || 0,
-    fiber: parseFloat(food.fiber) || 0,
-    time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    ...food,
+    cal: food.cal ?? 0,
+    prot: food.prot ?? 0,
+    fat: food.fat ?? 0,
+    carbs: food.carbs ?? 0,
+    fiber: food.fiber ?? 0,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
-  if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
-    console.error("Invalid food entry:", food);
-    return;
+  // If the food is "Water", increment water state
+  if (completeFood.name.toLowerCase() === "water") {
+    setWater(prev => prev + 1);
   }
 
   setFoodLog(prev => [...prev, completeFood]);
@@ -247,6 +247,11 @@ const deleteFood = (index) => {
   const item = foodLog[index];
   if (!item) return;
 
+  // Decrease water if it's a water log
+  if (item.name.toLowerCase() === "water") {
+    setWater(prev => Math.max(0, prev - 1));
+  }
+
   setFoodLog(prev => prev.filter((_, i) => i !== index));
   setCalories(prev => prev - (item.cal || 0));
   setProtein(prev => prev - (item.prot || 0));
@@ -254,6 +259,7 @@ const deleteFood = (index) => {
   setCarbs(prev => prev - (item.carbs || 0));
   setFiber(prev => prev - (item.fiber || 0));
 };
+
 
   const addWeight = () => {
     const weight = parseFloat(newWeight);
