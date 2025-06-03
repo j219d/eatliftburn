@@ -1,6 +1,4 @@
 
-
-
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -407,18 +405,19 @@ const inputStyleThird = {
         <button
           onClick={() => {
   const { name, cal, prot, fat, carbs, fiber } = customFood;
+
   const parsedCal = parseInt(cal);
   const parsedProt = parseInt(prot);
-  const parsedFat = parseFloat(fat) || 0;
-  const parsedCarbs = parseFloat(carbs) || 0;
-  const parsedFiber = parseFloat(fiber) || 0;
+  const parsedFat = fat !== "" && !isNaN(parseFloat(fat)) ? parseFloat(fat) : undefined;
+  const parsedCarbs = carbs !== "" && !isNaN(parseFloat(carbs)) ? parseFloat(carbs) : undefined;
+  const parsedFiber = fiber !== "" && !isNaN(parseFloat(fiber)) ? parseFloat(fiber) : undefined;
 
   if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
     setCalories(c => c + parsedCal);
     setProtein(p => p + parsedProt);
-    setFat(f => f + parsedFat);
-    setCarbs(c => c + parsedCarbs);
-    setFiber(f => f + parsedFiber);
+    if (parsedFat !== undefined) setFat(f => f + parsedFat);
+    if (parsedCarbs !== undefined) setCarbs(c => c + parsedCarbs);
+    if (parsedFiber !== undefined) setFiber(f => f + parsedFiber);
 
     setFoodLog(f => [
       ...f,
@@ -426,9 +425,9 @@ const inputStyleThird = {
         name,
         cal: parsedCal,
         prot: parsedProt,
-        fat: parsedFat,
-        carbs: parsedCarbs,
-        fiber: parsedFiber,
+        ...(parsedFat !== undefined && { fat: parsedFat }),
+        ...(parsedCarbs !== undefined && { carbs: parsedCarbs }),
+        ...(parsedFiber !== undefined && { fiber: parsedFiber }),
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
     ]);
