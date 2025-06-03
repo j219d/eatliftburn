@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -106,6 +107,7 @@ const foodOptions = [
   { name: "Sweet potato (1)", cal: 112, prot: 2, fat: 0.1, carbs: 26, fiber: 4 },
   { name: "Tomato", cal: 20, prot: 1, fat: 0.2, carbs: 5, fiber: 1.5 },
   { name: "Walnut (1 whole)", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
+  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
 ];
@@ -219,14 +221,19 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    name: food.name || "",
-    cal: food.cal ?? 0,
-    prot: food.prot ?? 0,
-    fat: food.fat ?? 0,
-    carbs: food.carbs ?? 0,
-    fiber: food.fiber ?? 0,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    name: food.name || "Unnamed",
+    cal: parseInt(food.cal) || 0,
+    prot: parseInt(food.prot) || 0,
+    fat: parseFloat(food.fat) || 0,
+    carbs: parseFloat(food.carbs) || 0,
+    fiber: parseFloat(food.fiber) || 0,
+    time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
+
+  if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
+    console.error("Invalid food entry:", food);
+    return;
+  }
 
   setFoodLog(prev => [...prev, completeFood]);
   setCalories(prev => prev + completeFood.cal);
@@ -241,13 +248,13 @@ const deleteFood = (index) => {
   if (!item) return;
 
   setFoodLog(prev => prev.filter((_, i) => i !== index));
-  setCalories(prev => prev - (item.cal ?? 0));
-  setProtein(prev => prev - (item.prot ?? 0));
-  setFat(prev => prev - (item.fat ?? 0));
-  setCarbs(prev => prev - (item.carbs ?? 0));
-  setFiber(prev => prev - (item.fiber ?? 0));
+  setCalories(prev => prev - (item.cal || 0));
+  setProtein(prev => prev - (item.prot || 0));
+  setFat(prev => prev - (item.fat || 0));
+  setCarbs(prev => prev - (item.carbs || 0));
+  setFiber(prev => prev - (item.fiber || 0));
 };
-  
+
   const addWeight = () => {
     const weight = parseFloat(newWeight);
     if (!isNaN(weight)) {
