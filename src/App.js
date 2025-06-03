@@ -133,6 +133,7 @@ const estimatedDeficit = 1620 + totalBurn - calories;
     localStorage.setItem("steps", steps);
     localStorage.setItem("deficitGoal", deficitGoal);
     localStorage.setItem("proteinGoal", proteinGoal);
+    localStorage.setItem("water", water);
     localStorage.setItem("checklist", JSON.stringify(checklist));
     localStorage.setItem("foodLog", JSON.stringify(foodLog));
     localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
@@ -227,6 +228,7 @@ const logWorkout = (type, reps) => {
     fat: parseFloat(food.fat) || 0,
     carbs: parseFloat(food.carbs) || 0,
     fiber: parseFloat(food.fiber) || 0,
+    water: parseInt(food.water) || 0, // 👈 Add this line
     time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
@@ -241,8 +243,11 @@ const logWorkout = (type, reps) => {
   setFat(prev => prev + completeFood.fat);
   setCarbs(prev => prev + completeFood.carbs);
   setFiber(prev => prev + completeFood.fiber);
+  if (completeFood.water > 0) {
+    setWater(prev => prev + completeFood.water); // ✅ This syncs water log to homepage
+  }
 };
-
+  
 const deleteFood = (index) => {
   const item = foodLog[index];
   if (!item) return;
@@ -253,6 +258,7 @@ const deleteFood = (index) => {
   setFat(prev => prev - (item.fat || 0));
   setCarbs(prev => prev - (item.carbs || 0));
   setFiber(prev => prev - (item.fiber || 0));
+  setWater(prev => prev - (item.water || 0)); // ✅ ADDED
 };
 
   const addWeight = () => {
