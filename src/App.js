@@ -220,7 +220,7 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    name: food.name ?? "Unnamed",
+    name: food.name || "Unnamed",
     cal: food.cal ?? 0,
     prot: food.prot ?? 0,
     fat: food.fat ?? 0,
