@@ -222,35 +222,28 @@ const logWorkout = (type, reps) => {
   const addFood = (food) => {
   const completeFood = {
     ...food,
-    cal: food.cal ?? 0,
-    prot: food.prot ?? 0,
     fat: food.fat ?? 0,
     carbs: food.carbs ?? 0,
     fiber: food.fiber ?? 0,
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
-
-  // If the food is "Water", increment water state
-  if (completeFood.name.toLowerCase() === "water") {
-    setWater(prev => prev + 1);
-  }
-
+  
   setFoodLog(prev => [...prev, completeFood]);
-  setCalories(prev => prev + completeFood.cal);
-  setProtein(prev => prev + completeFood.prot);
-  setFat(prev => prev + completeFood.fat);
-  setCarbs(prev => prev + completeFood.carbs);
-  setFiber(prev => prev + completeFood.fiber);
+  setCalories(prev => prev + (completeFood.cal || 0));
+  setProtein(prev => prev + (completeFood.prot || 0));
+  setFat(prev => prev + (completeFood.fat || 0));
+  setCarbs(prev => prev + (completeFood.carbs || 0));
+  setFiber(prev => prev + (completeFood.fiber || 0));
+  
+  // Water count tracker
+  if (completeFood.name === "Water 💧") {
+    setWater(prev => Math.min(prev + 1, 3)); // cap at 3
+  }
 };
 
 const deleteFood = (index) => {
   const item = foodLog[index];
   if (!item) return;
-
-  // Decrease water if it's a water log
-  if (item.name.toLowerCase() === "water") {
-    setWater(prev => Math.max(0, prev - 1));
-  }
 
   setFoodLog(prev => prev.filter((_, i) => i !== index));
   setCalories(prev => prev - (item.cal || 0));
@@ -258,6 +251,11 @@ const deleteFood = (index) => {
   setFat(prev => prev - (item.fat || 0));
   setCarbs(prev => prev - (item.carbs || 0));
   setFiber(prev => prev - (item.fiber || 0));
+
+  // Water decrement
+  if (item.name === "Water 💧") {
+    setWater(prev => Math.max(prev - 1, 0));
+  }
 };
 
 
