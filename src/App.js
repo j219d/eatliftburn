@@ -875,10 +875,10 @@ return (
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Water:</strong>{" "}
-  <span style={{ color: water >= waterGoal ? "green" : "red" }}>
-    {water}
-  </span>
-  <span> / {waterGoal} bottles</span>
+  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
+  {water + (checklist.concentrace ? 1 : 0)}
+</span>
+<span> / {waterGoal} bottles</span>
 </div>
 
 <div style={{ fontSize: "16px" }}>
