@@ -905,7 +905,7 @@ return (
   <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
     {protein}
   </span>
-  <span> / {proteinGoal}</span>
+  <span> / {proteinGoal}g</span>
   {protein >= proteinGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
