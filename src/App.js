@@ -170,7 +170,6 @@ useEffect(() => {
 };
 
   // ❗️Do NOT remove "weightLog" – it stays
-};
 
 const logWorkout = (type, reps) => {
   let burn;
