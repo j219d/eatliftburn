@@ -29,7 +29,7 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const fatGoal = 45;
 const carbGoal = 100;
 const fiberGoal = 25;
-const waterGoal = 4; // bottles of 27oz (~2.5L)
+const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
