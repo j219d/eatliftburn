@@ -301,15 +301,17 @@ const inputStyleThird = {
 
       {/* Dropdown Preset */}
       <select
-        value=""
-        onChange={(e) => {
-          const selected = foodOptions.find(f => f.name === e.target.value);
-          if (selected) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const food = { ...selected, time };
-            addFood(food);
-          }
-        }}
+  defaultValue=""
+  onChange={(e) => {
+    const selected = foodOptions.find(f => f.name === e.target.value);
+    if (selected) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const food = { ...selected, time };
+      addFood(food);
+    }
+    e.target.value = ""; // Reset dropdown after selection
+  }}
+
         style={{
           width: "100%",
           padding: "10px",
