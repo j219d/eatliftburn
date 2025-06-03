@@ -76,7 +76,7 @@ const foodOptions = [
   { name: "Chicken breast (200g)", cal: 330, prot: 62, fat: 7.2, carbs: 0, fiber: 0 },
   { name: "Cottage cheese (47g)", cal: 48, prot: 5.5, fat: 1.5, carbs: 1.4, fiber: 0 },
   { name: "Cottage cheese (95g)", cal: 95, prot: 11, fat: 3, carbs: 2.8, fiber: 0 },
-  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5, fat: 7.5, carbs: 7, fiber: 0 },
+  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5, fat: 7.5, carbsa: 7, fiber: 0 },
   { name: "Cucumber", cal: 16, prot: 1, fat: 0.1, carbs: 4, fiber: 0.5 },
   { name: "Egg", cal: 70, prot: 6, fat: 5, carbs: 0.6, fiber: 0 },
   { name: "Egg white", cal: 15, prot: 3, fat: 0, carbs: 0.2, fiber: 0 },
@@ -218,42 +218,32 @@ const logWorkout = (type, reps) => {
 };
 
   const addFood = (food) => {
-  const name = food.name || "";
-  const cal = Number(food.cal) || 0;
-  const prot = Number(food.prot) || 0;
-  const fat = Number(food.fat) || 0;
-  const carbs = Number(food.carbs) || 0;
-  const fiber = Number(food.fiber) || 0;
-  const water = Number(food.water) || 0;
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const completeFood = {
+    ...food,
+    fat: food.fat ?? 0,
+    carbs: food.carbs ?? 0,
+    fiber: food.fiber ?? 0,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  setFoodLog(prev => [...prev, completeFood]);
 
-  const newFood = { name, cal, prot, fat, carbs, fiber, water, time };
-
-  setCalories(prev => prev + cal);
-  setProtein(prev => prev + prot);
-  setFat(prev => prev + fat);
-  setCarbs(prev => prev + carbs);
-  setFiber(prev => prev + fiber);
-  setWater(prev => prev + water);
-  setFoodLog(prev => [...prev, newFood]);
+  setCalories(prev => prev + (completeFood.cal || 0));
+  setProtein(prev => prev + (completeFood.prot || 0));
+  setFat(prev => prev + (completeFood.fat || 0));
+  setCarbs(prev => prev + (completeFood.carbs || 0));
+  setFiber(prev => prev + (completeFood.fiber || 0));
 };
 
   const deleteFood = (index) => {
-  const removed = foodLog[index];
-  const cal = Number(removed.cal) || 0;
-  const prot = Number(removed.prot) || 0;
-  const fat = Number(removed.fat) || 0;
-  const carbs = Number(removed.carbs) || 0;
-  const fiber = Number(removed.fiber) || 0;
-  const water = Number(removed.water) || 0;
+  const item = foodLog[index];
+  if (!item) return;
 
-  setCalories(prev => prev - cal);
-  setProtein(prev => prev - prot);
-  setFat(prev => prev - fat);
-  setCarbs(prev => prev - carbs);
-  setFiber(prev => prev - fiber);
-  setWater(prev => prev - water);
-  setFoodLog(foodLog.filter((_, i) => i !== index));
+  setFoodLog(prev => prev.filter((_, i) => i !== index));
+  setCalories(prev => prev - (item.cal || 0));
+  setProtein(prev => prev - (item.prot || 0));
+  setFat(prev => prev - (item.fat || 0));
+  setCarbs(prev => prev - (item.carbs || 0));
+  setFiber(prev => prev - (item.fiber || 0));
 };
 
   const addWeight = () => {
