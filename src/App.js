@@ -241,12 +241,11 @@ const deleteFood = (index) => {
   if (!item) return;
 
   setFoodLog(prev => prev.filter((_, i) => i !== index));
-  setCalories(prev => prev - (item.cal || 0));
-  setProtein(prev => prev - (item.prot || 0));
-  setFat(prev => prev - (item.fat || 0));
-  setCarbs(prev => prev - (item.carbs || 0));
-  setFiber(prev => prev - (item.fiber || 0));
-  setWater(prev => prev - (item.water || 0));
+  setCalories(prev => prev - (parseInt(item.cal) || 0));
+  setProtein(prev => prev - (parseInt(item.prot) || 0));
+  setFat(prev => prev - (parseFloat(item.fat) || 0));
+  setCarbs(prev => prev - (parseFloat(item.carbs) || 0));
+  setFiber(prev => prev - (parseFloat(item.fiber) || 0));
 };
 
   const addWeight = () => {
