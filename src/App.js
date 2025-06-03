@@ -218,25 +218,43 @@ const logWorkout = (type, reps) => {
 };
 
   const addFood = (food) => {
-    setCalories(prev => prev + food.cal);
-setProtein(prev => prev + food.prot);
-setFat(prev => prev + (food.fat || 0));
-setCarbs(prev => prev + (food.carbs || 0));
-setFiber(prev => prev + (food.fiber || 0));
-setWater(prev => prev + (food.water || 0));
-setFoodLog(prev => [...prev, food]);
-  };
+  const name = food.name || "";
+  const cal = Number(food.cal) || 0;
+  const prot = Number(food.prot) || 0;
+  const fat = Number(food.fat) || 0;
+  const carbs = Number(food.carbs) || 0;
+  const fiber = Number(food.fiber) || 0;
+  const water = Number(food.water) || 0;
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const newFood = { name, cal, prot, fat, carbs, fiber, water, time };
+
+  setCalories(prev => prev + cal);
+  setProtein(prev => prev + prot);
+  setFat(prev => prev + fat);
+  setCarbs(prev => prev + carbs);
+  setFiber(prev => prev + fiber);
+  setWater(prev => prev + water);
+  setFoodLog(prev => [...prev, newFood]);
+};
 
   const deleteFood = (index) => {
-    const removed = foodLog[index];
-    setCalories(prev => prev - removed.cal);
-setProtein(prev => prev - removed.prot);
-setFat(prev => prev - (removed.fat || 0));
-setCarbs(prev => prev - (removed.carbs || 0));
-setFiber(prev => prev - (removed.fiber || 0));
-setWater(prev => prev - (removed.water || 0));
-    setFoodLog(foodLog.filter((_, i) => i !== index));
-  };
+  const removed = foodLog[index];
+  const cal = Number(removed.cal) || 0;
+  const prot = Number(removed.prot) || 0;
+  const fat = Number(removed.fat) || 0;
+  const carbs = Number(removed.carbs) || 0;
+  const fiber = Number(removed.fiber) || 0;
+  const water = Number(removed.water) || 0;
+
+  setCalories(prev => prev - cal);
+  setProtein(prev => prev - prot);
+  setFat(prev => prev - fat);
+  setCarbs(prev => prev - carbs);
+  setFiber(prev => prev - fiber);
+  setWater(prev => prev - water);
+  setFoodLog(foodLog.filter((_, i) => i !== index));
+};
 
   const addWeight = () => {
     const weight = parseFloat(newWeight);
