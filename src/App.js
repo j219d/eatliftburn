@@ -221,14 +221,18 @@ const logWorkout = (type, reps) => {
   const addFood = (food) => {
   const completeFood = {
     name: food.name || "Unnamed",
-    cal: food.cal ?? 0,
-    prot: food.prot ?? 0,
-    fat: food.fat ?? 0,
-    carbs: food.carbs ?? 0,
-    fiber: food.fiber ?? 0,
-    water: food.water ?? 0, // 🧪 This was missing!
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    cal: parseInt(food.cal) || 0,
+    prot: parseInt(food.prot) || 0,
+    fat: parseFloat(food.fat) || 0,
+    carbs: parseFloat(food.carbs) || 0,
+    fiber: parseFloat(food.fiber) || 0,
+    time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
+
+  if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
+    console.error("Invalid food entry:", food);
+    return;
+  }
 
   setFoodLog(prev => [...prev, completeFood]);
   setCalories(prev => prev + completeFood.cal);
@@ -236,7 +240,6 @@ const logWorkout = (type, reps) => {
   setFat(prev => prev + completeFood.fat);
   setCarbs(prev => prev + completeFood.carbs);
   setFiber(prev => prev + completeFood.fiber);
-  setWater(prev => prev + completeFood.water); // 💧 This was missing!
 };
 
 const deleteFood = (index) => {
@@ -244,12 +247,11 @@ const deleteFood = (index) => {
   if (!item) return;
 
   setFoodLog(prev => prev.filter((_, i) => i !== index));
-  setCalories(prev => prev - (item.cal ?? 0));
-  setProtein(prev => prev - (item.prot ?? 0));
-  setFat(prev => prev - (item.fat ?? 0));
-  setCarbs(prev => prev - (item.carbs ?? 0));
-  setFiber(prev => prev - (item.fiber ?? 0));
-  setWater(prev => prev - (item.water ?? 0)); // 💧 Also fix this
+  setCalories(prev => prev - (item.cal || 0));
+  setProtein(prev => prev - (item.prot || 0));
+  setFat(prev => prev - (item.fat || 0));
+  setCarbs(prev => prev - (item.carbs || 0));
+  setFiber(prev => prev - (item.fiber || 0));
 };
 
   const addWeight = () => {
