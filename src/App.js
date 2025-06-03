@@ -27,11 +27,11 @@ const [carbs, setCarbs] = useState(() => parseInt(localStorage.getItem("carbs"))
 const [fiber, setFiber] = useState(() => parseInt(localStorage.getItem("fiber")) || 0);
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
-// 🧠 Daily macro/ goals
+// 🧠 Daily macro/water goals
 const fatGoal = 45;
 const carbGoal = 100;
 const fiberGoal = 25;
-const Goal = 4; // bottles of 27oz (~2.5L)
+const waterGoal = 4; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
@@ -221,24 +221,26 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    ...food,
-    fat: food.fat ?? 0,
-    carbs: food.carbs ?? 0,
-    fiber: food.fiber ?? 0,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    name: food.name || "Unnamed",
+    cal: parseInt(food.cal) || 0,
+    prot: parseInt(food.prot) || 0,
+    fat: parseFloat(food.fat) || 0,
+    carbs: parseFloat(food.carbs) || 0,
+    fiber: parseFloat(food.fiber) || 0,
+    time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
-  
+
+  if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
+    console.error("Invalid food entry:", food);
+    return;
+  }
+
   setFoodLog(prev => [...prev, completeFood]);
-  setCalories(prev => prev + (completeFood.cal || 0));
-  setProtein(prev => prev + (completeFood.prot || 0));
-  setFat(prev => prev + (completeFood.fat || 0));
-  setCarbs(prev => prev + (completeFood.carbs || 0));
-  setFiber(prev => prev + (completeFood.fiber || 0));
-  
-  // Water count tracker
-  if (completeFood.name.toLowerCase().includes("water")) {
-  setWater(prev => Math.min(prev + 1, 3));
-}
+  setCalories(prev => prev + completeFood.cal);
+  setProtein(prev => prev + completeFood.prot);
+  setFat(prev => prev + completeFood.fat);
+  setCarbs(prev => prev + completeFood.carbs);
+  setFiber(prev => prev + completeFood.fiber);
 };
 
 const deleteFood = (index) => {
@@ -251,13 +253,7 @@ const deleteFood = (index) => {
   setFat(prev => prev - (item.fat || 0));
   setCarbs(prev => prev - (item.carbs || 0));
   setFiber(prev => prev - (item.fiber || 0));
-
-  // Water decrement
-  if (item.name === "Water 💧") {
-    setWater(prev => Math.max(prev - 1, 0));
-  }
 };
-
 
   const addWeight = () => {
     const weight = parseFloat(newWeight);
