@@ -373,6 +373,26 @@ const inputStyleThird = {
   onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
   style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
 />
+
+<input
+  placeholder="Fat"
+  type="number"
+  value={manualFood.fat}
+  onChange={(e) => setManualFood({ ...manualFood, fat: e.target.value })}
+/>
+<input
+  placeholder="Carbs"
+  type="number"
+  value={manualFood.carbs}
+  onChange={(e) => setManualFood({ ...manualFood, carbs: e.target.value })}
+/>
+<input
+  placeholder="Fiber"
+  type="number"
+  value={manualFood.fiber}
+  onChange={(e) => setManualFood({ ...manualFood, fiber: e.target.value })}
+/>
+    
         <button
           onClick={() => {
   const { name, cal, prot } = customFood;
