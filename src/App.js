@@ -220,12 +220,12 @@ const logWorkout = (type, reps) => {
 
   const addFood = (food) => {
   const completeFood = {
-    name: food.name || "",
-    cal: food.cal || 0,
-    prot: food.prot || 0,
-    fat: food.fat !== undefined ? food.fat : 0,
-    carbs: food.carbs !== undefined ? food.carbs : 0,
-    fiber: food.fiber !== undefined ? food.fiber : 0,
+    ...food,
+    cal: food.cal ?? 0,
+    prot: food.prot ?? 0,
+    fat: food.fat ?? 0,
+    carbs: food.carbs ?? 0,
+    fiber: food.fiber ?? 0,
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
@@ -242,12 +242,11 @@ const deleteFood = (index) => {
   if (!item) return;
 
   setFoodLog(prev => prev.filter((_, i) => i !== index));
-  setCalories(prev => prev - (item.cal || 0));
-  setProtein(prev => prev - (item.prot || 0));
-  setFat(prev => prev - (item.fat || 0));
-  setCarbs(prev => prev - (item.carbs || 0));
-  setFiber(prev => prev - (item.fiber || 0));
-  setWater(prev => prev - (item.water || 0));
+  setCalories(prev => prev - (item.cal ?? 0));
+  setProtein(prev => prev - (item.prot ?? 0));
+  setFat(prev => prev - (item.fat ?? 0));
+  setCarbs(prev => prev - (item.carbs ?? 0));
+  setFiber(prev => prev - (item.fiber ?? 0));
 };
 
   const addWeight = () => {
