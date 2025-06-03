@@ -226,6 +226,7 @@ const logWorkout = (type, reps) => {
     fat: food.fat ?? 0,
     carbs: food.carbs ?? 0,
     fiber: food.fiber ?? 0,
+    water: food.water ?? 0, // 🧪 This was missing!
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
@@ -235,6 +236,7 @@ const logWorkout = (type, reps) => {
   setFat(prev => prev + completeFood.fat);
   setCarbs(prev => prev + completeFood.carbs);
   setFiber(prev => prev + completeFood.fiber);
+  setWater(prev => prev + completeFood.water); // 💧 This was missing!
 };
 
 const deleteFood = (index) => {
@@ -247,6 +249,7 @@ const deleteFood = (index) => {
   setFat(prev => prev - (item.fat ?? 0));
   setCarbs(prev => prev - (item.carbs ?? 0));
   setFiber(prev => prev - (item.fiber ?? 0));
+  setWater(prev => prev - (item.water ?? 0)); // 💧 Also fix this
 };
 
   const addWeight = () => {
