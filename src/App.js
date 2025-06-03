@@ -100,7 +100,7 @@ const foodOptions = [
   { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 },
   { name: "Protein bar (Promix)", cal: 150, prot: 15, fat: 3, carbs: 17, fiber: 5 },
   { name: "Protein bar (Quest)", cal: 190, prot: 20, fat: 9, carbs: 22, fiber: 11 },
-  { name: "Protein ice cream", cal: 400, prot: 52, fat: 8, carbs: 28, fiber: 5 },
+  { name: "Protein ice cream", cal: 400, prot: 52, fat: 8, carbs: 26, fiber: 2.8 },
   { name: "Protein scoop (1)", cal: 75, prot: 15, fat: 0.3, carbs: 3.5, fiber: 0 },
   { name: "Protein scoop (2)", cal: 150, prot: 30, fat: 0.5, carbs: 7, fiber: 0 },
   { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
