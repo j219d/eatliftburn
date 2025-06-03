@@ -73,7 +73,7 @@ const foodOptions = [
   { name: "Butter (1 tsp)", cal: 35, prot: 0, fat: 4, carbs: 0, fiber: 0 },
   { name: "Carrot", cal: 25, prot: 0.5, fat: 0.1, carbs: 6, fiber: 1.7 },
   { name: "Carrot juice", cal: 94, prot: 2, fat: 0.4, carbs: 22, fiber: 2 },
-  { name: "Chia seeds (1 tbsp)", cal: 60, prot: 2, fat: 3.7, carbs: 5.1, fiber: 4.1 },
+  { name: "Chia seeds (1 tbsp)", cal: 58, prot: 2, fat: 3.7, carbs: 5.1, fiber: 4.1 },
   { name: "Chicken breast (50g)", cal: 82, prot: 15, fat: 1.8, carbs: 0, fiber: 0 },
   { name: "Chicken breast (100g)", cal: 165, prot: 31, fat: 3.6, carbs: 0, fiber: 0 },
   { name: "Chicken breast (150g)", cal: 248, prot: 46, fat: 5.4, carbs: 0, fiber: 0 },
