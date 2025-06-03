@@ -27,11 +27,11 @@ const [carbs, setCarbs] = useState(() => parseInt(localStorage.getItem("carbs"))
 const [fiber, setFiber] = useState(() => parseInt(localStorage.getItem("fiber")) || 0);
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
-// 🧠 Daily macro/water goals
+// 🧠 Daily macro/ goals
 const fatGoal = 45;
 const carbGoal = 100;
 const fiberGoal = 25;
-const waterGoal = 4; // bottles of 27oz (~2.5L)
+const Goal = 4; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
@@ -236,7 +236,7 @@ const logWorkout = (type, reps) => {
   setFiber(prev => prev + (completeFood.fiber || 0));
   
   // Water count tracker
-  if (completeFood.name === "Water 💧") {
+  if (completeFood.name === "Water") {
     setWater(prev => Math.min(prev + 1, 3)); // cap at 3
   }
 };
