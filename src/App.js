@@ -351,48 +351,49 @@ const inputStyleThird = {
         </select>
       </div>
 
-      <div style={{ marginBottom: "24px" }}>
-        <input
-          placeholder="Custom food name"
-          value={customFood.name}
-          onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-          style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <input
-  placeholder="Calories"
-  type="number"
-  value={customFood.cal}
-  onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-  style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
-/>
+     <div style={{ marginBottom: "24px" }}>
+  <input
+    placeholder="Custom food name"
+    value={customFood.name}
+    onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Calories"
+    type="number"
+    value={customFood.cal}
+    onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Protein"
+    type="number"
+    value={customFood.prot}
+    onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Fat"
+    type="number"
+    value={customFood.fat}
+    onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Carbs"
+    type="number"
+    value={customFood.carbs}
+    onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Fiber"
+    type="number"
+    value={customFood.fiber}
+    onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
+    style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
 
-<input
-  placeholder="Protein"
-  type="number"
-  value={customFood.prot}
-  onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-  style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
-/>
-
-<input
-  placeholder="Fat"
-  type="number"
-  value={manualFood.fat}
-  onChange={(e) => setManualFood({ ...manualFood, fat: e.target.value })}
-/>
-<input
-  placeholder="Carbs"
-  type="number"
-  value={manualFood.carbs}
-  onChange={(e) => setManualFood({ ...manualFood, carbs: e.target.value })}
-/>
-<input
-  placeholder="Fiber"
-  type="number"
-  value={manualFood.fiber}
-  onChange={(e) => setManualFood({ ...manualFood, fiber: e.target.value })}
-/>
-    
         <button
           onClick={() => {
   const { name, cal, prot } = customFood;
