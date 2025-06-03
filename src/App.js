@@ -409,7 +409,7 @@ const inputStyleThird = {
       prot: parsedProt,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }]);
-    setCustomFood({ name: "", cal: "", prot: "" });
+    setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   }
 }}
 
@@ -428,16 +428,19 @@ const inputStyleThird = {
       </div>
 
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
-      <ul style={{ paddingLeft: "16px" }}>
-        {foodLog.map((f, i) => (
-          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-            {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
-            {f.name} — {f.cal} cal, {f.prot}g{" "}
-            <button onClick={() => deleteFood(i)} style={{ marginLeft: "8px" }}>❌</button>
-          </li>
-        ))}
-      </ul>
-
+      <ul style={{ listStyle: "none", padding: 0 }}>
+  {foodLog.map((f, i) => (
+    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+      {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
+      {f.name} — {f.cal} cal, {f.prot}g protein
+      {f.fat ? `, ${f.fat}g fat` : ""}
+      {f.carbs ? `, ${f.carbs}g carbs` : ""}
+      {f.fiber ? `, ${f.fiber}g fiber` : ""}
+      <button onClick={() => deleteFood(i)} style={{ marginLeft: "8px" }}>❌</button>
+    </li>
+  ))}
+</ul>
+    
       <div style={{
         marginTop: "24px",
         backgroundColor: "#f1f1f1",
