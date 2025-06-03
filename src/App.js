@@ -127,18 +127,21 @@ const foodOptions = [
 
 const estimatedDeficit = 1620 + totalBurn - calories;
 
-  useEffect(() => {
-    localStorage.setItem("calories", calories);
-    localStorage.setItem("protein", protein);
-    localStorage.setItem("steps", steps);
-    localStorage.setItem("deficitGoal", deficitGoal);
-    localStorage.setItem("proteinGoal", proteinGoal);
-    localStorage.setItem("water", water);
-    localStorage.setItem("checklist", JSON.stringify(checklist));
-    localStorage.setItem("foodLog", JSON.stringify(foodLog));
-    localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
-    localStorage.setItem("weightLog", JSON.stringify(weightLog));
-  }, [calories, protein, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
+useEffect(() => {
+  localStorage.setItem("calories", calories);
+  localStorage.setItem("protein", protein);
+  localStorage.setItem("fat", fat);
+  localStorage.setItem("carbs", carbs);
+  localStorage.setItem("fiber", fiber);
+  localStorage.setItem("water", water);
+  localStorage.setItem("steps", steps);
+  localStorage.setItem("deficitGoal", deficitGoal);
+  localStorage.setItem("proteinGoal", proteinGoal);
+  localStorage.setItem("checklist", JSON.stringify(checklist));
+  localStorage.setItem("foodLog", JSON.stringify(foodLog));
+  localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
+  localStorage.setItem("weightLog", JSON.stringify(weightLog));
+}, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
