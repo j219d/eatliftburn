@@ -147,19 +147,26 @@ const estimatedDeficit = 1620 + totalBurn - calories;
   setCalories(0);
   setProtein(0);
   setSteps(0);
-  setWater(0); 
+  setFat(0);
+  setCarbs(0);
+  setFiber(0);
+  setWater(0);
   setFoodLog([]);
   setWorkoutLog({});
   setChecklist({ supplements: false, sunlight: false, concentrace: false });
 
-  // Clear localStorage for daily data
+  // Optional: clear localStorage for those too
   localStorage.removeItem("calories");
   localStorage.removeItem("protein");
   localStorage.removeItem("steps");
-  localStorage.removeItem("water"); 
+  localStorage.removeItem("fat");
+  localStorage.removeItem("carbs");
+  localStorage.removeItem("fiber");
+  localStorage.removeItem("water");
   localStorage.removeItem("foodLog");
   localStorage.removeItem("workoutLog");
   localStorage.removeItem("checklist");
+};
 
   // ❗️Do NOT remove "weightLog" – it stays
 };
