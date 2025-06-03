@@ -236,9 +236,9 @@ const logWorkout = (type, reps) => {
   setFiber(prev => prev + (completeFood.fiber || 0));
   
   // Water count tracker
-  if (completeFood.name === "Water") {
-    setWater(prev => Math.min(prev + 1, 3)); // cap at 3
-  }
+  if (completeFood.name.toLowerCase().includes("water")) {
+  setWater(prev => Math.min(prev + 1, 3));
+}
 };
 
 const deleteFood = (index) => {
