@@ -80,7 +80,7 @@ const foodOptions = [
   { name: "Chicken breast (200g)", cal: 330, prot: 62, fat: 7.2, carbs: 0, fiber: 0 },
   { name: "Cottage cheese (47g)", cal: 48, prot: 5.5, fat: 1.5, carbs: 1.4, fiber: 0 },
   { name: "Cottage cheese (95g)", cal: 95, prot: 11, fat: 3, carbs: 2.8, fiber: 0 },
-  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5, fat: 7.5, carbsa: 7, fiber: 0 },
+  { name: "Cottage cheese (full tub, 238g)", cal: 238, prot: 27.5, fat: 7.5, carbs: 7, fiber: 0 },
   { name: "Cucumber", cal: 16, prot: 1, fat: 0.1, carbs: 4, fiber: 0.5 },
   { name: "Egg", cal: 70, prot: 6, fat: 5, carbs: 0.6, fiber: 0 },
   { name: "Egg white", cal: 15, prot: 3, fat: 0, carbs: 0.2, fiber: 0 },
