@@ -106,7 +106,6 @@ const foodOptions = [
   { name: "Sweet potato (1)", cal: 112, prot: 2, fat: 0.1, carbs: 26, fiber: 4 },
   { name: "Tomato", cal: 20, prot: 1, fat: 0.2, carbs: 5, fiber: 1.5 },
   { name: "Walnut (1 whole)", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
-  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
 ];
