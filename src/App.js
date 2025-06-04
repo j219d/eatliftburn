@@ -726,6 +726,7 @@ const inputStyleThird = {
             {Object.entries(workoutLog).map(([type, value], i) => {
   let display = "";
 
+  // If the entry is an object (Treadmill, Run, Steps, etc.)
   if (typeof value === "object" && value !== null) {
     const reps = value.reps ?? 0;
     const cal = value.cal ?? 0;
@@ -733,28 +734,24 @@ const inputStyleThird = {
 
     if (type === "Treadmill") {
       display = `${cal} cal, ${steps} steps`;
-
     } else if (type === "Run") {
       display = `${reps} km – ${cal} cal, ${steps} steps`;
-
     } else if (type === "Steps") {
       display = `${reps} steps – ${cal} cal`;
-
     } else {
+      // fallback for other object-type workouts
       display = `${reps} reps – ${cal} cal`;
     }
 
+  // For workouts logged as a number
   } else if (type === "Swim") {
-    const cal = Math.round(value * 7);
-    display = `${value} laps – ${cal} cal`;
+    const laps = value;
+    const cal = Math.round(laps * 7);
+    display = `${laps} laps – ${cal} cal`;
 
   } else if (type === "Plank") {
     const cal = Math.round(value * 0.04);
     display = `${value} sec – ${cal} cal`;
-
-  } else if (type === "Row Machine") {
-    const cal = Math.round(value * 6);
-    display = `${value} min – ${cal} cal`;
 
   } else if (workouts[type]) {
     const cal = Math.round(value * workouts[type]);
