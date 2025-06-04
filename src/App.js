@@ -193,7 +193,7 @@ const logWorkout = (type, reps) => {
   });
 
   if (type === "Steps") {
-    setSteps(prev => prev + reps);
+    (prev => prev + reps);
   }
 
   if (type === "Run") {
@@ -637,7 +637,12 @@ const inputStyleThird = {
       const km = parseFloat(customWorkout.treadKm);
       if (!isNaN(cal) && !isNaN(km)) {
         const estimatedSteps = Math.round(km * 1250);
-        setSteps(prev => prev + estimatedSteps);
+        setSteps(prev => {
+  const newSteps = prev + estimatedSteps;
+  localStorage.setItem("steps", newSteps.toString());
+  return newSteps;
+});
+
         setWorkoutLog(prev => ({
           ...prev,
           Treadmill: (prev.Treadmill || 0) + cal
