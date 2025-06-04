@@ -226,12 +226,8 @@ const logWorkout = (type, reps) => {
     setSteps((prev) => prev - reps);
   }
 
-  if (type === "Treadmill" && reps?.stepsAdded) {
-  setSteps(prev => {
-    const updated = prev - reps.stepsAdded;
-    localStorage.setItem("steps", updated.toString());
-    return updated;
-  });
+  if (type === "Treadmill" && reps?.steps) {
+  setSteps(prev => Math.max(0, prev - reps.steps));
 }
 
   setWorkoutLog((prev) => {
@@ -661,7 +657,6 @@ const inputStyleThird = {
         const estimatedSteps = Math.round(km * 1250);
         setSteps(prev => {
   const newSteps = prev + estimatedSteps;
-  localStorage.setItem("steps", newSteps.toString());
   return newSteps;
 });
 
@@ -669,7 +664,7 @@ const inputStyleThird = {
   ...prev,
   Treadmill: {
     cal: (prev.Treadmill?.cal || 0) + cal,
-    stepsAdded: (prev.Treadmill?.stepsAdded || 0) + estimatedSteps
+    steps: (prev.Treadmill?.steps || 0) + estimatedSteps
   }
 }));
         setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
