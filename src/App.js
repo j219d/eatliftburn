@@ -848,6 +848,8 @@ return (
   );
 }
 
+const totalWater = Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 10;
+
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
@@ -947,11 +949,11 @@ return (
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Water:</strong>{" "}
-  <span style={{ color: Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 10 >= waterGoal ? "green" : "red" }}>
-    {Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 10}
+  <span style={{ color: totalWater >= waterGoal ? "green" : "red" }}>
+    {totalWater}
   </span>
   <span> / {waterGoal} bottles</span>
-  {Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 10 >= waterGoal && (
+  {totalWater >= waterGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
 </div>
