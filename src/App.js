@@ -902,36 +902,46 @@ return (
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
-  <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
+  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
     {Math.round(protein * 10) / 10}
   </span>
-  <span> / {proteinGoal}g</span>
+  <span> / {proteinGoal}</span>
   {Math.round(protein * 10) / 10 >= proteinGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
 </div>
+
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fat:</strong>{" "}
-  <span style={{ color: fat >= fatGoal ? "green" : "red" }}>
+  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
     {Math.round(fat * 10) / 10}
   </span>
   <span> / {fatGoal}g</span>
+  {Math.round(fat * 10) / 10 >= fatGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Carbs:</strong>{" "}
-  <span style={{ color: carbs >= carbGoal ? "green" : "red" }}>
+  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
     {Math.round(carbs * 10) / 10}
   </span>
   <span> / {carbGoal}g</span>
+  {Math.round(carbs * 10) / 10 >= carbGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fiber:</strong>{" "}
-  <span style={{ color: fiber >= fiberGoal ? "green" : "red" }}>
+  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
     {Math.round(fiber * 10) / 10}
   </span>
   <span> / {fiberGoal}g</span>
+  {Math.round(fiber * 10) / 10 >= fiberGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
