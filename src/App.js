@@ -217,14 +217,15 @@ const logWorkout = (type, reps) => {
     : Math.round(reps * workouts[type]);
 
   // ✅ Fix step count reversals
-  if (type === "Run") {
-    const runSteps = Math.round(reps * 800);
-    setSteps((prev) => prev - runSteps);
-  }
-
   if (type === "Steps") {
-    setSteps((prev) => prev - reps);
-  }
+  const stepCount = workoutLog["Steps"]?.reps || 0;
+  setSteps(prev => Math.max(0, prev - stepCount));
+}
+
+if (type === "Run") {
+  const stepCount = workoutLog["Run"]?.stepsAdded || 0;
+  setSteps(prev => Math.max(0, prev - stepCount));
+}
 
   if (type === "Treadmill" && reps?.steps) {
   setSteps(prev => Math.max(0, prev - reps.steps));
