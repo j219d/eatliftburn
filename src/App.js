@@ -187,24 +187,20 @@ const logWorkout = (type, reps) => {
   }
 
   setWorkoutLog(prev => {
-  const newLog = { ...prev };
+    const updated = { ...prev };
+    updated[type] = (updated[type] || 0) + reps;
+    return updated;
+  });
 
-  // Adjust steps before deleting
   if (type === "Steps") {
-    setSteps(s => Math.max(0, s - (prev["Steps"]?.reps || 0)));
+    (prev => prev + reps);
   }
 
   if (type === "Run") {
-    setSteps(s => Math.max(0, s - (prev["Run"]?.stepsAdded || 0)));
+    const runSteps = Math.round(reps * 800);
+    setSteps(prev => prev + runSteps);
   }
-
-  if (type === "Treadmill") {
-    setSteps(s => Math.max(0, s - (prev["Treadmill"]?.steps || 0)));
-  }
-
-  delete newLog[type];
-  return newLog;
-});
+};
 
 
   const deleteWorkout = (type) => {
