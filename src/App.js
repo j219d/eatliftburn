@@ -730,13 +730,15 @@ const inputStyleThird = {
     const cal = value.cal || 0;
     const steps = value.stepsAdded || 0;
     display = `${cal} cal, ${steps} steps`;
-  } else if (type === "Run") {
-    const km = value;
-    const cal = Math.round(km * 70);
-    display = `${km} km – ${cal} cal`;
-  } else if (type === "Steps") {
-    const cal = Math.round(value * 0.04);
-    display = `${value} steps – ${cal} cal`;
+  } else if (type === "Run" && typeof value === "object") {
+    const km = value.reps || 0;
+    const cal = value.cal || Math.round(km * 70);
+    const steps = value.stepsAdded || Math.round(km * 800);
+    display = `${km} km – ${cal} cal, ${steps} steps`;
+  } else if (type === "Steps" && typeof value === "object") {
+    const steps = value.reps || 0;
+    const cal = value.cal || Math.round(steps * 0.04);
+    display = `${steps} steps – ${cal} cal`;
   } else if (type === "Swim") {
     const laps = value;
     const cal = Math.round(laps * 7);
@@ -756,7 +758,7 @@ const inputStyleThird = {
 
   return (
     <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-      {type}: {display}{" "}
+      {type}: {display}
       <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
         ❌
       </button>
