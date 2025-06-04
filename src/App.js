@@ -947,9 +947,12 @@ return (
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Water:</strong>{" "}
   <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
-  {water + (checklist.concentrace ? 1 : 0)}
-</span>
-<span> / {waterGoal} bottles</span>
+    {water + (checklist.concentrace ? 1 : 0)}
+  </span>
+  <span> / {waterGoal} bottles</span>
+  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
 </div>
 
 <div style={{ fontSize: "16px" }}>
