@@ -746,10 +746,10 @@ const inputStyleThird = {
     const steps = value.stepsAdded ?? 0;
 
         if (type === "Treadmill") {
-      const cal = value.cal ?? 0;
-      const steps = value.stepsAdded ?? 0;
-      display = `${cal} cal, ${steps} steps`;
-        } else if (type === "Run") {
+  const cal = value.cal ?? 0;
+  const steps = value.steps ?? 0; // ✅ this is the fix
+  display = `${cal} cal, ${steps} steps`;
+} else if (type === "Run") {
       const reps = value.reps ?? 0;
       const cal = value.cal ?? 0;
       const steps = value.stepsAdded ?? 0;
