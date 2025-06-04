@@ -726,47 +726,40 @@ const inputStyleThird = {
             {Object.entries(workoutLog).map(([type, value], i) => {
   let display = "";
 
-  // Treadmill: value is an object { reps, cal, stepsAdded }
-  if (type === "Treadmill" && typeof value === "object") {
+  if (typeof value === "object" && value !== null) {
+    const reps = value.reps ?? 0;
     const cal = value.cal ?? 0;
     const steps = value.stepsAdded ?? 0;
-    display = `${cal} cal, ${steps} steps`;
 
-  // Run: value is an object { reps, cal, stepsAdded }
-  } else if (type === "Run" && typeof value === "object") {
-    const km = value.reps ?? 0;
-    const cal = value.cal ?? Math.round(km * 70);
-    const steps = value.stepsAdded ?? Math.round(km * 800);
-    display = `${km} km – ${cal} cal, ${steps} steps`;
+    if (type === "Treadmill") {
+      display = `${cal} cal, ${steps} steps`;
 
-  // Steps: value is an object { reps, cal }
-  } else if (type === "Steps" && typeof value === "object") {
-    const reps = value.reps ?? 0;
-    const cal = value.cal ?? Math.round(reps * 0.04);
-    display = `${reps} steps – ${cal} cal`;
+    } else if (type === "Run") {
+      display = `${reps} km – ${cal} cal, ${steps} steps`;
 
-  // Swim (number of laps)
+    } else if (type === "Steps") {
+      display = `${reps} steps – ${cal} cal`;
+
+    } else {
+      display = `${reps} reps – ${cal} cal`;
+    }
+
   } else if (type === "Swim") {
-    const laps = value;
-    const cal = Math.round(laps * 7);
-    display = `${laps} laps – ${cal} cal`;
+    const cal = Math.round(value * 7);
+    display = `${value} laps – ${cal} cal`;
 
-  // Plank (seconds)
   } else if (type === "Plank") {
     const cal = Math.round(value * 0.04);
     display = `${value} sec – ${cal} cal`;
 
-  // Row Machine (minutes)
   } else if (type === "Row Machine") {
     const cal = Math.round(value * 6);
     display = `${value} min – ${cal} cal`;
 
-  // Other workouts: use workout multiplier
   } else if (workouts[type]) {
     const cal = Math.round(value * workouts[type]);
     display = `${value} reps – ${cal} cal`;
 
-  // Fallback
   } else {
     display = `${value} cal`;
   }
