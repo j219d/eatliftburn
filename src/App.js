@@ -903,7 +903,7 @@ return (
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
   <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
-    {protein}
+    {Math.round(protein * 10) / 10}
   </span>
   <span> / {proteinGoal}g</span>
   {protein >= proteinGoal && (
@@ -913,7 +913,7 @@ return (
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fat:</strong>{" "}
   <span style={{ color: fat >= fatGoal ? "green" : "red" }}>
-    {fat}
+    {Math.round(fat * 10) / 10}
   </span>
   <span> / {fatGoal}g</span>
 </div>
@@ -921,7 +921,7 @@ return (
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Carbs:</strong>{" "}
   <span style={{ color: carbs >= carbGoal ? "green" : "red" }}>
-    {carbs}
+    {Math.round(carbs * 10) / 10}
   </span>
   <span> / {carbGoal}g</span>
 </div>
@@ -929,7 +929,7 @@ return (
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fiber:</strong>{" "}
   <span style={{ color: fiber >= fiberGoal ? "green" : "red" }}>
-    {fiber}
+    {Math.round(fiber * 10) / 10}
   </span>
   <span> / {fiberGoal}g</span>
 </div>
