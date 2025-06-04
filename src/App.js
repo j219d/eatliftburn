@@ -724,43 +724,40 @@ const inputStyleThird = {
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
             {Object.entries(workoutLog).map(([type, value], i) => {
-              let cal;
-let display;
+  let display = "";
 
-if (type === "Run") {
-  cal = Math.round(value * 70);
-  display = `${value} km — ${cal} cal`;
-} else if (type === "Steps") {
-  cal = Math.round(value * 0.04);
-  display = `${value} steps — ${cal} cal`;
-} else if (type === "Treadmill") {
-  cal = value;
-  display = `${cal} cal`;
-} else if (type === "Swim") {
-  const laps = value;
-  cal = Math.round(laps * 7);
-  display = `${laps} laps — ${cal} cal`;
-} else if (type === "Plank") {
-  cal = Math.round(value * 0.04);
-  display = `${value} sec — ${cal} cal`;
-} else if (type === "Row Machine") {
-  cal = Math.round(value * 6);
-  display = `${value} min — ${cal} cal`;
-} else if (workouts[type]) {
-  cal = Math.round(value * workouts[type]);
-  display = `${value} reps — ${cal} cal`;
-} else {
-  cal = value;
-  display = `${cal} cal`;
-}
+  if (type === "Run" && typeof value === "object") {
+    display = `${value.reps || 0} km – ${value.cal || 0} cal, ${value.stepsAdded || 0} steps`;
+  } else if (type === "Steps" && typeof value === "object") {
+    display = `${value.reps || 0} steps – ${value.cal || 0} cal`;
+  } else if (type === "Treadmill" && typeof value === "object") {
+    display = `${value.cal || 0} cal, ${value.stepsAdded || 0} steps`;
+  } else if (type === "Swim") {
+    const laps = value;
+    const cal = Math.round(laps * 7);
+    display = `${laps} laps – ${cal} cal`;
+  } else if (type === "Plank") {
+    const cal = Math.round(value * 0.04);
+    display = `${value} sec – ${cal} cal`;
+  } else if (type === "Row Machine") {
+    const cal = Math.round(value * 6);
+    display = `${value} min – ${cal} cal`;
+  } else if (workouts[type]) {
+    const cal = Math.round(value * workouts[type]);
+    display = `${value} reps – ${cal} cal`;
+  } else {
+    display = `${value} cal`;
+  }
 
-return (
-  <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-    {type}: {display}{" "}
-    <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>❌</button>
-  </li>
-);
-            })}
+  return (
+    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+      {type}: {display}{" "}
+      <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+        ❌
+      </button>
+    </li>
+  );
+})}
           </ul>
 
           <div style={{
