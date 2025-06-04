@@ -120,14 +120,14 @@ const foodOptions = [
 
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (type === "Run" && typeof value === "object") return sum + (value.cal || 0);
-  if (type === "Steps" && typeof value === "object") return sum + (value.cal || 0);
-  if (type === "Treadmill" && typeof value === "object") return sum + (value.cal || 0);
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
   if (type === "Swim") return sum + Math.round(value * 7);
   if (type === "Plank") return sum + Math.round(value * 0.04);
   if (workouts[type]) return sum + Math.round(value * workouts[type]);
   return sum;
-}, 0);
+}, 0)
 
 const estimatedDeficit = 1620 + totalBurn - calories;
 
@@ -806,13 +806,14 @@ const inputStyleThird = {
           }}>
             Total Burn: {
   Object.entries(workoutLog).reduce((sum, [type, value]) => {
-    if (type === "Run") return sum + Math.round(value * 70);
-    if (type === "Steps") return sum + Math.round(value * 0.04);
-    if (type === "Treadmill") return sum + value;
-    if (type === "Swim") return sum + Math.round(value * 7);
-    if (workouts[type]) return sum + Math.round(value * workouts[type]);
-    return sum + value;
-  }, 0)
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum;
+}, 0)
 } cal
           </div>
         </>
@@ -932,13 +933,14 @@ const inputStyleThird = {
         <strong>Calories Burned:</strong>{" "}
 {
   Object.entries(workoutLog).reduce((sum, [type, value]) => {
-    if (type === "Run") return sum + Math.round(value * 70);
-    if (type === "Steps") return sum + Math.round(value * 0.04);
-    if (type === "Treadmill") return sum + value;
-    if (type === "Swim") return sum + Math.round(value * 7);
-    if (workouts[type]) return sum + Math.round(value * workouts[type]);
-    return sum + value;
-  }, 0)
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum;
+}, 0)
 }
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
