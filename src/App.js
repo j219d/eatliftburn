@@ -159,6 +159,7 @@ useEffect(() => {
   setCarbs(0);
   setFiber(0);
   setWater(0);
+  setSteps(0);
   setFoodLog([]);
   setWorkoutLog({});
   setChecklist({ supplements: false, sunlight: false, concentrace: false });
