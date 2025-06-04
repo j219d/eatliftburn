@@ -125,7 +125,6 @@ const foodOptions = [
   else if (type === "Treadmill") sum += value;
   else if (type === "Swim") sum += Math.round(value * 7);
   else if (type === "Plank") sum += Math.round(value * 0.04); // 👈 should be value * 0.04
-  else if (type === "Row Machine") sum += Math.round(value * 6);
   else if (workouts[type]) sum += Math.round(value * workouts[type]);
   else sum += value;
   return sum;
@@ -155,7 +154,7 @@ useEffect(() => {
 
   setCalories(0);
   setProtein(0);
-  setSteps(0);
+  (0);
   setFat(0);
   setCarbs(0);
   setFiber(0);
@@ -183,8 +182,6 @@ const logWorkout = (type, reps) => {
   let burn;
   if (type === "Plank") {
     burn = Math.round(reps * 0.04); // ~2.4 cal/min
-  } else if (type === "Row Machine") {
-    burn = Math.round(reps * 6); // 6 cal per min
   } else {
     burn = Math.round(workouts[type] * reps);
   }
@@ -208,34 +205,40 @@ const logWorkout = (type, reps) => {
 
   const deleteWorkout = (type) => {
   const reps = workoutLog[type];
+
+  // Calculate burn (optional – only needed if displayed or used elsewhere)
   const burn =
-  type === "Run"
-    ? Math.round(reps * 70)
-    : type === "Steps"
-    ? Math.round(reps * 0.04)
-    : type === "Plank"
-    ? Math.round(reps * 0.04)
-    : type === "Row Machine"
-    ? Math.round(reps * 6)
-    : Math.round(reps * workouts[type]);
+    type === "Run"
+      ? Math.round(reps * 70)
+      : type === "Steps"
+      ? Math.round(reps * 0.04)
+      : type === "Plank"
+      ? Math.round(reps * 0.04)
+      ? Math.round(reps * 6)
+      : Math.round(reps * workouts[type]);
 
-
-  // ✅ Fix step count for Run
+  // ✅ Fix step count reversals
   if (type === "Run") {
     const runSteps = Math.round(reps * 800);
-    setSteps(prev => prev - runSteps);
+    setSteps((prev) => prev - runSteps);
   }
 
   if (type === "Steps") {
-    setSteps(prev => prev - reps);
+    setSteps((prev) => prev - reps);
   }
 
-  setWorkoutLog(prev => {
+  if (type === "Treadmill") {
+    const estSteps = Math.round((reps / 7) * 1250); // reverse-calculate km
+    setSteps((prev) => prev - estSteps);
+  }
+
+  setWorkoutLog((prev) => {
     const updated = { ...prev };
     delete updated[type];
     return updated;
   });
 };
+
 
   const addFood = (food) => {
   const completeFood = {
