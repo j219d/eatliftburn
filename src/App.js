@@ -208,14 +208,13 @@ const logWorkout = (type, reps) => {
 
   // Calculate burn (optional – only needed if displayed or used elsewhere)
   const burn =
-    type === "Run"
-      ? Math.round(reps * 70)
-      : type === "Steps"
-      ? Math.round(reps * 0.04)
-      : type === "Plank"
-      ? Math.round(reps * 0.04)
-      ? Math.round(reps * 6)
-      : Math.round(reps * workouts[type]);
+  type === "Run"
+    ? Math.round(reps * 70)
+    : type === "Steps"
+    ? Math.round(reps * 0.04)
+    : type === "Plank"
+    ? Math.round(reps * 0.04)
+    : Math.round(reps * workouts[type]);
 
   // ✅ Fix step count reversals
   if (type === "Run") {
