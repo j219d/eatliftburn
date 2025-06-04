@@ -575,7 +575,12 @@ const inputStyleThird = {
             const steps = parseInt(customWorkout["Steps"]);
             if (!isNaN(steps)) {
               const stepCalories = Math.round(steps * 0.04); // flat walking only
-              setSteps(prev => prev + steps); // steps tracker
+              setSteps(prev => {
+  const newSteps = prev + steps;
+  localStorage.setItem("steps", newSteps.toString());
+  return newSteps;
+});
+ // steps tracker
               setWorkoutLog(prev => ({
                 ...prev,
                 Steps: (prev["Steps"] || 0) + steps
