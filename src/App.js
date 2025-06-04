@@ -120,13 +120,12 @@ const foodOptions = [
 
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (type === "Run") sum += Math.round(value * 70);
-  else if (type === "Steps") sum += Math.round(value * 0.04);
-  else if (type === "Treadmill") sum += value;
-  else if (type === "Swim") sum += Math.round(value * 7);
-  else if (type === "Plank") sum += Math.round(value * 0.04); // 👈 should be value * 0.04
-  else if (workouts[type]) sum += Math.round(value * workouts[type]);
-  else sum += value;
+  if (type === "Run" && typeof value === "object") return sum + (value.cal || 0);
+  if (type === "Steps" && typeof value === "object") return sum + (value.cal || 0);
+  if (type === "Treadmill" && typeof value === "object") return sum + (value.cal || 0);
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
   return sum;
 }, 0);
 
@@ -534,12 +533,23 @@ const inputStyleThird = {
   if (!isNaN(input)) {
     let cal = 0;
     if (type === "Run") {
-      cal = Math.round(input * 70); // burn
-      const runSteps = Math.round(input * 800); // steps from run
-      setSteps(prev => prev + runSteps); // ✅ Push steps to home
-    } else {
-      cal = Math.round(input * workouts[type]);
+  const cal = Math.round(input * 70);
+  const runSteps = Math.round(input * 800);
+
+  setSteps(prev => prev + runSteps);
+
+  setWorkoutLog(prev => ({
+    ...prev,
+    [type]: {
+      reps: input,
+      cal,
+      stepsAdded: runSteps
     }
+  }));
+
+  setCustomWorkout({ ...customWorkout, [type]: "" });
+  return; // Exit early
+}
 
     setWorkoutLog(prev => ({
       ...prev,
@@ -586,9 +596,12 @@ const inputStyleThird = {
 });
  // steps tracker
               setWorkoutLog(prev => ({
-                ...prev,
-                Steps: (prev["Steps"] || 0) + steps
-              }));
+  ...prev,
+  Steps: {
+    reps: (prev["Steps"]?.reps || 0) + steps,
+    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.04)
+  }
+}));
               setCustomWorkout({ ...customWorkout, Steps: "" });
             }
           }}
@@ -732,11 +745,18 @@ const inputStyleThird = {
     const cal = value.cal ?? 0;
     const steps = value.stepsAdded ?? 0;
 
-    if (type === "Treadmill") {
+        if (type === "Treadmill") {
+      const cal = value.cal ?? 0;
+      const steps = value.stepsAdded ?? 0;
       display = `${cal} cal, ${steps} steps`;
-    } else if (type === "Run") {
+        } else if (type === "Run") {
+      const reps = value.reps ?? 0;
+      const cal = value.cal ?? 0;
+      const steps = value.stepsAdded ?? 0;
       display = `${reps} km – ${cal} cal, ${steps} steps`;
     } else if (type === "Steps") {
+      const reps = value.reps ?? 0;
+      const cal = value.cal ?? 0;
       display = `${reps} steps – ${cal} cal`;
     } else {
       // fallback for other object-type workouts
@@ -757,9 +777,13 @@ const inputStyleThird = {
     const cal = Math.round(value * workouts[type]);
     display = `${value} reps – ${cal} cal`;
 
-  } else {
-    display = `${value} cal`;
-  }
+  } else if (typeof value === "object" && value !== null) {
+  const reps = value.reps ?? 0;
+  const cal = value.cal ?? 0;
+  display = `${reps} reps – ${cal} cal`;
+} else {
+  display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+}
 
   return (
     <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
