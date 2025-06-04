@@ -726,12 +726,17 @@ const inputStyleThird = {
             {Object.entries(workoutLog).map(([type, value], i) => {
   let display = "";
 
-  if (type === "Run" && typeof value === "object") {
-    display = `${value.reps || 0} km – ${value.cal || 0} cal, ${value.stepsAdded || 0} steps`;
-  } else if (type === "Steps" && typeof value === "object") {
-    display = `${value.reps || 0} steps – ${value.cal || 0} cal`;
-  } else if (type === "Treadmill" && typeof value === "object") {
-    display = `${value.cal || 0} cal, ${value.stepsAdded || 0} steps`;
+  if (type === "Treadmill" && typeof value === "object") {
+    const cal = value.cal || 0;
+    const steps = value.stepsAdded || 0;
+    display = `${cal} cal, ${steps} steps`;
+  } else if (type === "Run") {
+    const km = value;
+    const cal = Math.round(km * 70);
+    display = `${km} km – ${cal} cal`;
+  } else if (type === "Steps") {
+    const cal = Math.round(value * 0.04);
+    display = `${value} steps – ${cal} cal`;
   } else if (type === "Swim") {
     const laps = value;
     const cal = Math.round(laps * 7);
