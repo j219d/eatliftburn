@@ -19,10 +19,10 @@ function App() {
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 750);
-  const [proteinGoal, setProteinGoal] = useState(() => parseInt(localStorage.getItem("proteinGoal")) || 140);
-const [fat, setFat] = useState(() => parseInt(localStorage.getItem("fat")) || 0);
-const [carbs, setCarbs] = useState(() => parseInt(localStorage.getItem("carbs")) || 0);
-const [fiber, setFiber] = useState(() => parseInt(localStorage.getItem("fiber")) || 0);
+  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
+const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
+const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
+const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
@@ -906,7 +906,7 @@ return (
     {Math.round(protein * 10) / 10}
   </span>
   <span> / {proteinGoal}g</span>
-  {protein >= proteinGoal && (
+  {Math.round(protein * 10) / 10 >= proteinGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
 </div>
