@@ -113,7 +113,6 @@ const foodOptions = [
   { name: "Sweet potato (whole)", cal: 112, prot: 2, fat: 0.1, carbs: 26, fiber: 4 },
   { name: "Tomato", cal: 20, prot: 1, fat: 0.2, carbs: 5, fiber: 1.5 },
   { name: "Walnut", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
-  { name: "Water (1 cup)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 0.296 }
   { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
@@ -848,8 +847,6 @@ return (
   );
 }
 
-const totalWater = Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 10;
-
   return (
   <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
     <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
@@ -949,11 +946,11 @@ const totalWater = Math.round((water + (checklist.concentrace ? 1 : 0)) * 10) / 
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Water:</strong>{" "}
-  <span style={{ color: totalWater >= waterGoal ? "green" : "red" }}>
-    {totalWater}
+  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
+    {water + (checklist.concentrace ? 1 : 0)}
   </span>
   <span> / {waterGoal} bottles</span>
-  {totalWater >= waterGoal && (
+  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
     <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
   )}
 </div>
