@@ -214,7 +214,7 @@ const logWorkout = (type, reps) => {
   // Calculate burn (optional – only needed if displayed or used elsewhere)
   const burn =
   type === "Run"
-    ? Math.round(reps * 70)
+    ? Math.round(reps * 65)
     : type === "Steps"
     ? Math.round(reps * 0.04)
     : type === "Plank"
