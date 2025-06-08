@@ -53,7 +53,7 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   "Low Pull": 0.3,
   "Lunges": 0.4,
   "Back Extensions": 0.3,
-  "Shoulder Press (Dumbbell)": 0.3,
+  "Shoulder Press": 0.3,
   "Glute Abductor": 0.3,
   "Biceps": 0.2,
   "Triceps": 0.3,
