@@ -47,17 +47,17 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
 
   const workouts = {
   "Leg Press": 0.4,
-  "Bench Press": 0.3,
   "Pull-ups": 0.4,
-  "Hamstring Curl": 0.5,
-  "Low Pull": 0.3,
-  "Shoulder Press (Dumbbell)": 0.5,
-  "Lunges": 0.4,
-  "Back Extensions": 0.3,
+  "Bench Press": 0.3,
   "Push-ups": 0.3,
+  "Hamstring Curl": 0.3,
+  "Lunges": 0.4,
+  "Shoulder Press (Dumbbell)": 0.3,
+  "Low Pull": 0.3,
+  "Back Extensions": 0.3,
+  "Glute Abductor": 0.3,
   "Biceps": 0.2,
   "Triceps": 0.3,
-  "Glute Abductor": 0.3,
   "Core Pull": 0.2,
   "Plank": 0.04, // 0.04 cal per second (~2.4 per minute)
   "Run": "run"
