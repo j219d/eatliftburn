@@ -26,8 +26,8 @@ const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber"
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
-const fatGoal = 60;
-const carbGoal = 150;
+const fatGoal = 50;
+const carbGoal = 120;
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
