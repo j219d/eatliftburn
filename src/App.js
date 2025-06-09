@@ -25,17 +25,37 @@ const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs"
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
-// 🧠 Daily macro/water goals
-const fatGoal = 50;
-const carbGoal = 120;
+// 🧠 Daily macro/water goals (mode-dependent)
+const modeSettings = {
+  Cut: {
+    deficitGoal: 500,
+    caloriesGoal: 1500,
+    proteinGoal: 140,
+    fatGoal: 50,
+    carbGoal: 120
+  },
+  Maintenance: {
+    deficitGoal: 0,
+    caloriesGoal: 2010,
+    proteinGoal: 140,
+    fatGoal: 55,
+    carbGoal: 150
+  },
+  Bulk: {
+    deficitGoal: -250,
+    caloriesGoal: 2250,
+    proteinGoal: 140,
+    fatGoal: 60,
+    carbGoal: 180
+  }
+};
+
+const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+const { deficitGoal, caloriesGoal, proteinGoal, fatGoal, carbGoal } = modeSettings[mode];
+
 const fiberGoal = 25;
-const waterGoal = 3; // bottles of 27oz (~2.5L)
-  const [stepGoal] = useState(10000);
-  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
-  supplements: false,
-  sunlight: false,
-  concentrace: false
-});
+const waterGoal = 3;
+
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
@@ -929,6 +949,27 @@ const inputStyleThird = {
   marginTop: "0px",
   marginBottom: "8px"
 }}>
+
+<div style={{ marginBottom: "12px", textAlign: "center" }}>
+  <label style={{ fontWeight: "bold", marginRight: "8px" }}>Mode:</label>
+  <select
+    value={mode}
+    onChange={(e) => {
+      setMode(e.target.value);
+      localStorage.setItem("mode", e.target.value);
+    }}
+    style={{ padding: "6px", fontSize: "14px", borderRadius: "6px" }}
+  >
+    <option value="Cut">Cut</option>
+    <option value="Maintenance">Maintenance</option>
+    <option value="Bulk">Bulk</option>
+  </select>
+</div>
+
+<div style={{ textAlign: "center", fontSize: "16px", marginBottom: "10px", color: "#555" }}>
+  <strong>Mode:</strong> {mode} — Goal: {caloriesGoal} kcal, {proteinGoal}g protein
+</div>
+
   📊 Today
 </h2>
 
