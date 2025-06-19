@@ -1055,28 +1055,28 @@ const inputStyleThird = {
 </h3>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {["sunlight", "supplements", "concentrace", "teffilin"].map((key) => (
-  <label key={key} style={{ fontSize: "16px" }}>
-    <input
-      type="checkbox"
-      checked={checklist[key]}
-      onChange={() =>
-        setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-      }
-      style={{ marginRight: "10px" }}
-    />
-    {key === "sunlight"
-  ? "Sunlight 🌞"
-  : key === "supplements"
-  ? "Supplements 💊"
-  : key === "concentrace"
-  ? "Concentrace 💧"
-  : key === "teffilin"
-  ? "Tefillin 💪🧠✋✡️"
-  : key}
-  </label>
-))}
-      </div>
+  {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
+    <label key={key} style={{ fontSize: "16px" }}>
+      <input
+        type="checkbox"
+        checked={checklist[key]}
+        onChange={() =>
+          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+        }
+        style={{ marginRight: "10px" }}
+      />
+      {key === "concentrace"
+        ? "Concentrace 💧"
+        : key === "teffilin"
+        ? "Tefillin ✡️"
+        : key === "sunlight"
+        ? "Sunlight 🌞"
+        : key === "supplements"
+        ? "Supplements 💊"
+        : key}
+    </label>
+  ))}
+</div>
     </div>
 
     {/* Navigation Buttons */}
