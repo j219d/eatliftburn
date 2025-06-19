@@ -37,6 +37,7 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   concentrace: false,
   teffilin: false
 });
+const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
@@ -1051,7 +1052,7 @@ const inputStyleThird = {
   marginTop: "0px",
   marginBottom: "12px"
 }}>
-  ☑️ Checklist
+  {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
 </h3>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
