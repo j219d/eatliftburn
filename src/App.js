@@ -34,7 +34,8 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
   sunlight: false,
-  concentrace: false
+  concentrace: false,
+  teffilin: false
 });
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
@@ -179,7 +180,7 @@ useEffect(() => {
   setSteps(0);
   setFoodLog([]);
   setWorkoutLog({});
-  setChecklist({ supplements: false, sunlight: false, concentrace: false });
+  setChecklist({ supplements: false, sunlight: false, concentrace: false, teffilin: false});
 
   // Optional: clear localStorage for those too
   localStorage.removeItem("calories");
@@ -1054,7 +1055,7 @@ const inputStyleThird = {
 </h3>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        {["sunlight", "supplements", "concentrace"].map((key) => (
+        {["sunlight", "supplements", "concentrace", "teffilin"].map((key) => (
   <label key={key} style={{ fontSize: "16px" }}>
     <input
       type="checkbox"
@@ -1065,12 +1066,14 @@ const inputStyleThird = {
       style={{ marginRight: "10px" }}
     />
     {key === "sunlight"
-      ? "Sunlight 🌞"
-      : key === "supplements"
-      ? "Supplements 💊"
-      : key === "concentrace"
-      ? "Concentrace 💧"
-      : key}
+  ? "Sunlight 🌞"
+  : key === "supplements"
+  ? "Supplements 💊"
+  : key === "concentrace"
+  ? "Concentrace 💧"
+  : key === "teffilin"
+  ? "Tefillin 💪🧠✋✡️"
+  : key}
   </label>
 ))}
       </div>
