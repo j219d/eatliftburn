@@ -946,7 +946,7 @@ const inputStyleThird = {
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: calories >= 1500 ? "green" : "red" }}>
+  <span style={{ color: calories >= 1610 ? "green" : "red" }}>
     {calories}
   </span>
 </div>
