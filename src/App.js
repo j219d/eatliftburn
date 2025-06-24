@@ -74,6 +74,7 @@ const foodOptions = [
   { name: "Blueberries (½ cup)", cal: 42, prot: 0.6, fat: 0.25, carbs: 10.7, fiber: 1.8 },
   { name: "Blueberries (1 cup)", cal: 84, prot: 1.1, fat: 0.5, carbs: 21.4, fiber: 3.6 },
   { name: "Brazil nut", cal: 33, prot: 0.75, fat: 3.4, carbs: 0.6, fiber: 0.2 },
+  { name: "Bread (Sourdough Rye Slice 56g)", calories: 145, protein: 4.5, fat: 1.0, carbs: 27, fiber: 3.3 },
   { name: "Butter (1 tsp)", cal: 35, prot: 0, fat: 4, carbs: 0, fiber: 0 },
   { name: "Carrot", cal: 25, prot: 0.5, fat: 0.1, carbs: 6, fiber: 1.7 },
   { name: "Carrots Peas and Corn (Frozen, 100g)", cal: 63, prot: 3, fat: 1.1, carbs: 10, fiber: 4 },
