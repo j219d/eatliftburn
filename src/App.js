@@ -63,8 +63,6 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   "Push-ups": 0.3,
   "Plank": 0.04,
   "Run": "run"
-  "Bike (km)": "bike_km",
-  "Bike (min)": "bike_min"
 };
   
 const foodOptions = [
@@ -236,34 +234,6 @@ const logWorkout = (type, reps) => {
     const runSteps = Math.round(reps * 800);
     setSteps(prev => prev + runSteps);
   }
-
-// 🔵 Bike by km (5 cal per km – conservative)
-if (type === "Bike (km)") {
-  const cal = Math.round(input * 5);
-  setWorkoutLog(prev => ({
-    ...prev,
-    [type]: {
-      reps: input,
-      cal
-    }
-  }));
-  setCustomWorkout({ ...customWorkout, [type]: "" });
-  return;
-}
-
-// 🔵 Bike by min (4 cal per minute – very conservative)
-if (type === "Bike (min)") {
-  const cal = Math.round(input * 4);
-  setWorkoutLog(prev => ({
-    ...prev,
-    [type]: {
-      reps: input,
-      cal
-    }
-  }));
-  setCustomWorkout({ ...customWorkout, [type]: "" });
-  return;
-}
 };
 
 
@@ -818,13 +788,10 @@ const inputStyleThird = {
       const reps = value.reps ?? 0;
       const cal = value.cal ?? 0;
       display = `${reps} steps – ${cal} cal`;
-    } else if (type === "Bike (km)") {
-  display = `${reps} km – ${cal} cal`;
-} else if (type === "Bike (min)") {
-  display = `${reps} min – ${cal} cal`;
-} else {
-  display = `${reps} reps – ${cal} cal`;
-}
+    } else {
+      // fallback for other object-type workouts
+      display = `${reps} reps – ${cal} cal`;
+    }
 
   // For workouts logged as a number
   } else if (type === "Swim") {
