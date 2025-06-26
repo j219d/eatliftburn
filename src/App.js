@@ -63,6 +63,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   "Push-ups": 0.3,
   "Plank": 0.04,
   "Run": "run"
+  "Bike": "bike"
 };
   
 const foodOptions = [
