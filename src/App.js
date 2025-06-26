@@ -164,7 +164,7 @@ const foodOptions = [
   return sum;
 }, 0)
 
-const estimatedDeficit = 1620 + totalBurn - calories;
+const estimatedDeficit = 1560 + totalBurn - calories;
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
