@@ -62,7 +62,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   "Triceps": 0.3,
   "Push-ups": 0.3,
   "Plank": 0.04,
-  "Run": "run"
+  "Run": "run",
   "Bike": "bike"
 };
   
