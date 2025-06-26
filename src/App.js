@@ -543,7 +543,7 @@ const inputStyleThird = {
   type="number"
   step={type === "Run" ? "0.01" : "1"}
   placeholder={(
-  type === "Run"
+  type === "Run" || type === "Bike"
     ? "Kilometers"
     : type === "Plank"
     ? "Seconds"
@@ -562,8 +562,18 @@ const inputStyleThird = {
             onClick={() => {
   const input = parseFloat(customWorkout[type]);
   if (!isNaN(input)) {
-    let cal = 0;
-    if (type === "Run") {
+    // --- NEW: handle Bike rides
+if (type === "Bike") {
+const cal = Math.round(input * 5);        // 5 cal/km
+setWorkoutLog(prev => ({
+...prev,
+[type]: { reps: input, cal }
+}));
+setCustomWorkout({ ...customWorkout, [type]: "" });
+return;
+}
+// existing Run handling
+if (type === "Run") {
   const cal = Math.round(input * 70);
   const runSteps = Math.round(input * 800);
 
@@ -582,10 +592,11 @@ const inputStyleThird = {
   return; // Exit early
 }
 
-    setWorkoutLog(prev => ({
-      ...prev,
-      [type]: (prev[type] || 0) + input
-    }));
+    // fallback for other reps-based workouts
+setWorkoutLog(prev => ({
+...prev,
+[type]: (prev[type] || 0) + input
+}));
     setCustomWorkout({ ...customWorkout, [type]: "" });
   }
 }}
@@ -788,6 +799,8 @@ const inputStyleThird = {
       const reps = value.reps ?? 0;
       const cal = value.cal ?? 0;
       display = `${reps} steps – ${cal} cal`;
+    } else if (type === "Bike") {
+      display = `${reps} km – ${cal} cal`;
     } else {
       // fallback for other object-type workouts
       display = `${reps} reps – ${cal} cal`;
