@@ -565,7 +565,7 @@ const inputStyleThird = {
   if (!isNaN(input)) {
     // --- NEW: handle Bike rides
 if (type === "Bike") {
-const cal = Math.round(input * 5);        // 5 cal/km
+const cal = Math.round(input * 15);        // 15 cal/km
 setWorkoutLog(prev => ({
 ...prev,
 [type]: { reps: input, cal }
