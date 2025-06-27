@@ -430,12 +430,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
      <div style={{ marginBottom: "24px" }}>
-    {/* 👇 two-row, three-column layout for custom food inputs */}
+    {/* 👇 two-column grid for custom food inputs */}
   <div
     style={{
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",  // two equal columns
       gap: "8px",
       marginBottom: "12px",
     }}
@@ -446,7 +445,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -458,7 +457,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -470,7 +469,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -482,7 +481,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -494,7 +493,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -506,7 +505,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
       style={{
         padding: "12px",
-        width: "32%",
+        width: "100%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
