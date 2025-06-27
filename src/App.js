@@ -681,6 +681,50 @@ if (screen === "workouts") {
         </div>
       </div>
 
+  {/* Treadmill Entry */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+        <input
+          type="number"
+          placeholder="Cal"
+          value={customWorkout.treadCal || ""}
+          onChange={e => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+          style={{ width:"43px", height:"23.5px", padding:"6px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc" }}
+        />
+        <input
+          type="number"
+          placeholder="KM"
+          step="0.01"
+          value={customWorkout.treadKm || ""}
+          onChange={e => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+          style={{ width:"39px", height:"23.5px", padding:"6px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc" }}
+        />
+        <button
+          onClick={() => logWorkout("Treadmill")}
+          style={{ padding:"8px 12px", fontSize:"16px", backgroundColor:"#0070f3", color:"white", border:"none", borderRadius:"8px" }}
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Swim Entry */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+        <input
+          type="number"
+          placeholder="Laps"
+          value={customWorkout.Swim || ""}
+          onChange={e => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+          style={{ width:"100px", padding:"8px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+        />
+        <button
+          onClick={() => logWorkout("Swim")}
+          style={{ padding:"8px 12px", fontSize:"16px", backgroundColor:"#0070f3", color:"white", border:"none", borderRadius:"8px" }}
+        >
+          Add
+        </button>
+      </div>
+
       {/* — Fixed Bottom Tab Bar — */}
       <div style={{
         position: "fixed",
