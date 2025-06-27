@@ -1062,9 +1062,15 @@ if (screen === "workouts") {
   );
 }
 
-  return (
-  <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-    <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+ return (
+    <>
+      <div style={{
+        padding: "24px",
+        paddingBottom: "80px",         // make room for the tab bar
+        fontFamily: "Inter, Arial, sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
   <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "45%", height: "auto" }} />
 </div>
 
@@ -1254,7 +1260,39 @@ if (screen === "workouts") {
       Reset
     </button>
   </div>
-);
+ {/* — Fixed Bottom Tab Bar — */}
+      <div style={{
+        position: "fixed",
+        bottom:   0,
+        left:     0,
+        right:    0,
+        display:  "flex",
+        height:   "56px",
+        backgroundColor: "#fff",
+        borderTop:       "1px solid #ddd",
+        boxShadow:       "0 -1px 4px rgba(0,0,0,0.1)"
+      }}>
+        <button
+          onClick={() => setScreen("food")}
+          style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}
+        >
+          🍽️ Food
+        </button>
+        <button
+          onClick={() => setScreen("workouts")}
+          style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}
+        >
+          🏋️ Workouts
+        </button>
+        <button
+          onClick={() => setScreen("weight")}
+          style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}
+        >
+          ⚖️ Weight
+        </button>
+      </div>
+    </>
+  );
 }
 
 export default App;
