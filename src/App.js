@@ -374,8 +374,15 @@ const inputStyleThird = {
 };
 
   if (screen === "food") {
-  return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+    return (
+      <>
+        <div style={{
+          padding: "24px",
+          paddingBottom: "80px",
+          fontFamily: "Inter, Arial, sans-serif",
+          maxWidth: "500px",
+          margin: "auto"
+        }}>
   <HomeButton />
   <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
   {"🍽️ Food Log"}
@@ -593,13 +600,36 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       }}>
         Total: {calories} cal / {protein}g protein
       </div>
-    </div>
-  );
-}
+{/* — Fixed Bottom Tab Bar — */}
+        <div style={{
+          position:     "fixed",
+          bottom:       0,
+          left:         0,
+          right:        0,
+          display:      "flex",
+          height:       "56px",
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
 
   if (screen === "workouts") {
-  return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
+    return (
+      <>
+        <div style={{
+          padding: "24px",
+          paddingBottom: "80px",
+          fontFamily: "Inter, Arial, sans-serif",
+          maxWidth: "500px",
+          margin: "auto"
+        }}>
       <HomeButton />
       <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
 
@@ -930,8 +960,25 @@ setWorkoutLog(prev => ({
         </>
       )}
     </div>
-  );
-}
+ {/* — Fixed Bottom Tab Bar — */}
+        <div style={{
+          position:     "fixed",
+          bottom:       0,
+          left:         0,
+          right:        0,
+          display:      "flex",
+          height:       "56px",
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
@@ -952,15 +999,28 @@ setWorkoutLog(prev => ({
   };
 
   return (
-    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-      <HomeButton />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
+    <>
+      <div style={{
+        padding: "24px",
+        paddingBottom: "80px",            // ← added bottom padding
+        fontFamily: "Inter, Arial, sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <HomeButton />
+        <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>
+          ⚖️ Weight Tracker
+        </h1>
 
-      {/* Latest weight */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>{latestWeight} lb</div>
-        <div style={{ fontSize: "14px", color: "#666" }}>{latestDate}</div>
-      </div>
+        {/* Latest weight */}
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
+            {latestWeight} lb
+          </div>
+          <div style={{ fontSize: "14px", color: "#666" }}>
+            {latestDate}
+          </div>
+        </div>
 
       {/* Input */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
@@ -1008,8 +1068,25 @@ setWorkoutLog(prev => ({
         ))}
       </ul>
     </div>
-  );
-}
+ {/* — Fixed Bottom Tab Bar — */}
+        <div style={{
+          position:     "fixed",
+          bottom:       0,
+          left:         0,
+          right:        0,
+          display:      "flex",
+          height:       "56px",
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
 
    return (
     <>
