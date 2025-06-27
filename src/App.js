@@ -600,6 +600,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       }}>
         Total: {calories} cal / {protein}g protein
       </div>
+    </div>
 {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
@@ -956,10 +957,10 @@ setWorkoutLog(prev => ({
   return sum;
 }, 0)
 } cal
-          </div>
-        </>
-      )}
-    </div>
+        </div>
+      </>
+    );
+  }
  {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
