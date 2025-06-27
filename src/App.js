@@ -608,19 +608,19 @@ if (screen === "workouts") {
                 border: "1px solid #ccc"
               }}
             />
-<button
-onClick={() => logWorkout(type)}
-      style={{
-        padding: "8px 12px",
-        fontSize: "16px",
-        backgroundColor: "#0070f3",
-        color: "white",
-        border: "none",
-        borderRadius: "8px"
-      }}
-    >
-      Add
-    </button>
+            <button
+              onClick={() => logWorkout(type)}
+              style={{
+                padding: "8px 12px",
+                fontSize: "16px",
+                backgroundColor: "#0070f3",
+                color: "white",
+                border: "none",
+                borderRadius: "8px"
+              }}
+            >
+              Add
+            </button>
           </div>
         ))}
 
