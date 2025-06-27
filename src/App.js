@@ -382,87 +382,95 @@ const inputStyleThird = {
 </h1>
 
       <div style={{ marginBottom: "20px" }}>
-{/* — six inputs in a 3-column × 2-row grid — */}
-  <div
+{/* 👇 search filter input */}
+<div style={{ marginBottom: "12px" }}>
+  <input
+    type="text"
+    placeholder="🔍 Search foods…"
+    value={foodSearch}
+    onChange={e => setFoodSearch(e.target.value)}
     style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      gap: "8px",
-      marginBottom: "12px",
+      width: "100%",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      marginBottom: "8px"
     }}
-  >
-    <input
-      placeholder="Custom food name"
-      value={customFood.name}
-      onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-    <input
-      placeholder="Calories"
-      type="number"
-      value={customFood.cal}
-      onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-    <input
-      placeholder="Protein"
-      type="number"
-      value={customFood.prot}
-      onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-    <input
-      placeholder="Fat"
-      type="number"
-      value={customFood.fat}
-      onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-    <input
-      placeholder="Carbs"
-      type="number"
-      value={customFood.carbs}
-      onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-    <input
-      placeholder="Fiber"
-      type="number"
-      value={customFood.fiber}
-      onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
-  </div>
+  />
+</div>
+        <select
+          defaultValue=""
+          onChange={(e) => {
+            const selected = JSON.parse(e.target.value);
+            addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+            e.target.value = "";
+          }}
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "16px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff"
+          }}
+        >
+          <option value="" disabled>Select Food</option>
+{foodOptions
+.filter(f =>
+f.name.toLowerCase().includes(foodSearch.toLowerCase())
+)
+.map((f, i) => (
+<option key={i} value={JSON.stringify(f)}>
+{f.name}
+</option>
+))
+}
+        </select>
+      </div>
+
+     <div style={{ marginBottom: "24px" }}>
+  <input
+    placeholder="Custom food name"
+    value={customFood.name}
+    onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Calories"
+    type="number"
+    value={customFood.cal}
+    onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Protein"
+    type="number"
+    value={customFood.prot}
+    onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Fat"
+    type="number"
+    value={customFood.fat}
+    onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Carbs"
+    type="number"
+    value={customFood.carbs}
+    onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
+    style={{ display: "block", marginBottom: "8px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
+  <input
+    placeholder="Fiber"
+    type="number"
+    value={customFood.fiber}
+    onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
+    style={{ display: "block", marginBottom: "12px", padding: "10px", fontSize: "16px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+  />
 
         <button
           onClick={() => {
