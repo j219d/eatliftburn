@@ -390,12 +390,12 @@ const inputStyleThird = {
     value={foodSearch}
     onChange={e => setFoodSearch(e.target.value)}
 style={{
-width: "90%",            // shrink by 10%
-margin: "0 auto 8px",    // center it, keep bottom gap
-padding: "10px 36px 10px 10px",
-fontSize: "16px",
-borderRadius: "8px",
-border: "1px solid #ccc",
+  width: "80%",
+  margin: "0 auto 8px",
+  padding: "10px 36px 10px 10px",
+  fontSize: "16px",
+  borderRadius: "8px",
+  border: "1px solid #ccc",
 }}
   />
 </div>
@@ -441,7 +441,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     }}
   >
     <input
-      placeholder="Custom food name"
+      placeholder="Custom food"
       value={customFood.name}
       onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
       style={{
