@@ -46,6 +46,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
+  const [foodSearch,   setFoodSearch]   = useState("");
 
   const workouts = {
   "Leg Press": 0.4,
@@ -381,6 +382,23 @@ const inputStyleThird = {
 </h1>
 
       <div style={{ marginBottom: "20px" }}>
+{/* 👇 search filter input */}
+<div style={{ marginBottom: "12px" }}>
+<input
+type="text"
+placeholder="🔍 Search foods…"
+value={foodSearch}
+onChange={e => setFoodSearch(e.target.value)}
+style={{
+width: "100%",
+padding: "10px",
+fontSize: "16px",
+borderRadius: "8px",
+border: "1px solid #ccc",
+marginBottom: "8px"
+}}
+/>
+</div>
         <select
           defaultValue=""
           onChange={(e) => {
@@ -398,11 +416,16 @@ const inputStyleThird = {
           }}
         >
           <option value="" disabled>Select Food</option>
-          {foodOptions.map((f, i) => (
-            <option key={i} value={JSON.stringify(f)}>
-              {f.name}
-            </option>
-          ))}
+{foodOptions
+.filter(f =>
+f.name.toLowerCase().includes(foodSearch.toLowerCase())
+)
+.map((f, i) => (
+<option key={i} value={JSON.stringify(f)}>
+{f.name}
+</option>
+))
+}
         </select>
       </div>
 
