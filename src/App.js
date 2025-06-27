@@ -620,21 +620,23 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   ))}
 </ul>
     
-      <div style={{
-        marginTop: "24px",
-        backgroundColor: "#f1f1f1",
-        padding: "12px 16px",
-        borderRadius: "10px",
-        textAlign: "center",
-        fontSize: "18px",
-        fontWeight: "bold"
-      }}>
-  <span>Total: {calories} cal</span>
-  <span>Protein: {protein} g</span>
-  <span>Carbs: {carbs} g</span>
-  <span>Fat: {fat} g</span>
-  <span>Fiber: {fiber} g</span>
-  <span>Water: {water}</span>
+<div style={{
+  marginTop:     "24px",
+  backgroundColor:"#f1f1f1",
+  padding:       "12px 16px",
+  borderRadius:  "10px",
+  display:       "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+  gap:           "8px",
+  fontSize:      "16px",
+  fontWeight:    "600",
+  color:         "#333"
+}}>
+  <div>Total:    {calories} cal</div>
+  <div>Protein:  {protein} g</div>
+  <div>Carbs:    {carbs} g</div>
+  <div>Fat:      {fat} g</div>
+  <div>Fiber:    {fiber} g</div>
 </div>
     </div>
 {/* — Fixed Bottom Tab Bar — */}
