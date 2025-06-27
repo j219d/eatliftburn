@@ -629,7 +629,13 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         fontSize: "18px",
         fontWeight: "bold"
       }}>
-      </div>
+  <span>Total: {calories} cal</span>
+  <span>Protein: {protein} g</span>
+  <span>Carbs: {carbs} g</span>
+  <span>Fat: {fat} g</span>
+  <span>Fiber: {fiber} g</span>
+  <span>Water: {water}</span>
+</div>
     </div>
 {/* — Fixed Bottom Tab Bar — */}
         <div style={{
