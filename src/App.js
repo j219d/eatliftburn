@@ -430,26 +430,29 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
      <div style={{ marginBottom: "24px" }}>
-    {/* 👇 two-column grid for custom food inputs */}
+   {/* — Name full width — */}
+  <input
+    placeholder="Custom food name"
+    value={customFood.name}
+    onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+    style={{
+      padding: "12px",
+      width: "100%",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      marginBottom: "8px",
+    }}
+  />
+
+  {/* — Nutrients in a 3-col grid (last cell is blank) — */}
   <div
     style={{
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",  // two equal columns
+      gridTemplateColumns: "1fr 1fr 1fr",
       gap: "8px",
       marginBottom: "12px",
     }}
   >
-    <input
-      placeholder="Custom food name"
-      value={customFood.name}
-      onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-      style={{
-        padding: "12px",
-        width: "100%",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-      }}
-    />
     <input
       placeholder="Calories"
       type="number"
@@ -486,6 +489,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         border: "1px solid #ccc",
       }}
     />
+
     <input
       placeholder="Carbs"
       type="number"
@@ -510,6 +514,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         border: "1px solid #ccc",
       }}
     />
+
+    {/* blank spacer */}
+    <div />
   </div>
 
         <button
