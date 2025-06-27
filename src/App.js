@@ -382,69 +382,7 @@ const inputStyleThird = {
 </h1>
 
       <div style={{ marginBottom: "20px" }}>
-{/* 👇 search filter input */}
-<div style={{ marginBottom: "12px" }}>
-  <input
-    type="text"
-    placeholder="🔍 Search foods…"
-    value={foodSearch}
-    onChange={e => setFoodSearch(e.target.value)}
-    style={{
-      width: "100%",
-      padding: "10px",
-      fontSize: "16px",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-      marginBottom: "8px"
-    }}
-  />
-</div>
-        <select
-          defaultValue=""
-          onChange={(e) => {
-            const selected = JSON.parse(e.target.value);
-            addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-            e.target.value = "";
-          }}
-          style={{
-            width: "100%",
-            padding: "12px",
-            fontSize: "16px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-            backgroundColor: "#fff"
-          }}
-        >
-          <option value="" disabled>Select Food</option>
-{foodOptions
-.filter(f =>
-f.name.toLowerCase().includes(foodSearch.toLowerCase())
-)
-.map((f, i) => (
-<option key={i} value={JSON.stringify(f)}>
-{f.name}
-</option>
-))
-}
-        </select>
-      </div>
-
-     <div style={{ marginBottom: "24px" }}>
-   {/* — Name full width — */}
-  <input
-    placeholder="Custom food name"
-    value={customFood.name}
-    onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
-    style={{
-      padding: "12px",
-      width: "100%",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-      marginBottom: "8px",
-    }}
-  />
-
-  {/* — Nutrients in a 3-col grid (last cell is blank) — */}
+{/* — six inputs in a 3-column × 2-row grid — */}
   <div
     style={{
       display: "grid",
@@ -453,6 +391,17 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       marginBottom: "12px",
     }}
   >
+    <input
+      placeholder="Custom food name"
+      value={customFood.name}
+      onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
+      style={{
+        padding: "12px",
+        width: "100%",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+      }}
+    />
     <input
       placeholder="Calories"
       type="number"
@@ -489,7 +438,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         border: "1px solid #ccc",
       }}
     />
-
     <input
       placeholder="Carbs"
       type="number"
@@ -514,9 +462,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         border: "1px solid #ccc",
       }}
     />
-
-    {/* blank spacer */}
-    <div />
   </div>
 
         <button
