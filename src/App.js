@@ -598,7 +598,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         fontSize: "18px",
         fontWeight: "bold"
       }}>
-        Total: {calories} cal / {protein}g protein
       </div>
     </div>
 {/* — Fixed Bottom Tab Bar — */}
@@ -957,10 +956,10 @@ setWorkoutLog(prev => ({
   return sum;
 }, 0)
 } cal
-        </div>
-      </>
-    );
-  }
+          </div>
+        </>
+      )}
+    </div>
  {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
@@ -1067,8 +1066,8 @@ setWorkoutLog(prev => ({
             <button onClick={() => deleteWeight(i)} style={{ marginLeft: "8px" }}>❌</button>
           </li>
         ))}
-      </ul>
-    </div>
+    </ul>
+  </div>
  {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
