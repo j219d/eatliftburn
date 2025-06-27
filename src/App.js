@@ -39,13 +39,34 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
 });
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
-  const [workoutLog, setWorkoutLog] = useState(() => {
+const [workoutLog, setWorkoutLog] = useState(() => {
   try {
-    const w = JSON.parse(localStorage.getItem("workoutLog"));
-    return Array.isArray(w) ? w : [];
-  } catch {
-    return [];
-  }
+    const raw = JSON.parse(localStorage.getItem("workoutLog"));
+    if (Array.isArray(raw)) return raw;
+    if (raw && typeof raw === "object") {
+      return Object.entries(raw).map(([type, val]) => {
+        let reps, cal, time;
+        if (typeof val === "object") {
+          reps = val.reps ?? 0;
+          cal = val.cal ?? 0;
+          time = val.time ?? new Date().toLocaleTimeString();
+        } else {
+          reps = val;
+          cal = workouts[type] && typeof workouts[type] === "number"
+            ? Math.round(reps * workouts[type])
+            : 0;
+          time = new Date().toLocaleTimeString();
+        }
+        let display;
+        if (type === "Run" || type === "Bike") display = `${reps} km`;
+        else if (type === "Plank") display = `${reps} sec`;
+        else if (type === "Swim") display = `${reps} laps`;
+        else display = `${reps} reps`;
+        return { type, display, cal, time };
+      });
+    }
+  } catch {}
+  return [];
 });
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
