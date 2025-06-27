@@ -39,7 +39,14 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
 });
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
-  const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || []);
+  const [workoutLog, setWorkoutLog] = useState(() => {
+  try {
+    const w = JSON.parse(localStorage.getItem("workoutLog"));
+    return Array.isArray(w) ? w : [];
+  } catch {
+    return [];
+  }
+});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
