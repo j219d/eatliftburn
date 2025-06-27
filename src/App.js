@@ -373,45 +373,51 @@ const inputStyleThird = {
   border: "1px solid #ccc"
 };
 
-  if (screen === "food") {
-    return (
-      <>
-            <div style={{
-      position:        "fixed",
-      top:             0,
-      left:            0,
-      right:           0,
-      height:          "56px",
-      backgroundColor: "#fff",
-      borderBottom:    "1px solid #ddd",
-      boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
-      display:         "flex",
-      alignItems:      "center",
-      justifyContent:  "center",
-      zIndex:          100
-    }}>
-      <button onClick={() => setScreen("home")}
-        style={{
+if (screen === "food") {
+  return (
+    <>
+      <div style={{
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
           border:     "none",
           background: "transparent",
           fontSize:   "18px",
           cursor:     "pointer"
         }}>
-        🏠 Home
-      </button>
-    </div>
+          🏠 Home
+        </button>
+      </div>
 
-    <div style={{
-      padding:       "24px",
-      paddingTop:    "80px",
-      paddingBottom: "80px",
-      fontFamily:    "Inter, Arial, sans-serif",
-      maxWidth:      "500px",
-      margin:        "auto"
-    }}>
+      <div style={{
+        padding:       "24px",
+        paddingTop:    "80px",
+        paddingBottom: "80px",
+        fontFamily:    "Inter, Arial, sans-serif",
+        maxWidth:      "500px",
+        margin:        "auto"
+      }}>
+        <h1 style={{
+          fontSize:    "24px",
+          fontWeight:  "bold",
+          textAlign:   "center",
+          marginBottom:"16px"
+        }}>
+          🍽️ Food Log
+        </h1>
 
-  {"🍽️ Food Log"}
-</h1>
+        {/* ← the rest of your Food UI goes here unchanged */}
 
       <div style={{ marginBottom: "20px" }}>
 {/* 👇 search filter input */}
@@ -646,43 +652,48 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   }
 
   if (screen === "workouts") {
-    return (
-      <>
-       <div style={{
-  position:        "fixed",
-  top:             0,
-  left:            0,
-  right:           0,
-  height:          "56px",
-  backgroundColor: "#fff",
-  borderBottom:    "1px solid #ddd",
-  boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
-  display:         "flex",
-  alignItems:      "center",
-  justifyContent:  "center",
-  zIndex:          100
-}}>
-  <button
-    onClick={() => setScreen("home")}
-    style={{
-      border:     "none",
-      background: "transparent",
-      fontSize:   "18px",
-      cursor:     "pointer"
-    }}
-  >
-    🏠 Home
-  </button>
-</div>
+  return (
+    <>
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "56px",
+        backgroundColor: "#fff",
+        borderBottom: "1px solid #ddd",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
 
-<div style={{
-  padding:       "24px",
-  paddingTop:    "80px",
-  paddingBottom: "80px",
-  fontFamily:    "Inter, Arial, sans-serif",
-  maxWidth:      "500px",
-  margin:        "auto"
-}}>
+      <div style={{
+        padding:       "24px",
+        paddingTop:    "80px",
+        paddingBottom: "80px",
+        fontFamily:    "Inter, Arial, sans-serif",
+        maxWidth:      "500px",
+        margin:        "auto"
+      }}>
+        <h1 style={{
+          fontSize:    "24px",
+          fontWeight:  "bold",
+          textAlign:   "center",
+          marginBottom:"12px"
+        }}>
+          🏋️ Workouts
+        </h1>
 
       {/* Strength + Run entries */}
       {Object.keys(workouts).map((type, i) => (
@@ -1052,41 +1063,43 @@ setWorkoutLog(prev => ({
   return (
     <>
       <div style={{
-  position:        "fixed",
-  top:             0,
-  left:            0,
-  right:           0,
-  height:          "56px",
-  backgroundColor: "#fff",
-  borderBottom:    "1px solid #ddd",
-  boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
-  display:         "flex",
-  alignItems:      "center",
-  justifyContent:  "center",
-  zIndex:          100
-}}>
-  <button
-    onClick={() => setScreen("home")}
-    style={{
-      border:     "none",
-      background: "transparent",
-      fontSize:   "18px",
-      cursor:     "pointer"
-    }}
-  >
-    🏠 Home
-  </button>
-</div>
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
 
-<div style={{
-  padding:       "24px",
-  paddingTop:    "80px",
-  paddingBottom: "80px",
-  fontFamily:    "Inter, Arial, sans-serif",
-  maxWidth:      "500px",
-  margin:        "auto"
-}}>
-
+      <div style={{
+        padding:       "24px",
+        paddingTop:    "80px",
+        paddingBottom: "80px",
+        fontFamily:    "Inter, Arial, sans-serif",
+        maxWidth:      "500px",
+        margin:        "auto"
+      }}>
+        <h1 style={{
+          fontSize:    "24px",
+          fontWeight:  "bold",
+          textAlign:   "center",
+          marginBottom:"12px"
+        }}>
           ⚖️ Weight Tracker
         </h1>
 
