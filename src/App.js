@@ -430,7 +430,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
      <div style={{ marginBottom: "24px" }}>
-  {/* six inputs in a 3×2 grid, each 85% wide */}
+    {/* six inputs in a 3×2 grid, each 80% wide */}
   <div
     style={{
       display: "grid",
@@ -446,7 +446,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, name: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -458,7 +458,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -470,7 +470,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -482,7 +482,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -494,7 +494,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
@@ -506,7 +506,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
       style={{
         padding: "12px",
-        width: "85%",
+        width: "80%",
         borderRadius: "8px",
         border: "1px solid #ccc",
       }}
