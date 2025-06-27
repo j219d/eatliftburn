@@ -389,14 +389,14 @@ const inputStyleThird = {
     placeholder="🔍 Search foods…"
     value={foodSearch}
     onChange={e => setFoodSearch(e.target.value)}
-style={{
-  width: "80%",
-  margin: "0 auto 8px",
-  padding: "10px 36px 10px 10px",
-  fontSize: "16px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
-}}
+  style={{
+    width: "85%",
+    margin: "0 auto 8px",
+    padding: "10px 36px 10px 10px",
+    fontSize: "16px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+  }}
   />
 </div>
         <select
