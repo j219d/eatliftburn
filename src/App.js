@@ -1022,18 +1022,25 @@ setWorkoutLog(prev => ({
       }}>
 
     {/* Overview Box */}
-    <div style={{
-    display:        "flex",
-    justifyContent: "space-between",
-    alignItems:     "center",
-    marginBottom:   "8px"
-  }}>
+<div style={{
+backgroundColor: "#f9f9f9",
+borderRadius:    "12px",
+padding:         "16px",
+boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
+marginBottom:    "20px"
+}}>
+<div style={{
+display:        "flex",
+justifyContent: "space-between",
+alignItems:     "center",
+marginBottom:   "8px"
+}}>
     <h2 style={{
       fontSize:   "17px",
       fontWeight: "600",
       margin:     0
     }}>
-      Today
+     📊 Today
     </h2>
     <button
       onClick={resetDay}
