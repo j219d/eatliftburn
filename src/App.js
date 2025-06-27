@@ -1023,20 +1023,32 @@ setWorkoutLog(prev => ({
 
     {/* Overview Box */}
     <div style={{
-      backgroundColor: "#f9f9f9",
-      borderRadius: "12px",
-      padding: "16px",
-      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-      marginBottom: "20px"
+    display:        "flex",
+    justifyContent: "space-between",
+    alignItems:     "center",
+    marginBottom:   "8px"
+  }}>
+    <h2 style={{
+      fontSize:   "17px",
+      fontWeight: "600",
+      margin:     0
     }}>
-      <h2 style={{
-  fontSize: "17px",
-  fontWeight: "600",
-  marginTop: "0px",
-  marginBottom: "8px"
-}}>
-  📊 Today
-</h2>
+      Today
+    </h2>
+    <button
+      onClick={resetDay}
+      style={{
+        backgroundColor: "#d32f2f",
+        color:           "white",
+        padding:         "4px 10px",
+        fontSize:        "13px",
+        border:          "none",
+        borderRadius:    "6px"
+      }}
+    >
+      Reset
+    </button>
+  </div>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
@@ -1179,24 +1191,7 @@ setWorkoutLog(prev => ({
 </div>
     </div>
     
-    <button
-      onClick={resetDay}
-      style={{
-  backgroundColor: "#d32f2f",
-  color: "white",
-  padding: "8px 20px",
-  fontSize: "15px",
-  border: "none",
-  borderRadius: "8px",
-  width: "140px",
-  maxWidth: "100%",
-  display: "block",
-  margin: "0 auto",
-  marginTop: "3px"
-}}
-    >
-      Reset
-    </button>
+
   </div>
  {/* — Fixed Bottom Tab Bar — */}
       <div style={{
