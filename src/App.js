@@ -489,19 +489,19 @@ if (screen === "food") {
             />
           </div>
           <button
-            onClick={addCustomFood}
-            style={{
-              padding: "10px 16px",
-              backgroundColor: "#0070f3",
-              color: "white",
-              fontSize: "16px",
-              border: "none",
-              borderRadius: "8px",
-              width: "100%"
-            }}
-          >
-            Add Custom Food
-          </button>
+  onClick={() => addFood(customFood)}
+  style={{
+    padding: "10px 16px",
+    backgroundColor: "#0070f3",
+    color: "white",
+    fontSize: "16px",
+    border: "none",
+    borderRadius: "8px",
+    width: "100%"
+  }}
+>
+  Add Custom Food
+</button>
         </div>
 
         {/* Logged Foods */}
@@ -608,19 +608,19 @@ if (screen === "workouts") {
                 border: "1px solid #ccc"
               }}
             />
-            <button
-              onClick={() => addWorkout(type)}
-              style={{
-                padding: "8px 12px",
-                fontSize: "16px",
-                backgroundColor: "#0070f3",
-                color: "white",
-                border: "none",
-                borderRadius: "8px"
-              }}
-            >
-              Add
-            </button>
+<button
+onClick={() => logWorkout(type)}
+      style={{
+        padding: "8px 12px",
+        fontSize: "16px",
+        backgroundColor: "#0070f3",
+        color: "white",
+        border: "none",
+        borderRadius: "8px"
+      }}
+    >
+      Add
+    </button>
           </div>
         ))}
 
