@@ -998,81 +998,123 @@ setWorkoutLog(prev => ({
 }
 
   if (screen === "weight") {
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
-  const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
+  const latestWeight = weightLog.length > 0
+    ? weightLog[weightLog.length - 1].weight
+    : "—";
+  const latestDate = weightLog.length > 0
+    ? weightLog[weightLog.length - 1].date
+    : "";
 
   const data = {
-    labels: weightLog.map((w) => w.date),
-    datasets: [
-      {
-        label: "Weight (lbs)",
-        data: weightLog.map((w) => w.weight),
-        borderColor: "#0070f3",
-        backgroundColor: "#0070f3",
-        fill: false,
-        tension: 0.3,
-      },
-    ],
+    labels: weightLog.map(w => w.date),
+    datasets: [{
+      label: "Weight (lbs)",
+      data: weightLog.map(w => w.weight),
+      borderColor: "#0070f3",
+      backgroundColor: "#0070f3",
+      fill: false,
+      tension: 0.3
+    }]
   };
 
   return (
-  <>
-    <div style={{ padding: "24px", paddingBottom: "80px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "auto" }}>
-      <HomeButton />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>⚖️ Weight Tracker</h1>
+    <>
+      <div style={{
+        padding: "24px",
+        paddingBottom: "80px",
+        fontFamily: "Inter, Arial, sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <HomeButton />
+        <h1 style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          textAlign: "center",
+          marginBottom: "12px"
+        }}>⚖️ Weight Tracker</h1>
 
-      {/* Latest weight */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>{latestWeight} lb</div>
-        <div style={{ fontSize: "14px", color: "#666" }}>{latestDate}</div>
-      </div>
-
-      {/* Input */}
-      <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
-        <input
-          placeholder="Enter weight"
-          value={newWeight}
-          onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <button
-          onClick={addWeight}
-          style={{
-            padding: "10px 16px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "8px"
-          }}
-        >
-          Log
-        </button>
-      </div>
-
-      {/* Chart */}
-      {weightLog.length > 0 && (
+        {/* Latest weight */}
         <div style={{
-          backgroundColor: "#fff",
-          padding: "16px",
-          borderRadius: "12px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          textAlign: "center",
+          marginBottom: "20px"
+        }}>
+          <div style={{
+            fontSize: "32px",
+            fontWeight: "bold",
+            color: "#333"
+          }}>{latestWeight} lb</div>
+          <div style={{
+            fontSize: "14px",
+            color: "#666"
+          }}>{latestDate}</div>
+        </div>
+
+        {/* Input */}
+        <div style={{
+          display: "flex",
+          gap: "8px",
           marginBottom: "24px"
         }}>
-          <Line data={data} />
+          <input
+            placeholder="Enter weight"
+            value={newWeight}
+            onChange={e => setNewWeight(e.target.value)}
+            style={{
+              flex: 1,
+              padding: "10px",
+              fontSize: "16px",
+              borderRadius: "8px",
+              border: "1px solid #ccc"
+            }}
+          />
+          <button
+            onClick={addWeight}
+            style={{
+              padding: "10px 16px",
+              fontSize: "16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            Log
+          </button>
         </div>
-      )}
 
-      {/* History */}
-      <ul style={{ paddingLeft: "16px" }}>
-        {weightLog.map((w, i) => (
-          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-            {w.date}: {w.weight} lbs{" "}
-            <button onClick={() => deleteWeight(i)} style={{ marginLeft: "8px" }}>❌</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+        {/* Chart */}
+        {weightLog.length > 0 && (
+          <div style={{
+            backgroundColor: "#fff",
+            padding: "16px",
+            borderRadius: "12px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+            marginBottom: "24px"
+          }}>
+            <Line data={data} />
+          </div>
+        )}
+
+        {/* History */}
+        <ul style={{ paddingLeft: "16px" }}>
+          {weightLog.map((w, i) => (
+            <li key={i} style={{
+              fontSize: "16px",
+              marginBottom: "6px"
+            }}>
+              {w.date}: {w.weight} lbs{" "}
+              <button
+                onClick={() => deleteWeight(i)}
+                style={{ marginLeft: "8px" }}
+              >
+                ❌
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {/* — Fixed Bottom Tab Bar — */}
       <div style={{
         position: "fixed",
@@ -1083,23 +1125,41 @@ setWorkoutLog(prev => ({
         height: "56px",
         backgroundColor: "#fff",
         borderTop: "1px solid #ddd",
-        boxShadow: "0 -1px 4px rgba(0,0,0,0.1)",
+        boxShadow: "0 -1px 4px rgba(0,0,0,0.1)"
       }}>
         <button
           onClick={() => setScreen("food")}
-          style={{ flex: 1, border: "none", background: "transparent", fontSize: "16px", cursor: "pointer" }}
+          style={{
+            flex: 1,
+            border: "none",
+            background: "transparent",
+            fontSize: "16px",
+            cursor: "pointer"
+          }}
         >
           🍽️ Food
         </button>
         <button
           onClick={() => setScreen("workouts")}
-          style={{ flex: 1, border: "none", background: "transparent", fontSize: "16px", cursor: "pointer" }}
+          style={{
+            flex: 1,
+            border: "none",
+            background: "transparent",
+            fontSize: "16px",
+            cursor: "pointer"
+          }}
         >
           🏋️ Workouts
         </button>
         <button
           onClick={() => setScreen("weight")}
-          style={{ flex: 1, border: "none", background: "transparent", fontSize: "16px", cursor: "pointer" }}
+          style={{
+            flex: 1,
+            border: "none",
+            background: "transparent",
+            fontSize: "16px",
+            cursor: "pointer"
+          }}
         >
           ⚖️ Weight
         </button>
