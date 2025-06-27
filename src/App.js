@@ -1020,9 +1020,6 @@ setWorkoutLog(prev => ({
         maxWidth: "500px",
         margin: "auto"
       }}>
-    <div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
-  <img src="/logo-banner.png" alt="EatLiftBurn logo" style={{ width: "45%", height: "auto" }} />
-</div>
 
     {/* Overview Box */}
     <div style={{
