@@ -376,15 +376,40 @@ const inputStyleThird = {
   if (screen === "food") {
     return (
       <>
-        <div style={{
-          padding: "24px",
-          paddingBottom: "80px",
-          fontFamily: "Inter, Arial, sans-serif",
-          maxWidth: "500px",
-          margin: "auto"
+            <div style={{
+      position:        "fixed",
+      top:             0,
+      left:            0,
+      right:           0,
+      height:          "56px",
+      backgroundColor: "#fff",
+      borderBottom:    "1px solid #ddd",
+      boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+      display:         "flex",
+      alignItems:      "center",
+      justifyContent:  "center",
+      zIndex:          100
+    }}>
+      <button onClick={() => setScreen("home")}
+        style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
         }}>
-  <HomeButton />
-  <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>
+        🏠 Home
+      </button>
+    </div>
+
+    <div style={{
+      padding:       "24px",
+      paddingTop:    "80px",
+      paddingBottom: "80px",
+      fontFamily:    "Inter, Arial, sans-serif",
+      maxWidth:      "500px",
+      margin:        "auto"
+    }}>
+
   {"🍽️ Food Log"}
 </h1>
 
@@ -623,15 +648,41 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   if (screen === "workouts") {
     return (
       <>
-        <div style={{
-          padding: "24px",
-          paddingBottom: "80px",
-          fontFamily: "Inter, Arial, sans-serif",
-          maxWidth: "500px",
-          margin: "auto"
-        }}>
-      <HomeButton />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px", textAlign: "center" }}>🏋️ Workouts</h1>
+       <div style={{
+  position:        "fixed",
+  top:             0,
+  left:            0,
+  right:           0,
+  height:          "56px",
+  backgroundColor: "#fff",
+  borderBottom:    "1px solid #ddd",
+  boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+  display:         "flex",
+  alignItems:      "center",
+  justifyContent:  "center",
+  zIndex:          100
+}}>
+  <button
+    onClick={() => setScreen("home")}
+    style={{
+      border:     "none",
+      background: "transparent",
+      fontSize:   "18px",
+      cursor:     "pointer"
+    }}
+  >
+    🏠 Home
+  </button>
+</div>
+
+<div style={{
+  padding:       "24px",
+  paddingTop:    "80px",
+  paddingBottom: "80px",
+  fontFamily:    "Inter, Arial, sans-serif",
+  maxWidth:      "500px",
+  margin:        "auto"
+}}>
 
       {/* Strength + Run entries */}
       {Object.keys(workouts).map((type, i) => (
@@ -1001,14 +1052,41 @@ setWorkoutLog(prev => ({
   return (
     <>
       <div style={{
-        padding: "24px",
-        paddingBottom: "80px",            // ← added bottom padding
-        fontFamily: "Inter, Arial, sans-serif",
-        maxWidth: "500px",
-        margin: "auto"
-      }}>
-        <HomeButton />
-        <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>
+  position:        "fixed",
+  top:             0,
+  left:            0,
+  right:           0,
+  height:          "56px",
+  backgroundColor: "#fff",
+  borderBottom:    "1px solid #ddd",
+  boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+  display:         "flex",
+  alignItems:      "center",
+  justifyContent:  "center",
+  zIndex:          100
+}}>
+  <button
+    onClick={() => setScreen("home")}
+    style={{
+      border:     "none",
+      background: "transparent",
+      fontSize:   "18px",
+      cursor:     "pointer"
+    }}
+  >
+    🏠 Home
+  </button>
+</div>
+
+<div style={{
+  padding:       "24px",
+  paddingTop:    "80px",
+  paddingBottom: "80px",
+  fontFamily:    "Inter, Arial, sans-serif",
+  maxWidth:      "500px",
+  margin:        "auto"
+}}>
+
           ⚖️ Weight Tracker
         </h1>
 
