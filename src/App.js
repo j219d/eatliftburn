@@ -656,6 +656,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     <div>Fiber:   {fiber} g</div>
   </div>
 </div>
+</div>
 {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
