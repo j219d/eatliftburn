@@ -382,7 +382,55 @@ const inputStyleThird = {
 </h1>
 
       <div style={{ marginBottom: "20px" }}>
- {/* six inputs in a 3×2 grid, each 85% wide */}
+{/* 👇 search filter input */}
+<div style={{ marginBottom: "12px" }}>
+  <input
+    type="text"
+    placeholder="🔍 Search foods…"
+    value={foodSearch}
+    onChange={e => setFoodSearch(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+      marginBottom: "8px"
+    }}
+  />
+</div>
+        <select
+          defaultValue=""
+          onChange={(e) => {
+            const selected = JSON.parse(e.target.value);
+            addFood({ ...selected, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+            e.target.value = "";
+          }}
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "16px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff"
+          }}
+        >
+          <option value="" disabled>Select Food</option>
+{foodOptions
+.filter(f =>
+f.name.toLowerCase().includes(foodSearch.toLowerCase())
+)
+.map((f, i) => (
+<option key={i} value={JSON.stringify(f)}>
+{f.name}
+</option>
+))
+}
+        </select>
+      </div>
+
+     <div style={{ marginBottom: "24px" }}>
+  {/* six inputs in a 3×2 grid, each 85% wide */}
   <div
     style={{
       display: "grid",
@@ -1159,4 +1207,3 @@ setWorkoutLog(prev => ({
 }
 
 export default App;
-
