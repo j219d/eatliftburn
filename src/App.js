@@ -625,20 +625,37 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   backgroundColor:"#f1f1f1",
   padding:       "12px 16px",
   borderRadius:  "10px",
-  display:       "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+  display:       "flex",
+  flexDirection: "column",
   gap:           "8px",
   fontSize:      "16px",
   fontWeight:    "600",
   color:         "#333"
 }}>
-  <div>Total:    {calories} cal</div>
-  <div>Protein:  {protein} g</div>
-  <div>Carbs:    {carbs} g</div>
-  <div>Fat:      {fat} g</div>
-  <div>Fiber:    {fiber} g</div>
+  <div style={{
+    textAlign: "center",
+    fontSize:  "20px",
+    fontWeight:"700"
+  }}>
+    Calories: {calories} cal
+  </div>
+
+  <div style={{
+    display:        "flex",
+    justifyContent: "space-between"
+  }}>
+    <div>Protein: {protein} g</div>
+    <div>Carbs:   {carbs} g</div>
+  </div>
+
+  <div style={{
+    display:        "flex",
+    justifyContent: "space-between"
+  }}>
+    <div>Fat:     {fat} g</div>
+    <div>Fiber:   {fiber} g</div>
+  </div>
 </div>
-    </div>
 {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
