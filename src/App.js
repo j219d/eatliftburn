@@ -1027,7 +1027,8 @@ setWorkoutLog(prev => ({
   </button>
 </div>
 
-{/* Logged Workouts */}
+      {/* Workout Summary */}
+  {/* Logged Workouts */}
 <>
   <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
     Logged Workouts
