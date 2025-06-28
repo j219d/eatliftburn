@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -13,18 +14,22 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
++// ▶ personal constants for BMR calculation
+const heightCm = 170;
+const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
+const isMale = true;
+
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
+// ▶ default deficit goal to saved value, or personal threshold
 const [deficitGoal, setDeficitGoal] = useState(() => {
-  const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
-  if (!isNaN(saved)) return saved;
-  // default to BMR if you’ve logged weight, otherwise 1600
-  return calorieThreshold;
+const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
+if (!isNaN(saved)) return saved;
+return calorieThreshold;
 });
-
   const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
@@ -46,21 +51,31 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
-const [weightLog, setWeightLog] = useState(() =>
-  JSON.parse(localStorage.getItem("weightLog")) || []
-);
-const [newWeight, setNewWeight] = useState("");
+  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
+  const [newWeight, setNewWeight] = useState("");
+// ▶ compute age
+const today = new Date();
+let age = today.getFullYear() - birthDate.getFullYear();
+const m = today.getMonth() - birthDate.getMonth();
+if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
-// ▶ compute latest weight, BMR, and our green-threshold
-const latestWeight = weightLog.length > 0
-  ? weightLog[weightLog.length - 1].weight
-  : null;
+// ▶ pull latest weight (lbs)
+const latestWeight = weightLog.length
+? weightLog[weightLog.length - 1].weight
+: null;
++
+// ▶ true BMR via Mifflin–St Jeor
 const bmr = latestWeight
-  ? Math.round(latestWeight * 9.76)   // simple: lbs × 9.76 ≈ BMR
-  : null;
-// fallback to 1600 if no weight logged yet
-const calorieThreshold = bmr || 1600;
+? Math.round(
+10 * (latestWeight / 2.20462) +  // lbs → kg
+6.25 * heightCm -
+5 * age +
+(isMale ? 5 : -161)
+)
+: null;
 
+// ▶ unified threshold: your BMR or 1600 if no weight yet
+const calorieThreshold = bmr || 1600;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
@@ -191,7 +206,7 @@ const foodOptions = [
   return sum;
 }, 0)
 
-// start deficit from BMR (or 1600), then add burn, subtract eaten
+// ▶ start deficit from BMR/1600 then +burn − eaten
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 useEffect(() => {
@@ -1309,11 +1324,9 @@ marginBottom:   "8px"
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
-<span style={{
-  color: calories >= calorieThreshold ? "green" : "red"
-}}>
-  {calories}
-</span>
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
+    {calories}
+  </span>
 </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
         <strong>Calories Burned:</strong>{" "}
