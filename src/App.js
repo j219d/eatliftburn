@@ -421,22 +421,38 @@ if (screen === "food") {
 
       <div style={{ marginBottom: "20px" }}>
 {/* 👇 search filter input */}
-<div style={{ marginBottom: "12px" }}>
+<div style={{ position: "relative", marginBottom: "12px" }}>
   <input
     type="text"
     placeholder="🔍 Search foods…"
     value={foodSearch}
     onChange={e => setFoodSearch(e.target.value)}
-  style={{
-    width: "85%",
-    margin: "0 auto 8px",
-    padding: "10px 36px 10px 10px",
-    fontSize: "16px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
-  }}
+    style={{
+      width: "100%",
+      padding: "10px 36px 10px 10px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
   />
+  <button
+    onClick={() => setFoodSearch("")}
+    style={{
+      position: "absolute",
+      right: "10px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      border: "none",
+      background: "transparent",
+      fontSize: "16px",
+      cursor: "pointer",
+      padding: 0,
+    }}
+  >
+    ❌
+  </button>
 </div>
+
         <select
           defaultValue=""
           onChange={(e) => {
