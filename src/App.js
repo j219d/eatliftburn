@@ -421,33 +421,51 @@ if (screen === "food") {
 
       <div style={{ marginBottom: "20px" }}>
 {/* 👇 search filter input */}
-<div style={{ position: "relative", margin: "0 auto 8px", width: "85%" }}>
-  <input
-    type="text"
-    placeholder="🔍 Search foods..."
-    value={foodSearch}
-    onChange={e => setFoodSearch(e.target.value)}
+<div
+  style={{
+    display:       "flex",
+    alignItems:    "center",
+    justifyContent:"center",
+    marginBottom:  "12px",
+  }}
+>
+  <div
     style={{
-      width: "100%",
-      padding: "10px 36px 10px 10px",
-      fontSize: "16px",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-    }}
-  />
-  <span
-    onClick={() => setFoodSearch("")}
-    style={{
-      position: "absolute",
-      right: "12px",
-      top: "50%",
-      transform: "translateY(-50%)",
-      cursor: "pointer",
-      fontSize: "16px",
+      position: "relative",
+      width:    "85%",
+      maxWidth: "400px"  // optional cap on how wide it grows
     }}
   >
-    ❌
-  </span>
+    <input
+      type="text"
+      placeholder="🔍 Search foods…"
+      value={foodSearch}
+      onChange={e => setFoodSearch(e.target.value)}
+      style={{
+        width:        "100%",
+        padding:      "10px 32px 10px 10px",
+        fontSize:     "16px",
+        borderRadius: "8px",
+        border:       "1px solid #ccc",
+        boxSizing:    "border-box",
+      }}
+    />
+    <button
+      onClick={() => setFoodSearch("")}
+      style={{
+        position:     "absolute",
+        right:        "10px",
+        top:          "50%",
+        transform:    "translateY(-50%)",
+        border:       "none",
+        background:   "transparent",
+        fontSize:     "16px",
+        cursor:       "pointer",
+      }}
+    >
+      ✖
+    </button>
+  </div>
 </div>
 
         <select
