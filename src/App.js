@@ -1027,96 +1027,79 @@ setWorkoutLog(prev => ({
   </button>
 </div>
 
-      {/* Workout Summary */}
-      {Object.keys(workoutLog).length > 0 && (
-        <>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
-          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value], i) => {
-  let display = "";
+{/* Logged Workouts */}
+<>
+  <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
+    Logged Workouts
+  </h2>
+  <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+    {Object.entries(workoutLog).map(([type, value], i) => {
+      let display = "";
 
-  // If the entry is an object (Treadmill, Run, Steps, etc.)
-  if (typeof value === "object" && value !== null) {
-    const reps = value.reps ?? 0;
-    const cal = value.cal ?? 0;
-    const steps = value.stepsAdded ?? 0;
-
+      // Object-type entries (Run, Steps, Bike, Treadmill…)
+      if (typeof value === "object" && value !== null) {
+        const reps = value.reps ?? 0;
+        const cal = value.cal ?? 0;
+        const steps = value.stepsAdded ?? 0;
         if (type === "Treadmill") {
-  const cal = value.cal ?? 0;
-  const steps = value.steps ?? 0; // ✅ this is the fix
-  display = `${cal} cal, ${steps} steps`;
-} else if (type === "Run") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      const steps = value.stepsAdded ?? 0;
-      display = `${reps} km – ${cal} cal, ${steps} steps`;
-    } else if (type === "Steps") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      display = `${reps} steps – ${cal} cal`;
-    } else if (type === "Bike") {
-      display = `${reps} km – ${cal} cal`;
-    } else {
-      // fallback for other object-type workouts
-      display = `${reps} reps – ${cal} cal`;
-    }
+          display = `${cal} cal, ${steps} steps`;
+        } else if (type === "Run") {
+          display = `${reps} km – ${cal} cal, ${steps} steps`;
+        } else if (type === "Steps") {
+          display = `${reps} steps – ${cal} cal`;
+        } else if (type === "Bike") {
+          display = `${reps} km – ${cal} cal`;
+        } else {
+          display = `${reps} reps – ${cal} cal`;
+        }
 
-  // For workouts logged as a number
-  } else if (type === "Swim") {
-    const laps = value;
-    const cal = Math.round(laps * 7);
-    display = `${laps} laps – ${cal} cal`;
+      // Number-type entries (Swim, Plank, or other reps)
+      } else if (type === "Swim") {
+        const laps = value;
+        const cal = Math.round(laps * 7);
+        display = `${laps} laps – ${cal} cal`;
+      } else if (type === "Plank") {
+        const cal = Math.round(value * 0.04);
+        display = `${value} sec – ${cal} cal`;
+      } else if (workouts[type]) {
+        const cal = Math.round(value * workouts[type]);
+        display = `${value} reps – ${cal} cal`;
+      } else {
+        display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+      }
 
-  } else if (type === "Plank") {
-    const cal = Math.round(value * 0.04);
-    display = `${value} sec – ${cal} cal`;
+      return (
+        <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+          {type}: {display}
+          <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+            ❌
+          </button>
+        </li>
+      );
+    })}
+  </ul>
+  <div style={{
+    backgroundColor: "#f1f1f1",
+    padding: "12px 16px",
+    borderRadius: "10px",
+    textAlign: "center",
+    fontSize: "18px",
+    fontWeight: "bold"
+  }}>
+    Total Burn: {
+      Object.entries(workoutLog).reduce((sum, [type, value]) => {
+        if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+          return sum + value.cal;
+        }
+        if (type === "Swim") return sum + Math.round(value * 7);
+        if (type === "Plank") return sum + Math.round(value * 0.04);
+        if (workouts[type]) return sum + Math.round(value * workouts[type]);
+        return sum;
+      }, 0)
+    } cal
+  </div>
+</>
 
-  } else if (workouts[type]) {
-    const cal = Math.round(value * workouts[type]);
-    display = `${value} reps – ${cal} cal`;
-
-  } else if (typeof value === "object" && value !== null) {
-  const reps = value.reps ?? 0;
-  const cal = value.cal ?? 0;
-  display = `${reps} reps – ${cal} cal`;
-} else {
-  display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
-}
-
-  return (
-    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-      {type}: {display}
-      <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
-        ❌
-      </button>
-    </li>
-  );
-})}
-          </ul>
-
-          <div style={{
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total Burn: {
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-} cal
-          </div>
-        </>
-      )}
-    </div>
  {/* — Fixed Bottom Tab Bar — */}
         <div style={{
           position:     "fixed",
