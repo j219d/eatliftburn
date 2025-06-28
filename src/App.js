@@ -2,7 +2,6 @@
 
 
 import React, { useState, useEffect } from "react";
-import "./theme_dark_neumorphic.css";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -401,7 +400,7 @@ const inputStyleFull = {
   padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
-  border: "1px solid #444"
+  border: "1px solid #ccc"
 };
 
 const inputStyleThird = {
@@ -409,7 +408,7 @@ const inputStyleThird = {
   padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
-  border: "1px solid #444"
+  border: "1px solid #ccc"
 };
 
 if (screen === "food") {
@@ -421,9 +420,9 @@ if (screen === "food") {
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: "#121212",
-        borderBottom:    "1px solid #444",
-        boxShadow:       "0 1px 4px rgba(0,0,0,0.7)",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
         alignItems:      "center",
         justifyContent:  "center",
@@ -519,8 +518,8 @@ if (screen === "food") {
             padding: "12px",
             fontSize: "16px",
             borderRadius: "8px",
-            border: "1px solid #444",
-            backgroundColor: "#121212"
+            border: "1px solid #ccc",
+            backgroundColor: "#fff"
           }}
         >
           <option value="" disabled>Select Food</option>
@@ -556,7 +555,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -568,7 +567,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -580,7 +579,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -592,7 +591,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -604,7 +603,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -616,7 +615,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: "1px solid #444",
+        border: "1px solid #ccc",
       }}
     />
   </div>
@@ -664,8 +663,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
           style={{
             padding: "10px 16px",
-            backgroundColor: "#bb86fc",
-            color: "#121212",
+            backgroundColor: "#0070f3",
+            color: "white",
             fontSize: "16px",
             border: "none",
             borderRadius: "8px",
@@ -736,9 +735,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: "#121212",
-          borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -757,7 +756,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         left: 0,
         right: 0,
         height: "56px",
-        backgroundColor: "#121212",
+        backgroundColor: "#fff",
         borderBottom: "1px solid #ddd",
         boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
         display: "flex",
@@ -813,7 +812,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   onChange={(e) =>
     setCustomWorkout({ ...customWorkout, [type]: e.target.value })
   }
-  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #444" }}
+  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
 />
           <button
             onClick={() => {
@@ -860,8 +859,8 @@ setWorkoutLog(prev => ({
             style={{
               padding: "8px 12px",
               fontSize: "16px",
-              backgroundColor: "#bb86fc",
-              color: "#121212",
+              backgroundColor: "#0070f3",
+              color: "white",
               border: "none",
               borderRadius: "8px"
             }}
@@ -881,7 +880,7 @@ setWorkoutLog(prev => ({
           onChange={(e) =>
             setCustomWorkout({ ...customWorkout, Steps: e.target.value })
           }
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #444" }}
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -907,8 +906,8 @@ setWorkoutLog(prev => ({
           style={{
             padding: "8px 12px",
             fontSize: "16px",
-            backgroundColor: "#bb86fc",
-            color: "#121212",
+            backgroundColor: "#0070f3",
+            color: "white",
             border: "none",
             borderRadius: "8px"
           }}
@@ -932,7 +931,7 @@ setWorkoutLog(prev => ({
       padding: "6px",
       fontSize: "14px",
       borderRadius: "8px",
-      border: "1px solid #444",
+      border: "1px solid #ccc",
     }}
   />
   
@@ -948,7 +947,7 @@ setWorkoutLog(prev => ({
       padding: "6px",
       fontSize: "14px",
       borderRadius: "8px",
-      border: "1px solid #444",
+      border: "1px solid #ccc",
     }}
   />
   
@@ -976,8 +975,8 @@ setWorkoutLog(prev => ({
     style={{
       padding: "8px 12px",
       fontSize: "16px",
-      backgroundColor: "#bb86fc",
-      color: "#121212",
+      backgroundColor: "#0070f3",
+      color: "white",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1000,7 +999,7 @@ setWorkoutLog(prev => ({
       padding: "8px",
       fontSize: "16px",
       borderRadius: "8px",
-      border: "1px solid #444",
+      border: "1px solid #ccc",
     }}
   />
 
@@ -1019,8 +1018,8 @@ setWorkoutLog(prev => ({
     style={{
       padding: "8px 12px",
       fontSize: "16px",
-      backgroundColor: "#bb86fc",
-      color: "#121212",
+      backgroundColor: "#0070f3",
+      color: "white",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1081,7 +1080,7 @@ setWorkoutLog(prev => ({
             })}
           </ul>
           <div style={{
-            backgroundColor: "#1e1e1e",
+            backgroundColor: "#f1f1f1",
             padding: "12px 16px",
             borderRadius: "10px",
             textAlign: "center",
@@ -1111,9 +1110,9 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: "#121212",
-          borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -1134,7 +1133,7 @@ setWorkoutLog(prev => ({
         label: "Weight (lbs)",
         data: weightLog.map((w) => w.weight),
         borderColor: "#0070f3",
-        backgroundColor: "#bb86fc",
+        backgroundColor: "#0070f3",
         fill: false,
         tension: 0.3,
       },
@@ -1149,9 +1148,9 @@ setWorkoutLog(prev => ({
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: "#121212",
-        borderBottom:    "1px solid #444",
-        boxShadow:       "0 1px 4px rgba(0,0,0,0.7)",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
         alignItems:      "center",
         justifyContent:  "center",
@@ -1186,10 +1185,10 @@ setWorkoutLog(prev => ({
 
         {/* Latest weight */}
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#e0e0e0" }}>
+          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
             {latestWeight} lb
           </div>
-          <div style={{ fontSize: "14px", color: "#a0a0a0" }}>
+          <div style={{ fontSize: "14px", color: "#666" }}>
             {latestDate}
           </div>
         </div>
@@ -1200,15 +1199,15 @@ setWorkoutLog(prev => ({
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #444" }}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
           style={{
             padding: "10px 16px",
             fontSize: "16px",
-            backgroundColor: "#bb86fc",
-            color: "#121212",
+            backgroundColor: "#0070f3",
+            color: "white",
             border: "none",
             borderRadius: "8px"
           }}
@@ -1220,7 +1219,7 @@ setWorkoutLog(prev => ({
       {/* Chart */}
       {weightLog.length > 0 && (
         <div style={{
-          backgroundColor: "#121212",
+          backgroundColor: "#fff",
           padding: "16px",
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
@@ -1248,9 +1247,9 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: "#121212",
-          borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -1272,7 +1271,7 @@ setWorkoutLog(prev => ({
 
     {/* Overview Box */}
 <div style={{
-backgroundColor: "#1e1e1e",
+backgroundColor: "#f9f9f9",
 borderRadius:    "12px",
 padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
@@ -1407,7 +1406,7 @@ marginBottom:   "8px"
 
     {/* Checklist Box */}
     <div style={{
-      backgroundColor: "#1e1e1e",
+      backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
@@ -1457,9 +1456,9 @@ marginBottom:   "8px"
         right:        0,
         display:      "flex",
         height:       "56px",
-        backgroundColor: "#121212",
-        borderTop:    "1px solid #444",
-        boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
+        backgroundColor: "#fff",
+        borderTop:    "1px solid #ddd",
+        boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
       }}>
         <button
           onClick={() => setScreen("food")}
