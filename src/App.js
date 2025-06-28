@@ -1,24 +1,3 @@
-// ▶ Theme definition for refined color palette
-const theme = {
-  colors: {
-    background: "#f7f8fa",
-    cardBackground: "#ffffff",
-    primary: "#0066ff",
-    secondary: "#0052cc",
-    border: "#e2e2e8",
-    success: "#28a745",
-    error: "#dc3545",
-    textPrimary: "#212529",
-    textSecondary: "#6c757d"
-  },
-  radius: "8px",
-  spacing: {
-    xs: "4px",
-    sm: "8px",
-    md: "16px",
-    lg: "24px"
-  }
-};
 
 
 
@@ -36,12 +15,38 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
+
+// ▶ personal constants for BMR calculation
+const heightCm = 170;
+const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
+const isMale = true;
+// ▶ Theme definition for refined color palette
+const theme = {
+  colors: {
+    background:       '#f7f8fa',
+    sectionBackground:'#ffffff',
+    primary:          '#0066cc',
+    border:           '#dee2e6',
+    success:          '#28a745',
+    error:            '#dc3545',
+    textPrimary:      '#212529',
+    textSecondary:    '#6c757d'
+  },
+  radius:  '8px',
+  spacing: { sm: '8px', md: '16px', lg: '24px' }
+};
+
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal")) || 500);
+  // ▶ default deficit goal to saved override or personal threshold
+  const [deficitGoal, setDeficitGoal] = useState(() => {
+    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
+    if (!isNaN(saved)) return saved;
+    return calorieThreshold;
+  });
   const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
@@ -65,6 +70,28 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
+
+  // ▶ compute age
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+
+  // ▶ latest weight (lbs)
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
+
+  // ▶ true BMR via Mifflin–St Jeor
+  const bmr = latestWeight
+    ? Math.round(
+        10 * (latestWeight / 2.20462) +  // lbs → kg
+        6.25 * heightCm -
+        5 * age +
+        (isMale ? 5 : -161)
+      )
+    : null;
+
+  // ▶ unified threshold: BMR or fallback 1600
+  const calorieThreshold = bmr || 1600;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
@@ -195,7 +222,7 @@ const foodOptions = [
   return sum;
 }, 0)
 
-const estimatedDeficit = 1560 + totalBurn - calories;
+const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -409,7 +436,7 @@ if (screen === "food") {
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: theme.colors.cardBackground,
+        backgroundColor: theme.colors.sectionBackground,
         borderBottom:    "1px solid #ddd",
         boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
@@ -429,7 +456,7 @@ if (screen === "food") {
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "58px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -508,7 +535,7 @@ if (screen === "food") {
             fontSize: "16px",
             borderRadius: "8px",
             border: `1px solid ${theme.colors.border}`,
-            backgroundColor: theme.colors.cardBackground
+            backgroundColor: theme.colors.sectionBackground
           }}
         >
           <option value="" disabled>Select Food</option>
@@ -653,7 +680,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           style={{
             padding: "10px 16px",
             backgroundColor: theme.colors.primary,
-            color: theme.colors.cardBackground,
+            color: theme.colors.sectionBackground,
             fontSize: "16px",
             border: "none",
             borderRadius: "8px",
@@ -724,7 +751,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.cardBackground,
+          backgroundColor: theme.colors.sectionBackground,
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -745,7 +772,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         left: 0,
         right: 0,
         height: "56px",
-        backgroundColor: theme.colors.cardBackground,
+        backgroundColor: theme.colors.sectionBackground,
         borderBottom: `1px solid ${theme.colors.border}`,
         boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
         display: "flex",
@@ -765,7 +792,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "58px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -849,7 +876,7 @@ setWorkoutLog(prev => ({
               padding: "8px 12px",
               fontSize: "16px",
               backgroundColor: theme.colors.primary,
-              color: theme.colors.cardBackground,
+              color: theme.colors.sectionBackground,
               border: "none",
               borderRadius: "8px"
             }}
@@ -896,7 +923,7 @@ setWorkoutLog(prev => ({
             padding: "8px 12px",
             fontSize: "16px",
             backgroundColor: theme.colors.primary,
-            color: theme.colors.cardBackground,
+            color: theme.colors.sectionBackground,
             border: "none",
             borderRadius: "8px"
           }}
@@ -965,7 +992,7 @@ setWorkoutLog(prev => ({
       padding: "8px 12px",
       fontSize: "16px",
       backgroundColor: theme.colors.primary,
-      color: theme.colors.cardBackground,
+      color: theme.colors.sectionBackground,
       border: "none",
       borderRadius: "8px"
     }}
@@ -1008,7 +1035,7 @@ setWorkoutLog(prev => ({
       padding: "8px 12px",
       fontSize: "16px",
       backgroundColor: theme.colors.primary,
-      color: theme.colors.cardBackground,
+      color: theme.colors.sectionBackground,
       border: "none",
       borderRadius: "8px"
     }}
@@ -1017,75 +1044,59 @@ setWorkoutLog(prev => ({
   </button>
 </div>
 
-      {/* Workout Summary */}
-      {Object.keys(workoutLog).length > 0 && (
+        {/* Logged Workouts */}
         <>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
+            Logged Workouts
+          </h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
             {Object.entries(workoutLog).map(([type, value], i) => {
-  let display = "";
+              let display = "";
 
-  // If the entry is an object (Treadmill, Run, Steps, etc.)
-  if (typeof value === "object" && value !== null) {
-    const reps = value.reps ?? 0;
-    const cal = value.cal ?? 0;
-    const steps = value.stepsAdded ?? 0;
+              // Object-type entries (Run, Steps, Bike, Treadmill…)
+              if (typeof value === "object" && value !== null) {
+                const reps = value.reps ?? 0;
+                const cal = value.cal ?? 0;
+                const steps = value.stepsAdded ?? 0;
+                if (type === "Treadmill") {
+                  display = `${cal} cal, ${steps} steps`;
+                } else if (type === "Run") {
+                  display = `${reps} km – ${cal} cal, ${steps} steps`;
+                } else if (type === "Steps") {
+                  display = `${reps} steps – ${cal} cal`;
+                } else if (type === "Bike") {
+                  display = `${reps} km – ${cal} cal`;
+                } else {
+                  display = `${reps} reps – ${cal} cal`;
+                }
 
-        if (type === "Treadmill") {
-  const cal = value.cal ?? 0;
-  const steps = value.steps ?? 0; // ✅ this is the fix
-  display = `${cal} cal, ${steps} steps`;
-} else if (type === "Run") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      const steps = value.stepsAdded ?? 0;
-      display = `${reps} km – ${cal} cal, ${steps} steps`;
-    } else if (type === "Steps") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      display = `${reps} steps – ${cal} cal`;
-    } else if (type === "Bike") {
-      display = `${reps} km – ${cal} cal`;
-    } else {
-      // fallback for other object-type workouts
-      display = `${reps} reps – ${cal} cal`;
-    }
+              // Number-type entries (Swim, Plank, or other reps)
+              } else if (type === "Swim") {
+                const laps = value;
+                const cal = Math.round(laps * 7);
+                display = `${laps} laps – ${cal} cal`;
+              } else if (type === "Plank") {
+                const cal = Math.round(value * 0.04);
+                display = `${value} sec – ${cal} cal`;
+              } else if (workouts[type]) {
+                const cal = Math.round(value * workouts[type]);
+                display = `${value} reps – ${cal} cal`;
+              } else {
+                display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+              }
 
-  // For workouts logged as a number
-  } else if (type === "Swim") {
-    const laps = value;
-    const cal = Math.round(laps * 7);
-    display = `${laps} laps – ${cal} cal`;
-
-  } else if (type === "Plank") {
-    const cal = Math.round(value * 0.04);
-    display = `${value} sec – ${cal} cal`;
-
-  } else if (workouts[type]) {
-    const cal = Math.round(value * workouts[type]);
-    display = `${value} reps – ${cal} cal`;
-
-  } else if (typeof value === "object" && value !== null) {
-  const reps = value.reps ?? 0;
-  const cal = value.cal ?? 0;
-  display = `${reps} reps – ${cal} cal`;
-} else {
-  display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
-}
-
-  return (
-    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-      {type}: {display}
-      <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
-        ❌
-      </button>
-    </li>
-  );
-})}
+              return (
+                <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                  {type}: {display}
+                  <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+                    ❌
+                  </button>
+                </li>
+              );
+            })}
           </ul>
-
           <div style={{
-            backgroundColor: theme.colors.background,
+            backgroundColor: "#f1f1f1",
             padding: "12px 16px",
             borderRadius: "10px",
             textAlign: "center",
@@ -1093,19 +1104,19 @@ setWorkoutLog(prev => ({
             fontWeight: "bold"
           }}>
             Total Burn: {
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-} cal
+              Object.entries(workoutLog).reduce((sum, [type, value]) => {
+                if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+                  return sum + value.cal;
+                }
+                if (type === "Swim") return sum + Math.round(value * 7);
+                if (type === "Plank") return sum + Math.round(value * 0.04);
+                if (workouts[type]) return sum + Math.round(value * workouts[type]);
+                return sum;
+              }, 0)
+            } cal
           </div>
         </>
-      )}
+
     </div>
  {/* — Fixed Bottom Tab Bar — */}
         <div style={{
@@ -1115,7 +1126,7 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.cardBackground,
+          backgroundColor: theme.colors.sectionBackground,
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -1153,7 +1164,7 @@ setWorkoutLog(prev => ({
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: theme.colors.cardBackground,
+        backgroundColor: theme.colors.sectionBackground,
         borderBottom:    "1px solid #ddd",
         boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
@@ -1173,7 +1184,7 @@ setWorkoutLog(prev => ({
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "58px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -1190,10 +1201,10 @@ setWorkoutLog(prev => ({
 
         {/* Latest weight */}
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
+          <div style={{ fontSize: "32px", fontWeight: "bold", color: theme.colors.textPrimary }}>
             {latestWeight} lb
           </div>
-          <div style={{ fontSize: "14px", color: "#666" }}>
+          <div style={{ fontSize: "14px", color: theme.colors.textSecondary }}>
             {latestDate}
           </div>
         </div>
@@ -1212,7 +1223,7 @@ setWorkoutLog(prev => ({
             padding: "10px 16px",
             fontSize: "16px",
             backgroundColor: theme.colors.primary,
-            color: theme.colors.cardBackground,
+            color: theme.colors.sectionBackground,
             border: "none",
             borderRadius: "8px"
           }}
@@ -1224,7 +1235,7 @@ setWorkoutLog(prev => ({
       {/* Chart */}
       {weightLog.length > 0 && (
         <div style={{
-          backgroundColor: theme.colors.cardBackground,
+          backgroundColor: theme.colors.sectionBackground,
           padding: "16px",
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
@@ -1252,7 +1263,7 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.cardBackground,
+          backgroundColor: theme.colors.sectionBackground,
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -1276,7 +1287,7 @@ setWorkoutLog(prev => ({
 
     {/* Overview Box */}
 <div style={{
-backgroundColor: "#f9f9f9",
+backgroundColor: theme.colors.background,
 borderRadius:    "12px",
 padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
@@ -1312,7 +1323,7 @@ marginBottom:   "8px"
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: calories >= 1610 ? "green" : "red" }}>
+  <span style={{ color: calories >= calorieThreshold ? theme.colors.success : theme.colors.error }}>
     {calories}
   </span>
 </div>
@@ -1332,7 +1343,7 @@ marginBottom:   "8px"
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Deficit:</strong>{" "}
-  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
+  <span style={{ color: estimatedDeficit >= deficitGoal ? theme.colors.success : theme.colors.error }}>
     {estimatedDeficit}
   </span>
   <span> / {deficitGoal}</span>
@@ -1411,7 +1422,7 @@ marginBottom:   "8px"
 
     {/* Checklist Box */}
     <div style={{
-      backgroundColor: "#f9f9f9",
+      backgroundColor: theme.colors.background,
       borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
@@ -1461,7 +1472,7 @@ marginBottom:   "8px"
         right:        0,
         display:      "flex",
         height:       "56px",
-        backgroundColor: theme.colors.cardBackground,
+        backgroundColor: theme.colors.sectionBackground,
         borderTop:    "1px solid #ddd",
         boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
       }}>
