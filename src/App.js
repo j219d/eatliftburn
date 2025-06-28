@@ -439,7 +439,7 @@ if (screen === "food") {
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "64px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -775,7 +775,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "64px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -1167,7 +1167,7 @@ setWorkoutLog(prev => ({
 
       <div style={{
         padding:       "24px",
-        paddingTop:    "80px",
+        paddingTop:    "64px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
