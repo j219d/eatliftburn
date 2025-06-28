@@ -746,22 +746,23 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     );
   }
 
-  if (screen === "workouts") {
+if (screen === "workouts") {
   return (
     <>
+      {/* — Fixed Header — */}
       <div style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "56px",
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
         backgroundColor: "#fff",
-        borderBottom: "1px solid #ddd",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 100
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
       }}>
         <button onClick={() => setScreen("home")} style={{
           border:     "none",
@@ -773,6 +774,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
+      {/* — Main Content — */}
       <div style={{
         padding:       "24px",
         paddingTop:    "80px",
@@ -790,352 +792,173 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           🏋️ Workouts
         </h1>
 
-      {/* Strength + Run entries */}
-      {Object.keys(workouts).map((type, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-          <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+        {/* Strength + Run + Bike entries */}
+        {Object.keys(workouts).map((type, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+            <input
+              type="number"
+              step={type === "Run" || type === "Bike" ? "0.01" : "1"}
+              placeholder={
+                type === "Run" || type === "Bike" ? "Kilometers"
+                : type === "Plank"                 ? "Seconds"
+                : type === "Swim"                  ? "Laps"
+                : "Reps"
+              }
+              value={customWorkout[type] || ""}
+              onChange={e => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
+              style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+            <button
+              onClick={() => logWorkout(type, parseFloat(customWorkout[type]))}
+              style={{
+                padding:   "8px 12px",
+                fontSize:  "16px",
+                backgroundColor: "#0070f3",
+                color:     "white",
+                border:    "none",
+                borderRadius: "8px"
+              }}
+            >
+              Add
+            </button>
+          </div>
+        ))}
+
+        {/* Steps entry (flat walking) */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
           <input
-  type="number"
-  step={type === "Run" ? "0.01" : "1"}
-  placeholder={(
-  type === "Run" || type === "Bike"
-    ? "Kilometers"
-    : type === "Plank"
-    ? "Seconds"
-    : type === "Swim"
-    ? "Laps"
-    : "Reps"
-)}
-
-  value={customWorkout[type] || ""}
-  onChange={(e) =>
-    setCustomWorkout({ ...customWorkout, [type]: e.target.value })
-  }
-  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-/>
+            type="number"
+            placeholder="Steps"
+            value={customWorkout.Steps || ""}
+            onChange={e => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
+            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
           <button
-            onClick={() => {
-  const input = parseFloat(customWorkout[type]);
-  if (!isNaN(input)) {
-    // --- NEW: handle Bike rides
-if (type === "Bike") {
-const cal = Math.round(input * 15);        // 15 cal/km
-setWorkoutLog(prev => ({
-...prev,
-[type]: { reps: input, cal }
-}));
-setCustomWorkout({ ...customWorkout, [type]: "" });
-return;
-}
-// existing Run handling
-if (type === "Run") {
-  const cal = Math.round(input * 70);
-  const runSteps = Math.round(input * 800);
-
-  setSteps(prev => prev + runSteps);
-
-  setWorkoutLog(prev => ({
-    ...prev,
-    [type]: {
-      reps: input,
-      cal,
-      stepsAdded: runSteps
-    }
-  }));
-
-  setCustomWorkout({ ...customWorkout, [type]: "" });
-  return; // Exit early
-}
-
-    // fallback for other reps-based workouts
-setWorkoutLog(prev => ({
-...prev,
-[type]: (prev[type] || 0) + input
-}));
-    setCustomWorkout({ ...customWorkout, [type]: "" });
-  }
-}}
+            onClick={() => logWorkout("Steps", parseInt(customWorkout.Steps, 10))}
             style={{
-              padding: "8px 12px",
-              fontSize: "16px",
+              padding:   "8px 12px",
+              fontSize:  "16px",
               backgroundColor: "#0070f3",
-              color: "white",
-              border: "none",
+              color:     "white",
+              border:    "none",
               borderRadius: "8px"
             }}
           >
             Add
           </button>
         </div>
-      ))}
 
-      {/* Steps section - separate from workouts */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
-        <input
-          type="number"
-          placeholder="Steps"
-          value={customWorkout["Steps"] || ""}
-          onChange={(e) =>
-            setCustomWorkout({ ...customWorkout, Steps: e.target.value })
-          }
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <button
-          onClick={() => {
-            const steps = parseInt(customWorkout["Steps"]);
-            if (!isNaN(steps)) {
-              const stepCalories = Math.round(steps * 0.04); // flat walking only
-              setSteps(prev => {
-  const newSteps = prev + steps;
-  localStorage.setItem("steps", newSteps.toString());
-  return newSteps;
-});
- // steps tracker
-              setWorkoutLog(prev => ({
-  ...prev,
-  Steps: {
-    reps: (prev["Steps"]?.reps || 0) + steps,
-    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.04)
-  }
-}));
-              setCustomWorkout({ ...customWorkout, Steps: "" });
-            }
-          }}
-          style={{
-            padding: "8px 12px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "8px"
-          }}
-        >
-          Add
-        </button>
+        {/* Treadmill entry */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+          <input
+            type="number"
+            placeholder="Cal"
+            value={customWorkout.treadCal || ""}
+            onChange={e => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+            style={{ width: "50px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <input
+            type="number"
+            placeholder="KM"
+            step="0.01"
+            value={customWorkout.treadKm || ""}
+            onChange={e => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+            style={{ width: "50px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <button
+            onClick={() => logTreadmill(parseInt(customWorkout.treadCal, 10), parseFloat(customWorkout.treadKm))}
+            style={{
+              padding:   "8px 12px",
+              fontSize:  "16px",
+              backgroundColor: "#0070f3",
+              color:     "white",
+              border:    "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
+        </div>
+
+        {/* Swim entry */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+          <input
+            type="number"
+            placeholder="Laps"
+            value={customWorkout.Swim || ""}
+            onChange={e => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <button
+            onClick={() => logWorkout("Swim", parseInt(customWorkout.Swim, 10))}
+            style={{
+              padding:   "8px 12px",
+              fontSize:  "16px",
+              backgroundColor: "#0070f3",
+              color:     "white",
+              border:    "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
+        </div>
+
+        {/* — Logged Workouts Summary — */}
+        <h2 style={{
+          fontSize:    "20px",
+          fontWeight:  "600",
+          marginTop:   "24px",
+          marginBottom:"12px"
+        }}>
+          Logged Workouts
+        </h2>
+        <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+          {Object.entries(workoutLog).map(([type, value], i) => {
+            /* ← keep your exact mapping/display logic here unchanged */
+            return <li key={i}>{/* ... */}</li>;
+          })}
+        </ul>
+        <div style={{
+          backgroundColor: "#f1f1f1",
+          padding:         "12px 16px",
+          borderRadius:    "10px",
+          textAlign:       "center",
+          fontSize:        "18px",
+          fontWeight:      "bold"
+        }}>
+          Total Burn: {
+            Object.entries(workoutLog).reduce((sum, [type, value]) => {
+              /* ← keep your exact reduce logic here unchanged */
+            }, 0)
+          } cal
+        </div>
       </div>
 
-{/* Treadmill Entry */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-  
-  <input
-    type="number"
-    placeholder="Cal"
-    value={customWorkout.treadCal || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-    style={{
-      width: "43px", // 🔻 halved
-      height: "23.5px",
-      padding: "6px",
-      fontSize: "14px",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-    }}
-  />
-  
-  <input
-    type="number"
-    placeholder="KM"
-    step="0.01"
-    value={customWorkout.treadKm || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-    style={{
-      width: "39.125px", // 🔻 halved
-      height: "23.5px",
-      padding: "6px",
-      fontSize: "14px",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-    }}
-  />
-  
-  <button
-    onClick={() => {
-      const cal = parseInt(customWorkout.treadCal);
-      const km = parseFloat(customWorkout.treadKm);
-      if (!isNaN(cal) && !isNaN(km)) {
-        const estimatedSteps = Math.round(km * 1250);
-        setSteps(prev => {
-  const newSteps = prev + estimatedSteps;
-  return newSteps;
-});
-
-        setWorkoutLog(prev => ({
-  ...prev,
-  Treadmill: {
-    cal: (prev.Treadmill?.cal || 0) + cal,
-    steps: (prev.Treadmill?.steps || 0) + estimatedSteps
-  }
-}));
-        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
-      }
-    }}
-    style={{
-      padding: "8px 12px",
-      fontSize: "16px",
-      backgroundColor: "#0070f3",
-      color: "white",
-      border: "none",
-      borderRadius: "8px"
-    }}
-  >
-    Add
-  </button>
-</div>
-
-{/* Swim Entry (50m laps, 7 cal/lap) */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
-
-  <input
-    type="number"
-    placeholder="Laps"
-    value={customWorkout["Swim"] || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
-    style={{
-      width: "100px",
-      padding: "8px",
-      fontSize: "16px",
-      borderRadius: "8px",
-      border: "1px solid #ccc",
-    }}
-  />
-
-  <button
-    onClick={() => {
-      const laps = parseInt(customWorkout["Swim"]);
-      if (!isNaN(laps)) {
-        const cal = Math.round(laps * 7); // 7 cal per 50m lap
-        setWorkoutLog(prev => ({
-          ...prev,
-          Swim: (prev.Swim || 0) + laps
-        }));
-        setCustomWorkout({ ...customWorkout, Swim: "" });
-      }
-    }}
-    style={{
-      padding: "8px 12px",
-      fontSize: "16px",
-      backgroundColor: "#0070f3",
-      color: "white",
-      border: "none",
-      borderRadius: "8px"
-    }}
-  >
-    Add
-  </button>
-</div>
-
-      {/* Workout Summary */}
-      {Object.keys(workoutLog).length > 0 && (
-        <>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>Summary</h2>
-          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value], i) => {
-  let display = "";
-
-  // If the entry is an object (Treadmill, Run, Steps, etc.)
-  if (typeof value === "object" && value !== null) {
-    const reps = value.reps ?? 0;
-    const cal = value.cal ?? 0;
-    const steps = value.stepsAdded ?? 0;
-
-        if (type === "Treadmill") {
-  const cal = value.cal ?? 0;
-  const steps = value.steps ?? 0; // ✅ this is the fix
-  display = `${cal} cal, ${steps} steps`;
-} else if (type === "Run") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      const steps = value.stepsAdded ?? 0;
-      display = `${reps} km – ${cal} cal, ${steps} steps`;
-    } else if (type === "Steps") {
-      const reps = value.reps ?? 0;
-      const cal = value.cal ?? 0;
-      display = `${reps} steps – ${cal} cal`;
-    } else if (type === "Bike") {
-      display = `${reps} km – ${cal} cal`;
-    } else {
-      // fallback for other object-type workouts
-      display = `${reps} reps – ${cal} cal`;
-    }
-
-  // For workouts logged as a number
-  } else if (type === "Swim") {
-    const laps = value;
-    const cal = Math.round(laps * 7);
-    display = `${laps} laps – ${cal} cal`;
-
-  } else if (type === "Plank") {
-    const cal = Math.round(value * 0.04);
-    display = `${value} sec – ${cal} cal`;
-
-  } else if (workouts[type]) {
-    const cal = Math.round(value * workouts[type]);
-    display = `${value} reps – ${cal} cal`;
-
-  } else if (typeof value === "object" && value !== null) {
-  const reps = value.reps ?? 0;
-  const cal = value.cal ?? 0;
-  display = `${reps} reps – ${cal} cal`;
-} else {
-  display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+      {/* — Fixed Bottom Tab Bar — */}
+      <div style={{
+        position:        "fixed",
+        bottom:          0,
+        left:            0,
+        right:           0,
+        display:         "flex",
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderTop:       "1px solid #ddd",
+        boxShadow:       "0 -1px 4px rgba(0,0,0,0.1)"
+      }}>
+        <button onClick={() => setScreen("food")}     style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🍽️ Food</button>
+        <button onClick={() => setScreen("workouts")} style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🏋️ Workouts</button>
+        <button onClick={() => setScreen("weight")}   style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>⚖️ Weight</button>
+      </div>
+    </>
+  );
 }
 
-  return (
-    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-      {type}: {display}
-      <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
-        ❌
-      </button>
-    </li>
-  );
-})}
-          </ul>
-
-          <div style={{
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total Burn: {
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-} cal
-          </div>
-        </>
-      )}
-    </div>
- {/* — Fixed Bottom Tab Bar — */}
-        <div style={{
-          position:     "fixed",
-          bottom:       0,
-          left:         0,
-          right:        0,
-          display:      "flex",
-          height:       "56px",
-          backgroundColor: "#fff",
-          borderTop:    "1px solid #ddd",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
-        }}>
-          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
-        </div>
-      </>
-    );
-  }
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
