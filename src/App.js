@@ -2,6 +2,7 @@
 
 
 import React, { useState, useEffect } from "react";
+import "./theme_dark_neumorphic.css";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -422,7 +423,7 @@ if (screen === "food") {
         height:          "56px",
         backgroundColor: "#121212",
         borderBottom:    "1px solid #444",
-        boxShadow:       "0 1px 4px rgba(0,0,0,0.5)",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.7)",
         display:         "flex",
         alignItems:      "center",
         justifyContent:  "center",
@@ -664,7 +665,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           style={{
             padding: "10px 16px",
             backgroundColor: "#bb86fc",
-            color: "white",
+            color: "#121212",
             fontSize: "16px",
             border: "none",
             borderRadius: "8px",
@@ -737,7 +738,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           height:       "56px",
           backgroundColor: "#121212",
           borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.5)"
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -860,7 +861,7 @@ setWorkoutLog(prev => ({
               padding: "8px 12px",
               fontSize: "16px",
               backgroundColor: "#bb86fc",
-              color: "white",
+              color: "#121212",
               border: "none",
               borderRadius: "8px"
             }}
@@ -907,7 +908,7 @@ setWorkoutLog(prev => ({
             padding: "8px 12px",
             fontSize: "16px",
             backgroundColor: "#bb86fc",
-            color: "white",
+            color: "#121212",
             border: "none",
             borderRadius: "8px"
           }}
@@ -976,7 +977,7 @@ setWorkoutLog(prev => ({
       padding: "8px 12px",
       fontSize: "16px",
       backgroundColor: "#bb86fc",
-      color: "white",
+      color: "#121212",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1019,7 +1020,7 @@ setWorkoutLog(prev => ({
       padding: "8px 12px",
       fontSize: "16px",
       backgroundColor: "#bb86fc",
-      color: "white",
+      color: "#121212",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1112,7 +1113,7 @@ setWorkoutLog(prev => ({
           height:       "56px",
           backgroundColor: "#121212",
           borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.5)"
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -1150,7 +1151,7 @@ setWorkoutLog(prev => ({
         height:          "56px",
         backgroundColor: "#121212",
         borderBottom:    "1px solid #444",
-        boxShadow:       "0 1px 4px rgba(0,0,0,0.5)",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.7)",
         display:         "flex",
         alignItems:      "center",
         justifyContent:  "center",
@@ -1207,7 +1208,7 @@ setWorkoutLog(prev => ({
             padding: "10px 16px",
             fontSize: "16px",
             backgroundColor: "#bb86fc",
-            color: "white",
+            color: "#121212",
             border: "none",
             borderRadius: "8px"
           }}
@@ -1249,7 +1250,7 @@ setWorkoutLog(prev => ({
           height:       "56px",
           backgroundColor: "#121212",
           borderTop:    "1px solid #444",
-          boxShadow:    "0 -1px 4px rgba(0,0,0,0.5)"
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
@@ -1458,7 +1459,7 @@ marginBottom:   "8px"
         height:       "56px",
         backgroundColor: "#121212",
         borderTop:    "1px solid #444",
-        boxShadow:    "0 -1px 4px rgba(0,0,0,0.5)"
+        boxShadow:    "0 -1px 4px rgba(0,0,0,0.7)"
       }}>
         <button
           onClick={() => setScreen("food")}
