@@ -944,39 +944,59 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           </button>
         </div>
 
-        {/* ← Here is the always-visible Logged Workouts block ↓ */}
-        <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
-          Logged Workouts
-        </h2>
-        <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-          {Object.entries(workoutLog).map(([type, value], i) => {
-            let display = "";
-            // … your exact existing mapping logic for each [type,value] …
-            return (
-              <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-                {type}: {display}
-                <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
-                  ❌
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <div style={{
-          backgroundColor: "#f1f1f1",
-          padding:         "12px 16px",
-          borderRadius:    "10px",
-          textAlign:       "center",
-          fontSize:        "18px",
-          fontWeight:      "bold"
-        }}>
-          Total Burn: {
-            Object.entries(workoutLog).reduce((sum, [type, value]) => {
-              // … your exact existing reduce logic …
-            }, 0)
-          } cal
-        </div>
-      </div>
+       {/* Logged Workouts */}
+<>
+  <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
+    Logged Workouts
+  </h2>
+  <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+    {Object.entries(workoutLog).map(([type, value], i) => {
+      // ← keep your exact mapping/display code here unchanged
+      let display = "";
+      if (typeof value === "object" && value !== null) {
+        // … your object-type logic …
+      } else if (type === "Swim") {
+        // … your Swim logic …
+      } else if (type === "Plank") {
+        // … your Plank logic …
+      } else if (workouts[type]) {
+        // … your generic reps logic …
+      } else {
+        // … fallback …
+      }
+      return (
+        <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+          {type}: {display}
+          <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+            ❌
+          </button>
+        </li>
+      );
+    })}
+  </ul>
+
+  <div style={{
+    backgroundColor: "#f1f1f1",
+    padding:         "12px 16px",
+    borderRadius:    "10px",
+    textAlign:       "center",
+    fontSize:        "18px",
+    fontWeight:      "bold"
+  }}>
+    Total Burn: {
+      Object.entries(workoutLog).reduce((sum, [type, value]) => {
+        if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+          return sum + value.cal;
+        }
+        if (type === "Swim")   return sum + Math.round(value * 7);
+        if (type === "Plank")  return sum + Math.round(value * 0.04);
+        if (workouts[type])    return sum + Math.round(value * workouts[type]);
+        return sum;
+      }, 0)
+    } cal
+  </div>
+</>
+
 
       {/* — Fixed Bottom Tab Bar — */}
       <div style={{
