@@ -2,6 +2,7 @@
 
 
 import React, { useState, useEffect } from "react";
+import "./theme_dark.css";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -20,22 +21,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 const heightCm = 170;
 const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
-// ▶ Theme definition for refined color palette
-const theme = {
-  colors: {
-    background:       '#f7f8fa',
-    sectionBackground:'#ffffff',
-    primary:          '#0066cc',
-    border:           '#dee2e6',
-    success:          '#28a745',
-    error:            '#dc3545',
-    textPrimary:      '#212529',
-    textSecondary:    '#6c757d'
-  },
-  radius:  '8px',
-  spacing: { sm: '8px', md: '16px', lg: '24px' }
-};
-
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
@@ -416,7 +401,7 @@ const inputStyleFull = {
   padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
-  border: `1px solid ${theme.colors.border}`
+  border: "1px solid #ccc"
 };
 
 const inputStyleThird = {
@@ -424,7 +409,7 @@ const inputStyleThird = {
   padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
-  border: `1px solid ${theme.colors.border}`
+  border: "1px solid #ccc"
 };
 
 if (screen === "food") {
@@ -436,7 +421,7 @@ if (screen === "food") {
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: theme.colors.sectionBackground,
+        backgroundColor: "#fff",
         borderBottom:    "1px solid #ddd",
         boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
@@ -534,8 +519,8 @@ if (screen === "food") {
             padding: "12px",
             fontSize: "16px",
             borderRadius: "8px",
-            border: `1px solid ${theme.colors.border}`,
-            backgroundColor: theme.colors.sectionBackground
+            border: "1px solid #ccc",
+            backgroundColor: "#fff"
           }}
         >
           <option value="" disabled>Select Food</option>
@@ -571,7 +556,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -583,7 +568,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -595,7 +580,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -607,7 +592,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -619,7 +604,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
     <input
@@ -631,7 +616,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         padding: "12px",
         width: "80%",
         borderRadius: "8px",
-        border: `1px solid ${theme.colors.border}`,
+        border: "1px solid #ccc",
       }}
     />
   </div>
@@ -679,8 +664,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
           style={{
             padding: "10px 16px",
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.sectionBackground,
+            backgroundColor: "#0070f3",
+            color: "white",
             fontSize: "16px",
             border: "none",
             borderRadius: "8px",
@@ -751,7 +736,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.sectionBackground,
+          backgroundColor: "#fff",
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -772,8 +757,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         left: 0,
         right: 0,
         height: "56px",
-        backgroundColor: theme.colors.sectionBackground,
-        borderBottom: `1px solid ${theme.colors.border}`,
+        backgroundColor: "#fff",
+        borderBottom: "1px solid #ddd",
         boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
         display: "flex",
         alignItems: "center",
@@ -828,7 +813,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   onChange={(e) =>
     setCustomWorkout({ ...customWorkout, [type]: e.target.value })
   }
-  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: `1px solid ${theme.colors.border}` }}
+  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
 />
           <button
             onClick={() => {
@@ -875,8 +860,8 @@ setWorkoutLog(prev => ({
             style={{
               padding: "8px 12px",
               fontSize: "16px",
-              backgroundColor: theme.colors.primary,
-              color: theme.colors.sectionBackground,
+              backgroundColor: "#0070f3",
+              color: "white",
               border: "none",
               borderRadius: "8px"
             }}
@@ -896,7 +881,7 @@ setWorkoutLog(prev => ({
           onChange={(e) =>
             setCustomWorkout({ ...customWorkout, Steps: e.target.value })
           }
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: `1px solid ${theme.colors.border}` }}
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -922,8 +907,8 @@ setWorkoutLog(prev => ({
           style={{
             padding: "8px 12px",
             fontSize: "16px",
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.sectionBackground,
+            backgroundColor: "#0070f3",
+            color: "white",
             border: "none",
             borderRadius: "8px"
           }}
@@ -947,7 +932,7 @@ setWorkoutLog(prev => ({
       padding: "6px",
       fontSize: "14px",
       borderRadius: "8px",
-      border: `1px solid ${theme.colors.border}`,
+      border: "1px solid #ccc",
     }}
   />
   
@@ -963,7 +948,7 @@ setWorkoutLog(prev => ({
       padding: "6px",
       fontSize: "14px",
       borderRadius: "8px",
-      border: `1px solid ${theme.colors.border}`,
+      border: "1px solid #ccc",
     }}
   />
   
@@ -991,8 +976,8 @@ setWorkoutLog(prev => ({
     style={{
       padding: "8px 12px",
       fontSize: "16px",
-      backgroundColor: theme.colors.primary,
-      color: theme.colors.sectionBackground,
+      backgroundColor: "#0070f3",
+      color: "white",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1015,7 +1000,7 @@ setWorkoutLog(prev => ({
       padding: "8px",
       fontSize: "16px",
       borderRadius: "8px",
-      border: `1px solid ${theme.colors.border}`,
+      border: "1px solid #ccc",
     }}
   />
 
@@ -1034,8 +1019,8 @@ setWorkoutLog(prev => ({
     style={{
       padding: "8px 12px",
       fontSize: "16px",
-      backgroundColor: theme.colors.primary,
-      color: theme.colors.sectionBackground,
+      backgroundColor: "#0070f3",
+      color: "white",
       border: "none",
       borderRadius: "8px"
     }}
@@ -1126,7 +1111,7 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.sectionBackground,
+          backgroundColor: "#fff",
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -1149,7 +1134,7 @@ setWorkoutLog(prev => ({
         label: "Weight (lbs)",
         data: weightLog.map((w) => w.weight),
         borderColor: "#0070f3",
-        backgroundColor: theme.colors.primary,
+        backgroundColor: "#0070f3",
         fill: false,
         tension: 0.3,
       },
@@ -1164,7 +1149,7 @@ setWorkoutLog(prev => ({
         left:            0,
         right:           0,
         height:          "56px",
-        backgroundColor: theme.colors.sectionBackground,
+        backgroundColor: "#fff",
         borderBottom:    "1px solid #ddd",
         boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
         display:         "flex",
@@ -1201,10 +1186,10 @@ setWorkoutLog(prev => ({
 
         {/* Latest weight */}
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <div style={{ fontSize: "32px", fontWeight: "bold", color: theme.colors.textPrimary }}>
+          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
             {latestWeight} lb
           </div>
-          <div style={{ fontSize: "14px", color: theme.colors.textSecondary }}>
+          <div style={{ fontSize: "14px", color: "#666" }}>
             {latestDate}
           </div>
         </div>
@@ -1215,15 +1200,15 @@ setWorkoutLog(prev => ({
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: `1px solid ${theme.colors.border}` }}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
           style={{
             padding: "10px 16px",
             fontSize: "16px",
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.sectionBackground,
+            backgroundColor: "#0070f3",
+            color: "white",
             border: "none",
             borderRadius: "8px"
           }}
@@ -1235,7 +1220,7 @@ setWorkoutLog(prev => ({
       {/* Chart */}
       {weightLog.length > 0 && (
         <div style={{
-          backgroundColor: theme.colors.sectionBackground,
+          backgroundColor: "#fff",
           padding: "16px",
           borderRadius: "12px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
@@ -1263,7 +1248,7 @@ setWorkoutLog(prev => ({
           right:        0,
           display:      "flex",
           height:       "56px",
-          backgroundColor: theme.colors.sectionBackground,
+          backgroundColor: "#fff",
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
@@ -1287,7 +1272,7 @@ setWorkoutLog(prev => ({
 
     {/* Overview Box */}
 <div style={{
-backgroundColor: theme.colors.background,
+backgroundColor: "#f9f9f9",
 borderRadius:    "12px",
 padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
@@ -1323,7 +1308,7 @@ marginBottom:   "8px"
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: calories >= calorieThreshold ? theme.colors.success : theme.colors.error }}>
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
     {calories}
   </span>
 </div>
@@ -1343,7 +1328,7 @@ marginBottom:   "8px"
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Deficit:</strong>{" "}
-  <span style={{ color: estimatedDeficit >= deficitGoal ? theme.colors.success : theme.colors.error }}>
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
     {estimatedDeficit}
   </span>
   <span> / {deficitGoal}</span>
@@ -1422,7 +1407,7 @@ marginBottom:   "8px"
 
     {/* Checklist Box */}
     <div style={{
-      backgroundColor: theme.colors.background,
+      backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
@@ -1472,7 +1457,7 @@ marginBottom:   "8px"
         right:        0,
         display:      "flex",
         height:       "56px",
-        backgroundColor: theme.colors.sectionBackground,
+        backgroundColor: "#fff",
         borderTop:    "1px solid #ddd",
         boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
       }}>
