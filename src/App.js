@@ -644,18 +644,19 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     display:        "flex",
     justifyContent: "space-between"
   }}>
-    <div>Protein: {protein} g</div>
-    <div>Carbs:   {carbs} g</div>
+    <div>Protein: {Math.round(protein * 10) / 10} g</div>
+    <div>Carbs:   {Math.round(carbs   * 10) / 10} g</div>
   </div>
 
   <div style={{
     display:        "flex",
     justifyContent: "space-between"
   }}>
-    <div>Fat:     {fat} g</div>
-    <div>Fiber:   {fiber} g</div>
+    <div>Fat:   {Math.round(fat   * 10) / 10} g</div>
+    <div>Fiber: {Math.round(fiber * 10) / 10} g</div>
   </div>
 </div>
+      
 </div>
 {/* — Fixed Bottom Tab Bar — */}
         <div style={{
