@@ -1307,7 +1307,7 @@ marginBottom:   "8px"
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
     {calories}
   </span>
 </div>
@@ -1327,7 +1327,7 @@ marginBottom:   "8px"
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Deficit:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
     {estimatedDeficit}
   </span>
   <span> / {deficitGoal}</span>
@@ -1338,7 +1338,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
     {Math.round(protein * 10) / 10}
   </span>
   <span> / {proteinGoal}</span>
@@ -1349,7 +1349,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fat:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
     {Math.round(fat * 10) / 10}
   </span>
   <span> / {fatGoal}g</span>
@@ -1360,7 +1360,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Carbs:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
     {Math.round(carbs * 10) / 10}
   </span>
   <span> / {carbGoal}g</span>
@@ -1371,7 +1371,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Fiber:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
     {Math.round(fiber * 10) / 10}
   </span>
   <span> / {fiberGoal}g</span>
@@ -1382,7 +1382,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Water:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
     {water + (checklist.concentrace ? 1 : 0)}
   </span>
   <span> / {waterGoal} bottles</span>
@@ -1393,7 +1393,7 @@ marginBottom:   "8px"
 
 <div style={{ fontSize: "16px" }}>
   <strong>Steps:</strong>{" "}
-  <span style={{ color: "green" : "red" }}>
+  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
     {steps}
   </span>
   <span> / {stepGoal}</span>
