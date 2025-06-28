@@ -746,7 +746,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     );
   }
 
-if (screen === "workouts") {
+  if (screen === "workouts") {
   return (
     <>
       {/* — Fixed Header — */}
@@ -792,7 +792,7 @@ if (screen === "workouts") {
           🏋️ Workouts
         </h1>
 
-        {/* Strength + Run + Bike entries */}
+        {/* Strength + Run entries */}
         {Object.keys(workouts).map((type, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
             <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
@@ -825,7 +825,7 @@ if (screen === "workouts") {
           </div>
         ))}
 
-        {/* Steps entry (flat walking) */}
+        {/* Steps entry */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
           <input
@@ -858,7 +858,7 @@ if (screen === "workouts") {
             placeholder="Cal"
             value={customWorkout.treadCal || ""}
             onChange={e => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-            style={{ width: "50px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ width: "100px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <input
             type="number"
@@ -866,7 +866,7 @@ if (screen === "workouts") {
             step="0.01"
             value={customWorkout.treadKm || ""}
             onChange={e => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-            style={{ width: "50px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ width: "100px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <button
             onClick={() => logTreadmill(parseInt(customWorkout.treadCal, 10), parseFloat(customWorkout.treadKm))}
@@ -908,19 +908,22 @@ if (screen === "workouts") {
           </button>
         </div>
 
-        {/* — Logged Workouts Summary — */}
-        <h2 style={{
-          fontSize:    "20px",
-          fontWeight:  "600",
-          marginTop:   "24px",
-          marginBottom:"12px"
-        }}>
+        {/* ← Here is the always-visible Logged Workouts block ↓ */}
+        <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
           Logged Workouts
         </h2>
         <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
           {Object.entries(workoutLog).map(([type, value], i) => {
-            /* ← keep your exact mapping/display logic here unchanged */
-            return <li key={i}>{/* ... */}</li>;
+            let display = "";
+            // … your exact existing mapping logic for each [type,value] …
+            return (
+              <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                {type}: {display}
+                <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+                  ❌
+                </button>
+              </li>
+            );
           })}
         </ul>
         <div style={{
@@ -933,7 +936,7 @@ if (screen === "workouts") {
         }}>
           Total Burn: {
             Object.entries(workoutLog).reduce((sum, [type, value]) => {
-              /* ← keep your exact reduce logic here unchanged */
+              // … your exact existing reduce logic …
             }, 0)
           } cal
         </div>
@@ -941,24 +944,23 @@ if (screen === "workouts") {
 
       {/* — Fixed Bottom Tab Bar — */}
       <div style={{
-        position:        "fixed",
-        bottom:          0,
-        left:            0,
-        right:           0,
-        display:         "flex",
-        height:          "56px",
+        position:     "fixed",
+        bottom:       0,
+        left:         0,
+        right:        0,
+        display:      "flex",
+        height:       "56px",
         backgroundColor: "#fff",
-        borderTop:       "1px solid #ddd",
-        boxShadow:       "0 -1px 4px rgba(0,0,0,0.1)"
+        borderTop:    "1px solid #ddd",
+        boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
       }}>
-        <button onClick={() => setScreen("food")}     style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🍽️ Food</button>
-        <button onClick={() => setScreen("workouts")} style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🏋️ Workouts</button>
-        <button onClick={() => setScreen("weight")}   style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>⚖️ Weight</button>
+        <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+        <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+        <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
       </div>
     </>
   );
 }
-
 
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
