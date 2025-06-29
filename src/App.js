@@ -15,48 +15,23 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-// Helper to compute age from DOB string "YYYY-MM-DD"
-function computeAge(dobString) {
-  const dob = new Date(dobString);
-  const today = new Date();
-  let age = today.getFullYear() - dob.getFullYear();
-  const m = today.getMonth() - dob.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
-  return age;
-}
-
-
 
 // ▶ personal constants for BMR calculation
 const heightCm = 170;
+const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
+const isMale = true;
 function App() {
-  // ▶ load or prompt for user profile
-  const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem("userProfile");
-    return saved ? JSON.parse(saved) : null;
-  });
-  useEffect(() => {
-    if (!profile) {
-      const gender = window.prompt("Enter gender (male/female):","male") || "male";
-      const heightCm = parseInt(window.prompt("Enter height (cm):","170"),10) || 170;
-      const weightLbs = parseInt(window.prompt("Enter weight (lbs):","150"),10) || 150;
-      const dob = window.prompt("Enter DOB (YYYY-MM-DD):","1990-01-01") || "1990-01-01";
-      const p = { gender, heightCm, weightLbs, dob };
-      localStorage.setItem("userProfile", JSON.stringify(p));
-      setProfile(p);
-    }
-  }, [profile]);
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
-  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "cut");
     const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
+  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
@@ -82,6 +57,9 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
 
   // ▶ compute age
   const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
   // ▶ latest weight (lbs)
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
@@ -98,19 +76,6 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
 
   // ▶ unified threshold: BMR or fallback 1600
   const calorieThreshold = bmr || 1600;
-  // ▶ compute available calories and macro goals based on mode
-  const availableCals = calorieThreshold + totalBurn;
-  const modeOffsets = { cut: -500, maint: 0, bulk: 250 };
-  const calorieGoal = availableCals + (modeOffsets[mode] || 0);
-
-  const weightLbsCurrent = weightLog.length > 0
-    ? weightLog[weightLog.length - 1].weight
-    : (profile ? profile.weightLbs : 150);
-  const proteinGoalCalc = Math.round(weightLbsCurrent * 0.8);
-  const fatGoalCalc = Math.round((calorieGoal * 0.25) / 9);
-  const carbGoalCalc = Math.round((calorieGoal - (proteinGoalCalc * 4 + fatGoalCalc * 9)) / 4);
-  const fiberGoalCalc = Math.round((calorieGoal / 1000) * 14);
-  const estimatedDeficit = availableCals - calories;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
