@@ -1041,7 +1041,7 @@ setWorkoutLog(prev => ({
               if (typeof value === "object" && value !== null) {
                 const reps = value.reps ?? 0;
                 const cal = value.cal ?? 0;
-                const steps = value.stepsAdded ?? 0;
+                const steps = value.stepsAdded ?? value.steps ?? 0;
                 if (type === "Treadmill") {
                   display = `${cal} cal, ${steps} steps`;
                 } else if (type === "Run") {
