@@ -893,7 +893,7 @@ setWorkoutLog(prev => ({
           onClick={() => {
             const steps = parseInt(customWorkout["Steps"]);
             if (!isNaN(steps)) {
-              const stepCalories = Math.round(steps * 0.04); // flat walking only
+              const stepCalories = Math.round(steps * 0.035); // updated: 0.035 kcal/step
               setSteps(prev => {
   const newSteps = prev + steps;
   localStorage.setItem("steps", newSteps.toString());
@@ -904,7 +904,7 @@ setWorkoutLog(prev => ({
   ...prev,
   Steps: {
     reps: (prev["Steps"]?.reps || 0) + steps,
-    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.04)
+    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.035)
   }
 }));
               setCustomWorkout({ ...customWorkout, Steps: "" });
