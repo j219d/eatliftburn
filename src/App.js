@@ -1,33 +1,4 @@
 
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
-  const weightKg = latestWeight / 2.20462;
-  const activeProfile = profiles[person] || profiles["Jon"];
-  const isJon = person === "Jon";
-  const bmr = getBMR(activeProfile, latestWeight);
-
-  let protein = 0;
-  let fat = 0;
-  let carbs = 0;
-
-  if (mode === "Cut") {
-    protein = Math.ceil(0.9 * weightKg);
-    fat = isJon ? Math.round((bmr * 0.25) / 9) : Math.round((bmr * 0.30) / 9);
-    carbs = Math.round(1.8 * weightKg);
-  } else if (mode === "Maintenance") {
-    protein = Math.ceil(0.8 * weightKg);
-    fat = isJon ? Math.round((bmr * 0.25) / 9) : Math.round((bmr * 0.30) / 9);
-    carbs = Math.round(2.2 * weightKg);
-  } else if (mode === "Bulk") {
-    protein = Math.ceil(0.9 * weightKg);
-    fat = isJon ? Math.round((bmr * 0.30) / 9) : Math.round((bmr * 0.35) / 9);
-    carbs = Math.round(2.5 * weightKg);
-  }
-
-  setProteinGoal(protein);
-  setFatGoal(fat);
-  setCarbGoal(carbs);
-
-
 
 
 
@@ -51,13 +22,6 @@ const heightCm = 170;
 const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
-
-  const profiles = {
-    Jon: { birthDate: "1990-09-21", heightCm: 173, isMale: true },
-    Chava: { birthDate: "1998-10-13", heightCm: 163, isMale: false },
-  };
-  const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
-        
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
@@ -75,7 +39,6 @@ const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber"
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
-const [showProfileSelector, setShowProfileSelector] = useState(false);
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
