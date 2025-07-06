@@ -1328,6 +1328,63 @@ marginBottom:    "20px"
     Reset
   </button>
 </div>
+          {/* Mode selector */}
+          <div style={{ textAlign: "center", marginBottom: "12px" }}>
+            <button
+              onClick={() => setShowModes(!showModes)}
+              style={{
+                backgroundColor: "#1976d2",
+                color: "white",
+                padding: "4px 10px",
+                fontSize: "13px",
+                border: "none",
+                borderRadius: "6px"
+              }}
+            >
+              Mode: {mode}
+            </button>
+            {showModes && (
+              <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "8px" }}>
+                {["Cut","Maintenance","Bulk"].map(m => (
+                  <button
+                    key={m}
+                    onClick={() => { setMode(m); setShowModes(false); }}
+                    style={{
+                      padding: "4px 8px",
+                      border: "none",
+                      borderRadius: "6px",
+                      backgroundColor: mode === m ? "#1976d2" : "#eee",
+                      color: mode === m ? "white" : "#000"
+                    }}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Calories Eaten:</strong>{" "}
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
+    {calories}
+  </span>
+</div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Burned:</strong>{" "}
+{
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum;
+}, 0)
+}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Deficit:</strong>{" "}
   <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
     {estimatedDeficit}
