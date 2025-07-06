@@ -1357,7 +1357,6 @@ marginBottom:    "20px"
   {/* Inline Mode button */}
   <button
     onClick={() => setShowModes(!showModes)}
-    style={{
       backgroundColor: "#1976d2",
       color:           "white",
       padding:         "4px 10px",
