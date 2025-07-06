@@ -1319,15 +1319,33 @@ padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
 marginBottom:    "20px"
 }}>
-<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-  <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-  <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-    Mode: {mode}
-  </button>
-  <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-    Reset
-  </button>
-</div>
+<div style={{
+display:        "flex",
+justifyContent: "space-between",
+alignItems:     "center",
+marginBottom:   "8px"
+}}>
+    <h2 style={{
+      fontSize:   "17px",
+      fontWeight: "600",
+      margin:     0
+    }}>
+     📊 Today
+    </h2>
+    <button
+      onClick={resetDay}
+      style={{
+        backgroundColor: "#d32f2f",
+        color:           "white",
+        padding:         "4px 10px",
+        fontSize:        "13px",
+        border:          "none",
+        borderRadius:    "6px"
+      }}
+    >
+      Reset
+    </button>
+  </div>
           {/* Mode selector */}
           <div style={{ textAlign: "center", marginBottom: "12px" }}>
             <button
