@@ -1319,15 +1319,33 @@ padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
 marginBottom:    "20px"
 }}>
-<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-  <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-  <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-    Mode: {mode}
-  </button>
-  <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-    Reset
-  </button>
-</div>
+<div style={{
+display:        "flex",
+justifyContent: "space-between",
+alignItems:     "center",
+marginBottom:   "8px"
+}}>
+    <h2 style={{
+      fontSize:   "17px",
+      fontWeight: "600",
+      margin:     0
+    }}>
+     📊 Today
+    </h2>
+    <button
+      onClick={resetDay}
+      style={{
+        backgroundColor: "#d32f2f",
+        color:           "white",
+        padding:         "4px 10px",
+        fontSize:        "13px",
+        border:          "none",
+        borderRadius:    "6px"
+      }}
+    >
+      Reset
+    </button>
+  </div>
           {/* Mode selector */}
           <div style={{ textAlign: "center", marginBottom: "12px" }}>
             <button
@@ -1343,151 +1361,7 @@ marginBottom:    "20px"
             >
               Mode: {mode}
             </button>
-            {showModes && (
-              <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "8px" }}>
-                {["Cut","Maintenance","Bulk"].map(m => (
-                  <button
-                    key={m}
-                    onClick={() => { setMode(m); setShowModes(false); }}
-                    style={{
-                      padding: "4px 8px",
-                      border: "none",
-                      borderRadius: "6px",
-                      backgroundColor: mode === m ? "#1976d2" : "#eee",
-                      color: mode === m ? "white" : "#000"
-                    }}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
-    {calories}
-  </span>
-</div>
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-        <strong>Calories Burned:</strong>{" "}
-{
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-}
-      </div>
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Deficit:</strong>{" "}
-  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
-    {estimatedDeficit}
-  </span>
-  <span> / {deficitGoal}</span>
-  {estimatedDeficit >= deficitGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Protein:</strong>{" "}
-  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
-    {Math.round(protein * 10) / 10}
-  </span>
-  <span> / {proteinGoal}</span>
-  {Math.round(protein * 10) / 10 >= proteinGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Fat:</strong>{" "}
-  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
-    {Math.round(fat * 10) / 10}
-  </span>
-  <span> / {fatGoal}g</span>
-  {Math.round(fat * 10) / 10 >= fatGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Carbs:</strong>{" "}
-  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
-    {Math.round(carbs * 10) / 10}
-  </span>
-  <span> / {carbGoal}g</span>
-  {Math.round(carbs * 10) / 10 >= carbGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Fiber:</strong>{" "}
-  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
-    {Math.round(fiber * 10) / 10}
-  </span>
-  <span> / {fiberGoal}g</span>
-  {Math.round(fiber * 10) / 10 >= fiberGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Water:</strong>{" "}
-  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
-    {water + (checklist.concentrace ? 1 : 0)}
-  </span>
-  <span> / {waterGoal} bottles</span>
-  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px" }}>
-  <strong>Steps:</strong>{" "}
-  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
-    {steps}
-  </span>
-  <span> / {stepGoal}</span>
-  {steps >= stepGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-    </div>
-
-    {/* Checklist Box */}
-    <div style={{
-      backgroundColor: "#f9f9f9",
-      borderRadius: "12px",
-      padding: "16px",
-      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-      marginBottom: "12px"
-    }}>
-      <h3 style={{
-  fontSize: "18px",
-  fontWeight: "600",
-  marginTop: "0px",
-  marginBottom: "12px"
-}}>
-  {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
-</h3>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-  {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px" }}>
-      <input
-        type="checkbox"
-        checked={checklist[key]}
-        onChange={() =>
-          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+            )
         }
         style={{ marginRight: "10px" }}
       />
