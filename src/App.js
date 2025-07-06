@@ -17,25 +17,30 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 
-// ▶ personal profiles (Jon vs Chava)
+
+// ▶ Profiles
 const profiles = {
-  J: { birthDate: new Date(1990, 8, 21), heightCm: 170, isMale: true },
-  C: { birthDate: new Date(1998, 9, 13), heightCm: 163, isMale: false }
+  Jon: {
+    heightCm: 170,
+    birthDate: new Date(1990, 8, 21),
+    isMale: true,
+    fatPercents: { Cut: 0.25, Maintenance: 0.25, Bulk: 0.3 }
+  },
+  Chava: {
+    heightCm: 163,
+    birthDate: new Date(1998, 9, 13),
+    isMale: false,
+    fatPercents: { Cut: 0.3, Maintenance: 0.3, Bulk: 0.35 }
+  }
 };
+
+const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
+const profile = profiles[person];
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-
-  // ▶ current profile (J or C)
-const [person, setPerson] = useState(
-  () => localStorage.getItem("person") || "J"
-);
-
-  // ▶ weight (exact, decimal)
-  const [weightLb, setWeightLb] = useState(() => parseFloat(localStorage.getItem(\"weightLb\")) || 150);
-  useEffect(() => { localStorage.setItem(\"weightLb\", weightLb); }, [weightLb]);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
     const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
@@ -73,24 +78,24 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
-  // ▶ compute age
+  // ▶ compute dynamic age & BMR
   const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  let age = today.getFullYear() - profile.birthDate.getFullYear();
+  const m = today.getMonth() - profile.birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < profile.birthDate.getDate())) age--;
 
-  // ▶ latest weight (lbs)
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
+  const weightKg = latestWeight ? latestWeight / 2.20462 : 0;
 
-  // ▶ true BMR via Mifflin–St Jeor
   const bmr = latestWeight
     ? Math.round(
-        10 * (latestWeight / 2.20462) +  // lbs → kg
-        6.25 * heightCm -
+        10 * weightKg +
+        6.25 * profile.heightCm -
         5 * age +
-        (isMale ? 5 : -161)
+        (profile.isMale ? 5 : -161)
       )
     : null;
+
 
   // ▶ unified threshold: BMR or fallback 1600
   const calorieThreshold = bmr || 1600;
@@ -259,20 +264,23 @@ useEffect(() => {
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
-  // ▶ sync goals on mode, weight & profile
+  // 🛠️ Whenever mode/person/weight changes, override with dynamic logic
   useEffect(() => {
-    const pLg = latestWeight || weightLb;
-    const kgCalc = pLg / 2.20462;
-    const pFact = mode === "Maintenance" ? 0.8 : 0.9;
-    setProteinGoal(Math.ceil(kgCalc * pFact));
-    const fPct = person === "J"
-      ? (mode === "Bulk" ? 0.3 : 0.25)
-      : (mode === "Bulk" ? 0.35 : 0.3);
-    setFatGoal(Math.ceil((calorieThreshold * fPct) / 9));
-    const cFact = mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5;
-    setCarbGoal(Math.ceil(kgCalc * cFact));
-    setDeficitGoal(mode === "Cut" ? 500 : mode === "Maintenance" ? 0 : -100);
-  }, [mode, latestWeight, weightLb, person, calorieThreshold]);
+    if (!weightKg || !bmr) return;
+
+    const fatPercent = profile.fatPercents[mode] || 0.25;
+
+    const protein = Math.ceil(weightKg * (mode === "Maintenance" ? 0.8 : 0.9));
+    const fat = Math.round(bmr * fatPercent / 9);
+    const carbs = Math.ceil(weightKg * (mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5));
+    const deficit = mode === "Cut" ? 500 : mode === "Maintenance" ? 0 : -100;
+
+    setProteinGoal(protein);
+    setFatGoal(fat);
+    setCarbGoal(carbs);
+    setDeficitGoal(deficit);
+  }, [mode, person, latestWeight]);
+
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
@@ -1333,12 +1341,17 @@ marginBottom:    "20px"
   marginBottom: "8px"
 }}>
   <h2 style={{
-    flex:       1,
-    fontSize:   "17px",
+    flex: 1,
+    fontSize: "17px",
     fontWeight: "600",
-    margin:     0
+    margin: 0
   }}>
     📊 Today
+  </h2>
+  <button onClick={() => setPerson(person === "Jon" ? "Chava" : "Jon")}
+    style={{ borderRadius: "50%", marginRight: "8px", fontSize: "14px", padding: "2px 8px", backgroundColor: "#ccc", border: "none" }}>
+    {person === "Jon" ? "J" : "C"}
+  </button>
   </h2>
 
   {/* Inline Mode button */}
