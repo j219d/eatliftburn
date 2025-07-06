@@ -54,239 +54,45 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 // 🧠 Daily macro/water goals
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
-useEffect(() => {
-    console.log("Active Profile:", person);
-    console.log("Mode:", mode);
-  localStorage.setItem("person", person);
-}, [person]);
-const [showModes, setShowModes] = useState(false);
 
-const [fatGoal, setFatGoal] = useState(
-  () => parseFloat(localStorage.getItem("fatGoal")) || 50
-);
-const [carbGoal, setCarbGoal] = useState(
-  () => parseFloat(localStorage.getItem("carbGoal")) || 120
-);
-const fiberGoal = 25;
-const waterGoal = 3; // bottles of 27oz (~2.5L)
-  const [stepGoal] = useState(10000);
-  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
-  supplements: false,
-  sunlight: false,
-  concentrace: false,
-  teffilin: false
-});
-const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
-  const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
-  const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
-  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
-  const [newWeight, setNewWeight] = useState("");
-
-  // ▶ compute age
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-
-  // ▶ latest weight (lbs)
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
-
-  // ▶ true BMR via Mifflin–St Jeor
-  const bmr = latestWeight
-    ? Math.round(
-        10 * (latestWeight / 2.20462) +  // lbs → kg
-        6.25 * heightCm -
-        5 * age +
-        (isMale ? 5 : -161)
-      )
-    : null;
-
-  // ▶ unified threshold: BMR or fallback 1600
-  const calorieThreshold = bmr || 1600;
-
-  const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
-  const [customWorkout, setCustomWorkout] = useState({});
-  const [customSteps, setCustomSteps] = useState("");
-  const [foodSearch,   setFoodSearch]   = useState("");
-
-  const workouts = {
-  "Leg Press": 0.4,
-  "Bench Press": 0.3,
-  "Pull-ups": 0.4,
-  "Shoulder Press": 0.3,
-  "Low Pull": 0.3,
-  "Lunges": 0.4,
-  "Hamstring Curl": 0.3,
-  "Glute Abductor": 0.3,
-  "Back Extensions": 0.3,
-  "Core Pull": 0.2,
-  "Biceps": 0.2,
-  "Triceps": 0.3,
-  "Push-ups": 0.3,
-  "Plank": 0.04,
-  "Run": "run",
-  "Bike": "bike"
-};
-  
-const foodOptions = [
-  { name: "Apple", cal: 95, prot: 1, fat: 0.3, carbs: 25, fiber: 4.4 },
-  { name: "Avocado (half)", cal: 120, prot: 1.5, fat: 10, carbs: 6, fiber: 5 },
-  { name: "Avocado (whole)", cal: 240, prot: 3, fat: 20, carbs: 12, fiber: 10 },
-  { name: "Banana (half)", cal: 53, prot: 0.6, fat: 0.2, carbs: 13.5, fiber: 1.6 },
-  { name: "Banana (whole)", cal: 105, prot: 1.3, fat: 0.4, carbs: 27, fiber: 3.1 },
-  { name: "Blueberries (½ cup)", cal: 42, prot: 0.6, fat: 0.25, carbs: 10.7, fiber: 1.8 },
-  { name: "Blueberries (1 cup)", cal: 84, prot: 1.1, fat: 0.5, carbs: 21.4, fiber: 3.6 },
-  { name: "Brazil nut", cal: 33, prot: 0.75, fat: 3.4, carbs: 0.6, fiber: 0.2 },
-  { name: "Bread (sourdough rye slice 56g)", cal: 145, prot: 4.5, fat: 1.0, carbs: 27, fiber: 3.3 },
-  { name: "Butter (1 tsp)", cal: 35, prot: 0, fat: 4, carbs: 0, fiber: 0 },
-  { name: "Carrot", cal: 25, prot: 0.5, fat: 0.1, carbs: 6, fiber: 1.7 },
-  { name: "Carrots Peas and Corn (frozen, 100g)", cal: 63, prot: 3, fat: 1.1, carbs: 10, fiber: 4 },
-  { name: "Chia pudding (2 tbsp chia + 3/4 cup almond milk)", cal: 206, prot: 5, fat: 9, carbs: 12, fiber: 10 },
-  { name: "Chia seeds (1 tbsp)", cal: 58, prot: 2, fat: 3.7, carbs: 5.1, fiber: 4.1 },
-  { name: "Chicken breast (50g)", cal: 82, prot: 15, fat: 1.8, carbs: 0, fiber: 0 },
-  { name: "Chicken breast (100g)", cal: 165, prot: 31, fat: 3.6, carbs: 0, fiber: 0 },
-  { name: "Chicken breast (150g)", cal: 248, prot: 46, fat: 5.4, carbs: 0, fiber: 0 },
-  { name: "Chicken breast (200g)", cal: 330, prot: 62, fat: 7.2, carbs: 0, fiber: 0 },
-  { name: "Corn (100g)", cal: 85, prot: 2.2, fat: 1.3, carbs: 15.3, fiber: 1.5 },
-  { name: "Cottage cheese 5% (50g)", cal: 48, prot: 5.5, fat: 2.5, carbs: 0.8, fiber: 0 },
-  { name: "Cottage cheese 5% (100g)", cal: 95, prot: 11, fat: 5, carbs: 1.5, fiber: 0 },
-  { name: "Cottage cheese 5% (250g full tub)", cal: 238, prot: 27.5, fat: 12.5, carbs: 3.8, fiber: 0 },
-  { name: "Cucumber", cal: 16, prot: 1, fat: 0.1, carbs: 4, fiber: 0.5 },
-  { name: "Date (1 Medjool)", cal: 66, prot: 0.4, fat: 0.1, carbs: 18, fiber: 1.6 },
-  { name: "Egg", cal: 70, prot: 6, fat: 5, carbs: 0.6, fiber: 0 },
-  { name: "Egg white", cal: 15, prot: 3, fat: 0, carbs: 0.2, fiber: 0 },
-  { name: "Eggs (2) + butter", cal: 175, prot: 12, fat: 13, carbs: 0.6, fiber: 0 },
-  { name: "Eggs (2), Egg white (1) + butter", cal: 190, prot: 15, fat: 13, carbs: 0.8, fiber: 0 },
-  { name: "Flax seeds (1 tbsp)", cal: 55, prot: 2, fat: 4.3, carbs: 3, fiber: 2.8 },
-  { name: "Green onions", cal: 5, prot: 0, fat: 0, carbs: 1, fiber: 0.3 },
-  { name: "Green beans (100g, roasted, no oil)", cal: 38, prot: 2.2, fat: 0.4, carbs: 8, fiber: 3.6 },
-  { name: "Green beans (200g, roasted, no oil)", cal: 76, prot: 4.4, fat: 0.8, carbs: 16, fiber: 7.2 },
-  { name: "Green beans (300g, roasted, no oil)", cal: 114, prot: 6.6, fat: 1.2, carbs: 24, fiber: 10.8 },
-  { name: "Ground beef 90/10 (50g)", cal: 73, prot: 9.3, fat: 4, carbs: 0, fiber: 0 },
-  { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 },
-  { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9, fat: 12, carbs: 0, fiber: 0 },
-  { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2, fat: 16, carbs: 0, fiber: 0 },
-  { name: "Honey (1 tsp)", cal: 15, prot: 0, fat: 0, carbs: 4, fiber: 0 },
-  { name: "Honey (1 tbsp)", cal: 45, prot: 0, fat: 0, carbs: 12, fiber: 0 },
-  { name: "Hummus (100g)", cal: 170, prot: 7, fat: 10, carbs: 14, fiber: 4 },
-  { name: "Israeli salad (large)", cal: 100, prot: 2, fat: 0.5, carbs: 10, fiber: 3 },
-  { name: "Israeli salad (medium)", cal: 70, prot: 1.5, fat: 0.3, carbs: 7, fiber: 2 },
-  { name: "Israeli salad (small)", cal: 40, prot: 1, fat: 0.2, carbs: 4, fiber: 1 },
-  { name: "Maple syrup (1 tsp)", cal: 17, prot: 0, fat: 0, carbs: 4.5, fiber: 0 },
-  { name: "Maple syrup (1 tbsp)", cal: 52, prot: 0, fat: 0, carbs: 13.4, fiber: 0 },
-  { name: "Oats (¼ cup)", cal: 73, prot: 2.4, fat: 1.7, carbs: 11.2, fiber: 2.4 },
-  { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 },  
-  { name: "Olive oil (1 tbsp)", cal: 120, prot: 0, fat: 14, carbs: 0, fiber: 0 },
-  { name: "Oreo (1 cookie)", cal: 52, prot: 0.35, fat: 2.15, carbs: 7.5, fiber: 0.05 },
-  { name: "Oreo (2 cookies)", cal: 104, prot: 0.7, fat: 4.3, carbs: 15, fiber: 0.1 },
-  { name: "Peanut butter (1 tsp)", cal: 47, prot: 2, fat: 4, carbs: 2, fiber: 0.5 },
-  { name: "Peanut butter (1 tbsp)", cal: 94, prot: 4, fat: 8, carbs: 3, fiber: 1 },
-  { name: "Peanut butter (PBfit 1 tbsp)", cal: 30, prot: 4, fat: 1, carbs: 3, fiber: 1 },
-  { name: "Peanut butter (PBfit 2 tbsp)", cal: 60, prot: 8, fat: 2, carbs: 6, fiber: 2 },
-  { name: "Peas (frozen, 50g)", cal: 37, prot: 3.5, fat: 0.8, carbs: 5.3, fiber: 2.6 },
-  { name: "Peas (frozen, 100g)", cal: 73, prot: 6.9, fat: 1.5, carbs: 10.5, fiber: 5.1 },
-  { name: "Peas (frozen, 150g)", cal: 110, prot: 10.4, fat: 2.3, carbs: 15.8, fiber: 7.7 },
-  { name: "Peas (frozen, 200g)", cal: 146, prot: 13.8, fat: 3.0, carbs: 21.0, fiber: 10.2 },
-  { name: "Pita (½)",  cal: 138, prot: 4.6, fat: 0.6, carbs: 27.9, fiber: 1.1 },
-  { name: "Pita (full)", cal: 275, prot: 9.1, fat: 1.2, carbs: 55.7, fiber: 2.2 },
-  { name: "Potato (50g)", cal: 43, prot: 1, fat: 0, carbs: 10, fiber: 1 },
-  { name: "Potato (100g)", cal: 86, prot: 2, fat: 0, carbs: 20, fiber: 2 },
-  { name: "Potato (150g)", cal: 129, prot: 3, fat: 0, carbs: 30, fiber: 3 },
-  { name: "Potato (200g)", cal: 172, prot: 4, fat: 0, carbs: 40, fiber: 4 },
-  { name: "Protein bar (promix vanilla)", cal: 150, prot: 15, fat: 3, carbs: 17, fiber: 5 },
-  { name: "Protein bar (maxx)", cal: 217, prot: 21, fat: 6.8, carbs: 20, fiber: 3.9 },
-  { name: "Protein bar (quest chocolate peanut butter)", cal: 190, prot: 20, fat: 9, carbs: 22, fiber: 11 },
-  { name: "Protein bar (quest cookie dough)", cal: 190, prot: 21, fat: 9, carbs: 21, fiber: 12 },
-  { name: "Protein bar (quest mini cookie dough)", cal: 80, prot: 8, fat: 3.5, carbs: 9, fiber: 3 },
-  { name: "Protein chips (quest)", cal: 140, prot: 20, fat: 4.5, carbs: 4, fiber: 1 },
-  { name: "Protein Ice Cream (Peanut Butter Banana)", cal: 498, prot: 55.3, fat: 9.2, carbs: 51.4, fiber: 4.1 },
-  { name: "Protein pancakes (kodiak ½ cup)", cal: 220, prot: 14, fat: 2, carbs: 30, fiber: 3 },
-  { name: "Protein scoop (1 Promix Chocolate)", cal: 80, prot: 15.5, fat: 0.75, carbs: 4.5 },
-  { name: "Protein scoop (2 Promix Chocolate)", cal: 160, prot: 31, fat: 1.5, carbs: 9 },
-  { name: "Protein scoop (1 Promix Unflavored)", cal: 65, prot: 15, fat: 0.25, carbs: 1 },
-  { name: "Protein scoop (2 Promix Unflavored)", cal: 130, prot: 30, fat: 0.5, carbs: 2 },
-  { name: "Protein scoop (1 Promix Vanilla)", cal: 75, prot: 15, fat: 0.25, carbs: 3.5 },
-  { name: "Protein scoop (2 Promix Vanilla)", cal: 150, prot: 30, fat: 0.5, carbs: 7 },
-  { name: "Pumpkin seeds (1 tsp)", cal: 20, prot: 1, fat: 1.5, carbs: 0.7, fiber: 0.4 },
-  { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
-  { name: "Rice (50g cooked)", cal: 65, prot: 1.3, fat: 0.1, carbs: 14, fiber: 0.2 },
-  { name: "Rice (100g cooked)", cal: 130, prot: 2.6, fat: 0.2, carbs: 28, fiber: 0.4 },
-  { name: "Rice (150g cooked)", cal: 195, prot: 3.9, fat: 0.3, carbs: 42, fiber: 0.6 },
-  { name: "Rice (200g cooked)", cal: 260, prot: 5.2, fat: 0.4, carbs: 56, fiber: 0.8 },
-  { name: "Salmon (85g wild sockeye pouch)", cal: 100, prot: 17, fat: 3.5, carbs: 0, fiber: 0 },
-  { name: "Salmon (50g)", cal: 103, prot: 11, fat: 6.5, carbs: 0, fiber: 0 },
-  { name: "Salmon (100g)", cal: 206, prot: 22, fat: 13, carbs: 0, fiber: 0 },
-  { name: "Salmon (150g)", cal: 309, prot: 33, fat: 19.5, carbs: 0, fiber: 0 },
-  { name: "Salmon (200g)", cal: 412, prot: 44, fat: 26, carbs: 0, fiber: 0 },
-  { name: "Spinach (frozen, 100g)", cal: 28, prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 },
-  { name: "Spinach (handful)", cal: 15, prot: 1.5, fat: 0.3, carbs: 2, fiber: 1 },
-  { name: "Strawberries (½ cup)", cal: 25, prot: 0.5, fat: 0.25, carbs: 5.9, fiber: 1.5 },
-  { name: "Strawberries (1 cup)", cal: 49, prot: 1, fat: 0.5, carbs: 11.7, fiber: 3 },
-  { name: "Sweet potato (50g)", cal: 43, prot: 1, fat: 0, carbs: 10, fiber: 1.5 },
-  { name: "Sweet potato (100g)", cal: 86, prot: 2, fat: 0.1, carbs: 20, fiber: 3 },
-  { name: "Sweet potato (150g)", cal: 129, prot: 3, fat: 0.2, carbs: 30, fiber: 4.5 },
-  { name: "Sweet potato (200g)", cal: 172, prot: 4, fat: 0.2, carbs: 40, fiber: 6 },
-  { name: "Tomato", cal: 20, prot: 1, fat: 0.2, carbs: 5, fiber: 1.5 },
-  { name: "Tuna (150g)", cal: 156, prot: 37.2, fat: 0.9, carbs: 0, fiber: 0 },
-  { name: "Walnut", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
-  { name: "Walnuts (3)", cal: 78, prot: 1.8, fat: 7.8, carbs: 1.8, fiber: 0.9 },
-  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
-  { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
-  { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
-];
-
-
-  const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-
-const estimatedDeficit = calorieThreshold + totalBurn - calories;
-
-useEffect(() => {
-  localStorage.setItem("calories", calories);
-  localStorage.setItem("protein", protein);
-  localStorage.setItem("fat", fat);
-  localStorage.setItem("carbs", carbs);
-  localStorage.setItem("fiber", fiber);
-  localStorage.setItem("water", water);
-  localStorage.setItem("steps", steps);
-  localStorage.setItem("deficitGoal", deficitGoal);
-  localStorage.setItem("proteinGoal", proteinGoal);
-  localStorage.setItem("checklist", JSON.stringify(checklist));
-  localStorage.setItem("foodLog", JSON.stringify(foodLog));
-  localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
-  localStorage.setItem("weightLog", JSON.stringify(weightLog));
-    localStorage.setItem("fatGoal", fatGoal);
-    localStorage.setItem("carbGoal", carbGoal);
-    localStorage.setItem("mode", mode);
-}, [person, mode, calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
-
-
-  // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
-    if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
-      setDeficitGoal(500);
-    } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-      setDeficitGoal(0);
-    } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-      setDeficitGoal(-100);
-    }
-  }, [person, mode, mode]);
+    const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
+    const latestWeightEntry = storedWeights[storedWeights.length - 1];
+    const weightKg = latestWeightEntry ? latestWeightEntry.weight / 2.20462 : 70;
+
+    const profile = profiles[person];
+    const birthYear = new Date(profile.birthDate).getFullYear();
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - birthYear;
+
+    const bmr = Math.round(
+      10 * weightKg +
+      6.25 * profile.heightCm -
+      5 * age +
+      (profile.isMale ? 5 : -161)
+    );
+
+    const fatPercents = {
+      Jon: { Cut: 0.25, Maintenance: 0.25, Bulk: 0.30 },
+      Chava: { Cut: 0.30, Maintenance: 0.30, Bulk: 0.35 },
+    };
+
+    const proteinPerKg = { Cut: 0.9, Maintenance: 0.8, Bulk: 0.9 };
+    const carbsPerKg = { Cut: 1.8, Maintenance: 2.2, Bulk: 2.5 };
+
+    const protein = Math.ceil(weightKg * proteinPerKg[mode]);
+    const fat = Math.round((bmr * fatPercents[person][mode]) / 9);
+    const carbs = Math.round(weightKg * carbsPerKg[mode]);
+
+    setProteinGoal(protein);
+    setFatGoal(fat);
+    setCarbGoal(carbs);
+
+    localStorage.setItem("proteinGoal", protein);
+    localStorage.setItem("fatGoal", fat);
+    localStorage.setItem("carbGoal", carbs);
+  }, [person, mode]);
+
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
