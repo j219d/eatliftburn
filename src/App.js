@@ -17,15 +17,52 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 
-// ▶ personal constants for BMR calculation
-const heightCm = 170;
-const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
-const isMale = true;
+  // ▶ compute BMR from selected profile + weight
+  const profile = profiles[person];
+  const today = new Date();
+  let age = today.getFullYear() - profile.birthDate.getFullYear();
+  const m = today.getMonth() - profile.birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < profile.birthDate.getDate()))
+    age--;
+
+  const weightKg = weightLb / 2.20462;
+  const bmr = Math.round(
+    10 * weightKg +
+    6.25 * profile.heightCm -
+    5 * age +
+    (profile.isMale ? 5 : -161)
+  );
+  const calorieThreshold = bmr;
+
+// ▶ personal profiles (Jon vs Chava)
+const profiles = {
+  J: { birthDate: new Date(1990,8,21), heightCm: 170, isMale: true },
+  C: { birthDate: new Date(1998,9,13), heightCm: 163, isMale: false }
+    };
+
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
+
+  // ▶ current profile (J or C)
+  const [person, setPerson] = useState(
+    () => localStorage.getItem("person") || "J"
+  );
+  useEffect(() => {
+    localStorage.setItem("person", person);
+  }, [person]);
+
+  // ▶ weight (exact, decimal)
+  const [weightLb, setWeightLb] = useState(
+    () => parseFloat(localStorage.getItem("weightLb")) || 150
+  );
+  useEffect(() => {
+    localStorage.setItem("weightLb", weightLb);
+  }, [weightLb]);
+
+  
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
     const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
@@ -249,25 +286,37 @@ useEffect(() => {
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
-  // 🛠️ Whenever mode changes, override the home-page goals
-  useEffect(() => {
-    if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
-      setDeficitGoal(500);
-    } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-      setDeficitGoal(0);
-    } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-      setDeficitGoal(-100);
-    }
-  }, [mode]);
+  // ▶ sync goals on mode, weight & person change
+useEffect(() => {
+  const kg = weightLb / 2.20462;
+
+  // Protein: Cut & Bulk = 0.9 g/kg, Maintenance = 0.8 g/kg
+  const protFactor = (mode === "Cut" || mode === "Bulk") ? 0.9 : 0.8;
+  const P = Math.ceil(kg * protFactor);
+
+  // Fat % floors: Jon = 25/25/30%, Chava = 30/30/35%
+  const fatPct = person === "J"
+    ? (mode === "Cut" ? 0.25 : mode === "Maintenance" ? 0.25 : 0.30)
+    : (mode === "Cut" ? 0.30 : mode === "Maintenance" ? 0.30 : 0.35);
+  const F = Math.ceil((calorieThreshold * fatPct) / 9);
+
+  // Carbs: Cut = 1.8, Maintenance = 2.2, Bulk = 2.5 g/kg
+  const carbFactor = mode === "Cut"
+    ? 1.8
+    : mode === "Maintenance"
+      ? 2.2
+      : 2.5;
+  const C = Math.ceil(kg * carbFactor);
+
+  // Deficit goals: Cut = 500, Maintenance = 0, Bulk = -100
+  const D = mode === "Cut" ? 500 : mode === "Maintenance" ? 0 : -100;
+
+  setProteinGoal(P);
+  setFatGoal(F);
+  setCarbGoal(C);
+  setDeficitGoal(D);
+}, [mode, weightLb, person, calorieThreshold]);
+
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
@@ -1327,46 +1376,48 @@ marginBottom:    "20px"
   alignItems:   "center",
   marginBottom: "8px"
 }}>
-  <h2 style={{
-    flex:       1,
-    fontSize:   "17px",
-    fontWeight: "600",
-    margin:     0
-  }}>
+  <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+  <h2 style={{ flex: 1, fontSize: 17, fontWeight: 600, margin: 0 }}>
     📊 Today
   </h2>
 
-  {/* Inline Mode button */}
+  {/* J/C toggle */}
   <button
-    onClick={() => setShowModes(!showModes)}
+    onClick={() => setPerson(p => (p === "J" ? "C" : "J"))}
     style={{
-      backgroundColor: "#1976d2",
-      color:           "white",
-      padding:         "4px 10px",
-      fontSize:        "13px",
-      border:          "none",
-      borderRadius:    "6px",
-      marginRight:     "8px"
+      width: 32, height: 32, borderRadius: "50%",
+      background: person === "J" ? "#eee" : "#1976d2",
+      color:      person === "J" ? "#000" : "#fff",
+      border: "none", fontSize: 16, marginRight: 8
     }}
+  >
+    {person}
+  </button>
+
+  {/* Mode selector */}
+  <button
+    onClick={() => setShowModes(s => !s)}
+    style={{ marginRight: 8 }}
   >
     Mode: {mode}
   </button>
 
-  {/* Reset button */}
+  {/* Reset */}
   <button
     onClick={resetDay}
     style={{
       backgroundColor: "#d32f2f",
-      color:           "white",
+      color:           "#fff",
       padding:         "4px 10px",
-      fontSize:        "13px",
+      fontSize:        13,
       border:          "none",
-      borderRadius:    "6px"
+      borderRadius:    6
     }}
   >
     Reset
   </button>
 </div>
+
 
     {showModes && (
   <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "12px" }}>
