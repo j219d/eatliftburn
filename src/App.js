@@ -32,7 +32,32 @@ function App() {
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
-  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
+
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
+  const weightKg = latestWeight / 2.20462;
+
+  let protein = 0;
+  let fat = 0;
+  let carbs = 0;
+
+  if (mode === "Cut") {
+    protein = Math.ceil(0.9 * weightKg);
+    fat = Math.round((bmr * 0.25) / 9);
+    carbs = Math.round(1.8 * weightKg);
+  } else if (mode === "Maintenance") {
+    protein = Math.ceil(0.8 * weightKg);
+    fat = Math.round((bmr * 0.25) / 9);
+    carbs = Math.round(2.2 * weightKg);
+  } else if (mode === "Bulk") {
+    protein = Math.ceil(0.9 * weightKg);
+    fat = Math.round((bmr * 0.30) / 9);
+    carbs = Math.round(2.5 * weightKg);
+  }
+
+  setProteinGoal(protein);
+  setFatGoal(fat);
+  setCarbGoal(carbs);
+
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
@@ -42,7 +67,6 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
-const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
 );
 const [carbGoal, setCarbGoal] = useState(
@@ -53,42 +77,6 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
-
-useEffect(() => {
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
-  const weightKg = latestWeight / 2.20462;
-  const activeProfile = profiles[person] || profiles["Jon"];
-  const isJon = person === "Jon";
-  const bmr = getBMR(activeProfile, latestWeight);
-
-  // Protein (g)
-  let protein = mode === "Maintenance"
-    ? Math.ceil(0.8 * weightKg)
-    : Math.ceil(0.9 * weightKg);
-
-  // Fat (% of BMR / 9 cal per gram)
-  let fatPct;
-  if (isJon) {
-    fatPct = mode === "Cut" ? 0.25 : mode === "Bulk" ? 0.30 : 0.25;
-  } else {
-    fatPct = mode === "Cut" ? 0.30 : mode === "Bulk" ? 0.35 : 0.30;
-  }
-  let fat = Math.round((bmr * fatPct) / 9);
-
-  // Carbs (g)
-  let carbs = Math.round(
-    (mode === "Cut"
-      ? 1.8
-      : mode === "Maintenance"
-      ? 2.2
-      : 2.5) * weightKg
-  );
-
-  setProteinGoal(protein);
-  setFatGoal(fat);
-  setCarbGoal(carbs);
-}, [mode, person, weightLog]);
-
   sunlight: false,
   concentrace: false,
   teffilin: false
@@ -288,10 +276,19 @@ useEffect(() => {
   // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
     if (mode === "Cut") {
+      setProteinGoal(140);
+      setFatGoal(50);
+      setCarbGoal(120);
       setDeficitGoal(500);
     } else if (mode === "Maintenance") {
+      setProteinGoal(140);
+      setFatGoal(55);
+      setCarbGoal(160);
       setDeficitGoal(0);
     } else { // Bulk
+      setProteinGoal(150);
+      setFatGoal(60);
+      setCarbGoal(200);
       setDeficitGoal(-100);
     }
   }, [mode]);
