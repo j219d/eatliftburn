@@ -3,19 +3,6 @@
 
 
 import React, { useState, useEffect } from "react";
-
-const profiles = {
-  Jon: {
-    heightCm: 173,
-    birthDate: "1990-09-21",
-    isMale: true,
-  },
-  Chava: {
-    heightCm: 163,
-    birthDate: "1998-10-13",
-    isMale: false,
-  },
-};
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -53,7 +40,6 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 
 // 🧠 Daily macro/water goals
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
-const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -244,7 +230,6 @@ const foodOptions = [
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 useEffect(() => {
-  localStorage.setItem("person", person);
   localStorage.setItem("calories", calories);
   localStorage.setItem("protein", protein);
   localStorage.setItem("fat", fat);
@@ -1621,41 +1606,3 @@ marginBottom:    "20px"
 }
 
 export default App;
-
-
-// Whenever mode or person changes, update macro goals
-useEffect(() => {
-  const storedWeights = JSON.parse(localStorage.getItem("weightLog")) || [];
-  const latestWeightEntry = storedWeights[storedWeights.length - 1];
-  const weightKg = latestWeightEntry ? latestWeightEntry.weight / 2.20462 : 70;
-
-  const profile = profiles[person];
-  const birthYear = new Date(profile.birthDate).getFullYear();
-  const age = new Date().getFullYear() - birthYear;
-
-  const bmr = Math.round(
-    10 * weightKg +
-    6.25 * profile.heightCm -
-    5 * age +
-    (profile.isMale ? 5 : -161)
-  );
-
-  const fatPercents = {
-    Jon: { Cut: 0.25, Maintenance: 0.25, Bulk: 0.30 },
-    Chava: { Cut: 0.30, Maintenance: 0.30, Bulk: 0.35 },
-  };
-
-  const proteinPerKg = { Cut: 0.9, Maintenance: 0.8, Bulk: 0.9 };
-  const carbsPerKg = { Cut: 1.8, Maintenance: 2.2, Bulk: 2.5 };
-
-  const protein = Math.ceil(weightKg * proteinPerKg[mode]);
-  const fat = Math.round((bmr * fatPercents[person][mode]) / 9);
-  const carbs = Math.round(weightKg * carbsPerKg[mode]);
-
-  setProteinGoal(protein);
-  setFatGoal(fat);
-  setCarbGoal(carbs);
-  localStorage.setItem("proteinGoal", protein);
-  localStorage.setItem("fatGoal", fat);
-  localStorage.setItem("carbGoal", carbs);
-}, [mode, person]);
