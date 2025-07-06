@@ -1346,13 +1346,16 @@ marginBottom:    "20px"
     fontWeight: "600",
     margin: 0
   }}>
+  <button onClick={() => setPerson(person === "Jon" ? "Chava" : "Jon")}
+    style={{ borderRadius: "50%", marginRight: "8px", fontSize: "14px", padding: "2px 8px", backgroundColor: "#ccc", border: "none" }}>
+    {person === "Jon" ? "J" : "C"}
+  </button>
     📊 Today
   </h2>
   <button onClick={() => setPerson(person === "Jon" ? "Chava" : "Jon")}
     style={{ borderRadius: "50%", marginRight: "8px", fontSize: "14px", padding: "2px 8px", backgroundColor: "#ccc", border: "none" }}>
     {person === "Jon" ? "J" : "C"}
   </button>
-  </h2>
 
   {/* Inline Mode button */}
   <button
