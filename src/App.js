@@ -1369,6 +1369,10 @@ marginBottom:    "20px"
       border:          "none",
       borderRadius:    "6px",
       marginRight:     "8px"
+    }}
+  >
+    Mode
+  </button>
     }}>
     Mode: {mode}
   </button>
