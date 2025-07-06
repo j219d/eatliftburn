@@ -1365,6 +1365,26 @@ marginBottom:    "20px"
   </button>
 </div>
 
+    {showModes && (
+  <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "12px" }}>
+    {["Cut","Maintenance","Bulk"].map(m => (
+      <button
+        key={m}
+        onClick={() => { setMode(m); setShowModes(false); }}
+        style={{
+          padding: "4px 8px",
+          border: "none",
+          borderRadius: "6px",
+          backgroundColor: mode === m ? "#1976d2" : "#eee",
+          color: mode === m ? "white" : "#000"
+        }}
+      >
+        {m}
+      </button>
+    ))}
+  </div>
+)}
+
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
   <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
