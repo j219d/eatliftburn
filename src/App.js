@@ -3,6 +3,19 @@
 
 
 import React, { useState, useEffect } from "react";
+
+const profiles = {
+  Jon: {
+    heightCm: 173,
+    birthDate: "1990-09-21",
+    isMale: true,
+  },
+  Chava: {
+    heightCm: 163,
+    birthDate: "1998-10-13",
+    isMale: false,
+  },
+};
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
