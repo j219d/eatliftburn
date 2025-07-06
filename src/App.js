@@ -1357,7 +1357,6 @@ marginBottom:    "20px"
     {person === "Jon" ? "J" : "C"}
   </button>
 
-  {/* Inline Mode button */}
   <button
     onClick={() => setShowModes(!showModes)}
   <button
