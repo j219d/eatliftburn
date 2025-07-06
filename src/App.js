@@ -32,32 +32,7 @@ function App() {
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
-
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
-  const weightKg = latestWeight / 2.20462;
-
-  let protein = 0;
-  let fat = 0;
-  let carbs = 0;
-
-  if (mode === "Cut") {
-    protein = Math.ceil(0.9 * weightKg);
-    fat = Math.round((bmr * 0.25) / 9);
-    carbs = Math.round(1.8 * weightKg);
-  } else if (mode === "Maintenance") {
-    protein = Math.ceil(0.8 * weightKg);
-    fat = Math.round((bmr * 0.25) / 9);
-    carbs = Math.round(2.2 * weightKg);
-  } else if (mode === "Bulk") {
-    protein = Math.ceil(0.9 * weightKg);
-    fat = Math.round((bmr * 0.30) / 9);
-    carbs = Math.round(2.5 * weightKg);
-  }
-
-  setProteinGoal(protein);
-  setFatGoal(fat);
-  setCarbGoal(carbs);
-
+  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
@@ -67,6 +42,7 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
+const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
 );
 const [carbGoal, setCarbGoal] = useState(
