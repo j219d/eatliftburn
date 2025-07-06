@@ -230,8 +230,12 @@ const foodOptions = [
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 
-// --- Profile + Macro Calculation Logic START ---
+// --- Profile & Macro Calculation Logic ---
 const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
+
+useEffect(() => {
+  localStorage.setItem("person", person);
+}, [person]);
 
 const profiles = {
   Jon: {
@@ -243,17 +247,17 @@ const profiles = {
     heightCm: 163,
     birthDate: new Date(1998, 9, 13),
     isMale: false,
-  }
+  },
 };
-
-useEffect(() => {
-  localStorage.setItem("person", person);
-}, [person]);
 
 const getAge = (birthDate) => {
   const today = new Date();
-  return today.getFullYear() - birthDate.getFullYear() -
-    (today < new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate()) ? 1 : 0);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
 };
 
 const calculateBMR = (weightKg, profile) => {
@@ -285,8 +289,7 @@ useEffect(() => {
   setCarbGoal(carbGoal);
   setFatGoal(fatGoal);
 }, [mode, person]);
-// --- Profile + Macro Calculation Logic END ---
-
+// --- END Profile & Macro Logic ---
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -516,7 +519,12 @@ const inputStyleThird = {
 };
 
 if (screen === "food") {
-  return (
+  
+<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+  <button onClick={() => setPerson("Jon")}>👨</button>
+  <button onClick={() => setPerson("Chava")}>👩</button>
+</div>
+return (
     <>
       <div style={{
         position:        "fixed",
