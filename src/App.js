@@ -226,16 +226,6 @@ const foodOptions = [
 
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
-  // ✅ Deficit threshold per mode
-  const deficitGood = (
-    mode === "Cut"
-      ? estimatedDeficit >= deficitGoal
-      : mode === "Maintenance"
-      ? Math.abs(estimatedDeficit) <= 100
-      : estimatedDeficit <= -100
-  );
-
-
 useEffect(() => {
   localStorage.setItem("calories", calories);
   localStorage.setItem("protein", protein);
@@ -466,15 +456,29 @@ const inputStyleThird = {
 if (screen === "food") {
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+      <div style={{
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
 
       <div style={{
         padding:       "24px",
@@ -788,15 +792,29 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   if (screen === "workouts") {
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+      <div style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "56px",
+        backgroundColor: "#fff",
+        borderBottom: "1px solid #ddd",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
 
       <div style={{
         padding:       "24px",
@@ -895,37 +913,162 @@ setWorkoutLog(prev => ({
       ))}
 
       {/* Steps section - separate from workouts */}
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
+        <input
+          type="number"
+          placeholder="Steps"
+          value={customWorkout["Steps"] || ""}
+          onChange={(e) =>
+            setCustomWorkout({ ...customWorkout, Steps: e.target.value })
+          }
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => {
+            const steps = parseInt(customWorkout["Steps"]);
+            if (!isNaN(steps)) {
+              const stepCalories = Math.round(steps * 0.035); // updated: 0.035 kcal/step
+              setSteps(prev => {
+  const newSteps = prev + steps;
+  localStorage.setItem("steps", newSteps.toString());
+  return newSteps;
+});
+ // steps tracker
+              setWorkoutLog(prev => ({
+  ...prev,
+  Steps: {
+    reps: (prev["Steps"]?.reps || 0) + steps,
+    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.035)
+  }
+}));
+              setCustomWorkout({ ...customWorkout, Steps: "" });
+            }
+          }}
+          style={{
+            padding: "8px 12px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Add
+        </button>
+      </div>
 
 {/* Treadmill Entry */}
-<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  
+  <input
+    type="number"
+    placeholder="Cal"
+    value={customWorkout.treadCal || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+    style={{
+      width: "43px", // 🔻 halved
+      height: "23.5px",
+      padding: "6px",
+      fontSize: "14px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+  
+  <input
+    type="number"
+    placeholder="KM"
+    step="0.01"
+    value={customWorkout.treadKm || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+    style={{
+      width: "39.125px", // 🔻 halved
+      height: "23.5px",
+      padding: "6px",
+      fontSize: "14px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+  
+  <button
+    onClick={() => {
+      const cal = parseInt(customWorkout.treadCal);
+      const km = parseFloat(customWorkout.treadKm);
+      if (!isNaN(cal) && !isNaN(km)) {
+        const estimatedSteps = Math.round(km * 1250);
+        setSteps(prev => {
+  const newSteps = prev + estimatedSteps;
+  return newSteps;
+});
+
+        setWorkoutLog(prev => ({
+  ...prev,
+  Treadmill: {
+    cal: (prev.Treadmill?.cal || 0) + cal,
+    steps: (prev.Treadmill?.steps || 0) + estimatedSteps
+  }
+}));
+        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
 
 {/* Swim Entry (50m laps, 7 cal/lap) */}
-<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+
+  <input
+    type="number"
+    placeholder="Laps"
+    value={customWorkout["Swim"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+    style={{
+      width: "100px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+
+  <button
+    onClick={() => {
+      const laps = parseInt(customWorkout["Swim"]);
+      if (!isNaN(laps)) {
+        const cal = Math.round(laps * 7); // 7 cal per 50m lap
+        setWorkoutLog(prev => ({
+          ...prev,
+          Swim: (prev.Swim || 0) + laps
+        }));
+        setCustomWorkout({ ...customWorkout, Swim: "" });
+      }
+    }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
+  >
+    Add
+  </button>
+</div>
 
         {/* Logged Workouts */}
         <>
@@ -1041,15 +1184,29 @@ setWorkoutLog(prev => ({
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
+      <div style={{
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
 
       <div style={{
         padding:       "24px",
@@ -1162,16 +1319,150 @@ padding:         "16px",
 boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
 marginBottom:    "20px"
 }}>
-<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-            <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>📊 Today</h2>
-            <button onClick={() => setShowModes(!showModes)} style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}>
-              Mode: {mode}
-            </button>
-            <button onClick={resetDay} style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}>
-              Reset
-            </button>
-          </div>
-          
+<div style={{
+  display:      "flex",
+  alignItems:   "center",
+  marginBottom: "8px"
+}}>
+  <h2 style={{
+    flex:       1,
+    fontSize:   "17px",
+    fontWeight: "600",
+    margin:     0
+  }}>
+    📊 Today
+  </h2>
+
+  {/* Inline Mode button */}
+  <button
+    onClick={() => setShowModes(!showModes)}
+    style={{
+      backgroundColor: "#1976d2",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px",
+      marginRight:     "8px"
+    }}
+  >
+    Mode: {mode}
+  </button>
+
+  {/* Reset button */}
+  <button
+    onClick={resetDay}
+    style={{
+      backgroundColor: "#d32f2f",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px"
+    }}
+  >
+    Reset
+  </button>
+</div>
+
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Calories Eaten:</strong>{" "}
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
+    {calories}
+  </span>
+</div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Burned:</strong>{" "}
+{
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum;
+}, 0)
+}
+      </div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Deficit:</strong>{" "}
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
+    {estimatedDeficit}
+  </span>
+  <span> / {deficitGoal}</span>
+  {estimatedDeficit >= deficitGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Protein:</strong>{" "}
+  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
+    {Math.round(protein * 10) / 10}
+  </span>
+  <span> / {proteinGoal}</span>
+  {Math.round(protein * 10) / 10 >= proteinGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fat:</strong>{" "}
+  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
+    {Math.round(fat * 10) / 10}
+  </span>
+  <span> / {fatGoal}g</span>
+  {Math.round(fat * 10) / 10 >= fatGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Carbs:</strong>{" "}
+  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
+    {Math.round(carbs * 10) / 10}
+  </span>
+  <span> / {carbGoal}g</span>
+  {Math.round(carbs * 10) / 10 >= carbGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fiber:</strong>{" "}
+  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
+    {Math.round(fiber * 10) / 10}
+  </span>
+  <span> / {fiberGoal}g</span>
+  {Math.round(fiber * 10) / 10 >= fiberGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Water:</strong>{" "}
+  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
+    {water + (checklist.concentrace ? 1 : 0)}
+  </span>
+  <span> / {waterGoal} bottles</span>
+  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px" }}>
+  <strong>Steps:</strong>{" "}
+  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
+    {steps}
+  </span>
+  <span> / {stepGoal}</span>
+  {steps >= stepGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+    </div>
 
     {/* Checklist Box */}
     <div style={{
