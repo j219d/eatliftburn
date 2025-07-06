@@ -161,6 +161,8 @@ const foodOptions = [
   { name: "Oreo (2 cookies)", cal: 104, prot: 0.7, fat: 4.3, carbs: 15, fiber: 0.1 },
   { name: "Peanut butter (1 tsp)", cal: 47, prot: 2, fat: 4, carbs: 2, fiber: 0.5 },
   { name: "Peanut butter (1 tbsp)", cal: 94, prot: 4, fat: 8, carbs: 3, fiber: 1 },
+  { name: "Peanut butter (PBfit 1 tbsp)", cal: 30, prot: 4, fat: 1, carbs: 3, fiber: 1 },
+  { name: "Peanut butter (PBfit 2 tbsp)", cal: 60, prot: 8, fat: 2, carbs: 6, fiber: 2 },
   { name: "Peas (frozen, 50g)", cal: 37, prot: 3.5, fat: 0.8, carbs: 5.3, fiber: 2.6 },
   { name: "Peas (frozen, 100g)", cal: 73, prot: 6.9, fat: 1.5, carbs: 10.5, fiber: 5.1 },
   { name: "Peas (frozen, 150g)", cal: 110, prot: 10.4, fat: 2.3, carbs: 15.8, fiber: 7.7 },
@@ -246,28 +248,25 @@ useEffect(() => {
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
-  // ▶ sync goals on mode, weight, person change
+  // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
-    const profile = profiles[person];
-    const weightKg = weightLb/2.20462;
-    // protein factor
-    const protFactor = mode==="Cut"||mode==="Bulk"?0.9:0.8;
-    const P = Math.ceil(weightKg*protFactor);
-    // fat % floor
-    const fatPct = person==="J"
-      ? (mode==="Cut"?0.25:mode==="Maintenance"?0.25:0.30)
-      : (mode==="Cut"?0.30:mode==="Maintenance"?0.30:0.35);
-    const F = Math.ceil((calorieThreshold*fatPct)/9);
-    // carbs floor
-    const carbFactor = mode==="Cut"?1.8:mode==="Maintenance"?2.2:2.5;
-    const C = Math.ceil(weightKg*carbFactor);
-    // deficit goal
-    const D = mode==="Cut"?500:mode==="Maintenance"?0:-100;
-    setProteinGoal(P);
-    setFatGoal(F);
-    setCarbGoal(C);
-    setDeficitGoal(D);
-  },[mode, weightLb, person, calorieThreshold]);
+    if (mode === "Cut") {
+      setProteinGoal(140);
+      setFatGoal(50);
+      setCarbGoal(120);
+      setDeficitGoal(500);
+    } else if (mode === "Maintenance") {
+      setProteinGoal(140);
+      setFatGoal(55);
+      setCarbGoal(160);
+      setDeficitGoal(0);
+    } else { // Bulk
+      setProteinGoal(150);
+      setFatGoal(60);
+      setCarbGoal(200);
+      setDeficitGoal(-100);
+    }
+  }, [mode]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
