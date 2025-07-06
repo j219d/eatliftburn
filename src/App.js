@@ -1359,7 +1359,6 @@ marginBottom:    "20px"
 
   <button
     onClick={() => setShowModes(!showModes)}
-  <button
     onClick={() => setShowModes(!showModes)}
     style={{
       backgroundColor: "#1976d2",
