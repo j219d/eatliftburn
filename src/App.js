@@ -1372,9 +1372,6 @@ marginBottom:    "20px"
   >
     Mode
   </button>
-    }}>
-    Mode: {mode}
-  </button>
 
   {/* Reset button */}
   <button
