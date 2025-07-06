@@ -1349,7 +1349,7 @@ marginBottom:    "20px"
   {/* Inline Mode button */}
   <button
   onClick={() => setPerson(person === "Jon" ? "Chava" : "Jon")}
-  className="text-2xl"
+  className="text-2xl mr-3"
 >
   {person === "Jon" ? "👨" : "👩"}
 </button>
