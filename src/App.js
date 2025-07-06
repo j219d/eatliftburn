@@ -48,8 +48,8 @@ const [fatGoal, setFatGoal] = useState(
 const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
-
-  // ▼ PROFILE CONFIG
+const fiberGoal = 25;
+  // ▼ PROFILE CONFIGURATION
   const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
   const isJon = person === "Jon";
   const profiles = {
@@ -65,26 +65,22 @@ const [carbGoal, setCarbGoal] = useState(
     const ageDifMs = Date.now() - profile.birthDate.getTime();
     const ageDate = new Date(ageDifMs);
     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-    if (profile.isMale) {
-      return 10 * weight + 6.25 * profile.heightCm - 5 * age + 5;
-    } else {
-      return 10 * weight + 6.25 * profile.heightCm - 5 * age - 161;
-    }
+    return profile.isMale
+      ? 10 * weight + 6.25 * profile.heightCm - 5 * age + 5
+      : 10 * weight + 6.25 * profile.heightCm - 5 * age - 161;
   };
 
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
   const weightKg = latestWeight / 2.20462;
   const bmr = getBMR(profiles[person], latestWeight);
 
-  // ▼ Macro logic
-  const calcMacros = () => {
+  const calculateMacros = () => {
     const protein = Math.ceil((mode === "Maintenance" ? 0.8 : 0.9) * weightKg);
     const fatPct = isJon
       ? (mode === "Bulk" ? 0.30 : 0.25)
       : (mode === "Bulk" ? 0.35 : 0.30);
     const fat = Math.round((bmr * fatPct) / 9);
-    const carbFactor = mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5;
-    const carbs = Math.round(carbFactor * weightKg);
+    const carbs = Math.round((mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5) * weightKg);
 
     setProteinGoal(protein);
     setFatGoal(fat);
@@ -92,9 +88,9 @@ const [carbGoal, setCarbGoal] = useState(
   };
 
   useEffect(() => {
-    calcMacros();
+    calculateMacros();
   }, [weightLog, mode, person]);
-const fiberGoal = 25;
+
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
