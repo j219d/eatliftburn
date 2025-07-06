@@ -22,6 +22,9 @@ const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
   const [screen, setScreen] = useState("home");
+  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+  const [showModes, setShowModes] = useState(false);
+
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
@@ -38,15 +41,8 @@ const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber"
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
-const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
-const [showModes, setShowModes] = useState(false);
-
-const [fatGoal, setFatGoal] = useState(
-  () => parseFloat(localStorage.getItem("fatGoal")) || 50
-);
-const [carbGoal, setCarbGoal] = useState(
-  () => parseFloat(localStorage.getItem("carbGoal")) || 120
-);
+const fatGoal = 50;
+const carbGoal = 120;
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
@@ -240,31 +236,7 @@ useEffect(() => {
   localStorage.setItem("foodLog", JSON.stringify(foodLog));
   localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
   localStorage.setItem("weightLog", JSON.stringify(weightLog));
-    localStorage.setItem("fatGoal", fatGoal);
-    localStorage.setItem("carbGoal", carbGoal);
-    localStorage.setItem("mode", mode);
-}, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
-
-
-  // 🛠️ Whenever mode changes, override the home-page goals
-  useEffect(() => {
-    if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
-      setDeficitGoal(500);
-    } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-      setDeficitGoal(0);
-    } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-      setDeficitGoal(-100);
-    }
-  }, [mode]);
+}, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, weightLog]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
@@ -1330,57 +1302,23 @@ marginBottom:   "8px"
       fontWeight: "600",
       margin:     0
     }}>
-     📊 Today
-    </h2>
-    <button
-      onClick={resetDay}
-      style={{
-        backgroundColor: "#d32f2f",
-        color:           "white",
-        padding:         "4px 10px",
-        fontSize:        "13px",
-        border:          "none",
-        borderRadius:    "6px"
-      }}
-    >
-      Reset
-    </button>
-  </div>
-          {/* Mode selector */}
-          <div style={{ textAlign: "center", marginBottom: "12px" }}>
-            <button
-              onClick={() => setShowModes(!showModes)}
-              style={{
-                backgroundColor: "#1976d2",
-                color: "white",
-                padding: "4px 10px",
-                fontSize: "13px",
-                border: "none",
-                borderRadius: "6px"
-              }}
-            >
-              Mode: {mode}
-            </button>
-            {showModes && (
-              <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "8px" }}>
-                {["Cut","Maintenance","Bulk"].map(m => (
-                  <button
-                    key={m}
-                    onClick={() => { setMode(m); setShowModes(false); }}
-                    style={{
-                      padding: "4px 8px",
-                      border: "none",
-                      borderRadius: "6px",
-                      backgroundColor: mode === m ? "#1976d2" : "#eee",
-                      color: mode === m ? "white" : "#000"
-                    }}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+<div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+  <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>
+    📊 Today
+  </h2>
+  <button
+    onClick={() => setShowModes(!showModes)}
+    style={{ backgroundColor: "#1976d2", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px", marginRight: "8px" }}
+  >
+    Mode: {mode}
+  </button>
+  <button
+    onClick={resetDay}
+    style={{ backgroundColor: "#d32f2f", color: "white", padding: "4px 10px", fontSize: "13px", border: "none", borderRadius: "6px" }}
+  >
+    Reset
+  </button>
+</div>
 
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Calories Eaten:</strong>{" "}
@@ -1403,15 +1341,30 @@ marginBottom:   "8px"
 }
       </div>
       <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Deficit:</strong>{" "}
-  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
-    {estimatedDeficit}
-  </span>
-  <span> / {deficitGoal}</span>
-  {estimatedDeficit >= deficitGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
+      {(() => {
+        const isMet = mode === "Maintenance"
+          ? Math.abs(estimatedDeficit) <= 100
+          : mode === "Bulk"
+            ? estimatedDeficit <= -100
+            : estimatedDeficit >= deficitGoal;
+        const thresholdLabel = mode === "Maintenance"
+          ? "±100"
+          : mode === "Bulk"
+            ? "≥100"
+            : deficitGoal;
+        return (
+          <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+            <strong>Deficit:</strong>{" "}
+            <span style={{ color: isMet ? "green" : "red" }}>
+              {estimatedDeficit}
+            </span>
+            <span> / {thresholdLabel}</span>
+            {isMet && (
+              <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+            )}
+          </div>
+        );
+      })()}
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
