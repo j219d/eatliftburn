@@ -35,7 +35,7 @@ const profiles = {
 };
 
 const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
-const profile = profiles[person];
+const profile = profiles[person] || profiles["Jon"];
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
@@ -43,9 +43,10 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
-    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
-    if (!isNaN(saved)) return saved;
-    return calorieThreshold;
+const [deficitGoal, setDeficitGoal] = useState(() => {
+  const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
+  return isNaN(saved) ? calorieThreshold : saved;
+});
   });
   const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
