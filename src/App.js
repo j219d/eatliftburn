@@ -27,7 +27,7 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
-    const saved = parseInt(localStorage.getItem("Goal"), 10);
+    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
@@ -224,7 +224,7 @@ const foodOptions = [
   return sum;
 }, 0)
 
-const estimated = calorieThreshold + totalBurn - calories;
+const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -1405,7 +1405,16 @@ marginBottom:    "20px"
 }, 0)
 }
       </div>
-{(() => {
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Deficit:</strong>{" "}
+  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
+    {estimatedDeficit}
+  </span>
+  <span> / {deficitGoal}</span>
+  {estimatedDeficit >= deficitGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>{(() => {
   // Compute pass/fail per mode
   const isMet =
     mode === "Maintenance"
@@ -1414,7 +1423,7 @@ marginBottom:    "20px"
         ? estimatedDeficit <= -100
         : estimatedDeficit >= deficitGoal;
 
-  // Label to show on the right
+  // Determine the label after the slash
   const thresholdLabel =
     mode === "Maintenance"
       ? "±100"
@@ -1435,6 +1444,7 @@ marginBottom:    "20px"
     </div>
   );
 })()}
+
 
 <div style={{ fontSize: "16px", marginBottom: "8px" }}>
   <strong>Protein:</strong>{" "}
