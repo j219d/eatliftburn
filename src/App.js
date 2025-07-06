@@ -1343,7 +1343,23 @@ marginBottom:    "20px"
             >
               Mode: {mode}
             </button>
-            
+            {showModes && (
+              <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginTop: "8px" }}>
+                {["Cut","Maintenance","Bulk"].map(m => (
+                  <button
+                    key={m}
+                    onClick={() => { setMode(m); setShowModes(false); }}
+                    style={{
+                      padding: "4px 8px",
+                      border: "none",
+                      borderRadius: "6px",
+                      backgroundColor: mode === m ? "#1976d2" : "#eee",
+                      color: mode === m ? "white" : "#000"
+                    }}
+                  >
+                    {m}
+                  </button>
+                ))}
               </div>
             )}
           </div>
