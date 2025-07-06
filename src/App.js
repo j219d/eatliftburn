@@ -471,11 +471,9 @@ const inputStyleThird = {
 };
 
 if (screen === "food") {
-  return (
-    <>
-      <div style={{
-        position:        "fixed",
-        top:             0,
+return (
+  <div style={{ padding: "2rem", fontSize: "24px" }}>✅ App Rendered</div>
+);
         left:            0,
         right:           0,
         height:          "56px",
