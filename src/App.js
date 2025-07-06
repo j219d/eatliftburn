@@ -27,7 +27,21 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
-    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
+    const saved = parseInt(localStorage.getItem("deficitGoal")
+  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "cut");
+
+  const macroGoals = {
+    cut: { protein: 140, fat: 50, carbs: 120, fiber: 25, deficit: 500 },
+    maintenance: { protein: 140, fat: 55, carbs: 160, fiber: 25, deficit: 0 },
+    bulk: { protein: 150, fat: 60, carbs: 200, fiber: 25, deficit: -250 }
+  };
+
+  const { protein: proteinGoal, fat: fatGoal, carbs: carbGoal, fiber: fiberGoal, deficit: targetDeficit } = macroGoals[mode];
+
+  useEffect(() => {
+    localStorage.setItem("mode", mode);
+  }, [mode]);
+, 10);
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
@@ -139,8 +153,8 @@ const foodOptions = [
   { name: "Ground beef 90/10 (100g)", cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 },
   { name: "Ground beef 90/10 (150g)", cal: 218, prot: 27.9, fat: 12, carbs: 0, fiber: 0 },
   { name: "Ground beef 90/10 (200g)", cal: 290, prot: 37.2, fat: 16, carbs: 0, fiber: 0 },
-  { name: "Honey (1 tsp)", cal: 15, prot: 0, fat: 0, carbs: 4, fiber: 0 },
-  { name: "Honey (1 tbsp)", cal: 45, prot: 0, fat: 0, carbs: 12, fiber: 0 },
+  { name: "Honey (1 tsp Manuka)", cal: 15, prot: 0, fat: 0, carbs: 4, fiber: 0 },
+  { name: "Honey (1 tbsp Manuka)", cal: 45, prot: 0, fat: 0, carbs: 12, fiber: 0 },
   { name: "Hummus (100g)", cal: 170, prot: 7, fat: 10, carbs: 14, fiber: 4 },
   { name: "Israeli salad (large)", cal: 100, prot: 2, fat: 0.5, carbs: 10, fiber: 3 },
   { name: "Israeli salad (medium)", cal: 70, prot: 1.5, fat: 0.3, carbs: 7, fiber: 2 },
@@ -150,8 +164,6 @@ const foodOptions = [
   { name: "Oats (¼ cup)", cal: 73, prot: 2.4, fat: 1.7, carbs: 11.2, fiber: 2.4 },
   { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 },  
   { name: "Olive oil (1 tbsp)", cal: 120, prot: 0, fat: 14, carbs: 0, fiber: 0 },
-  { name: "Oreo (1 cookie)", cal: 52, prot: 0.35, fat: 2.15, carbs: 7.5, fiber: 0.05 },
-  { name: "Oreo (2 cookies)", cal: 104, prot: 0.7, fat: 4.3, carbs: 15, fiber: 0.1 },
   { name: "Peanut butter (1 tsp)", cal: 47, prot: 2, fat: 4, carbs: 2, fiber: 0.5 },
   { name: "Peanut butter (1 tbsp)", cal: 94, prot: 4, fat: 8, carbs: 3, fiber: 1 },
   { name: "Peas (frozen, 50g)", cal: 37, prot: 3.5, fat: 0.8, carbs: 5.3, fiber: 2.6 },
@@ -164,11 +176,9 @@ const foodOptions = [
   { name: "Potato (100g)", cal: 86, prot: 2, fat: 0, carbs: 20, fiber: 2 },
   { name: "Potato (150g)", cal: 129, prot: 3, fat: 0, carbs: 30, fiber: 3 },
   { name: "Potato (200g)", cal: 172, prot: 4, fat: 0, carbs: 40, fiber: 4 },
-  { name: "Protein bar (promix vanilla)", cal: 150, prot: 15, fat: 3, carbs: 17, fiber: 5 },
-  { name: "Protein bar (maxx)", cal: 217, prot: 21, fat: 6.8, carbs: 20, fiber: 3.9 },
+  { name: "Protein bar (promix)", cal: 150, prot: 15, fat: 3, carbs: 17, fiber: 5 },
   { name: "Protein bar (quest chocolate peanut butter)", cal: 190, prot: 20, fat: 9, carbs: 22, fiber: 11 },
   { name: "Protein bar (quest cookie dough)", cal: 190, prot: 21, fat: 9, carbs: 21, fiber: 12 },
-  { name: "Protein bar (quest mini cookie dough)", cal: 80, prot: 8, fat: 3.5, carbs: 9, fiber: 3 },
   { name: "Protein chips (quest)", cal: 140, prot: 20, fat: 4.5, carbs: 4, fiber: 1 },
   { name: "Protein Ice Cream (Peanut Butter Banana)", cal: 498, prot: 55.3, fat: 9.2, carbs: 51.4, fiber: 4.1 },
   { name: "Protein pancakes (kodiak ½ cup)", cal: 220, prot: 14, fat: 2, carbs: 30, fiber: 3 },
