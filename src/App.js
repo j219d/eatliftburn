@@ -16,12 +16,12 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
+
 // ▶ personal profiles (Jon vs Chava)
 const profiles = {
   J: { birthDate: new Date(1990, 8, 21), heightCm: 170, isMale: true },
   C: { birthDate: new Date(1998, 9, 13), heightCm: 163, isMale: false }
 };
-
 function App() {
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
@@ -29,13 +29,12 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
 
   // ▶ current profile (J or C)
-  const [person, setPerson] = useState(() => localStorage.getItem("person") || "J");
-  useEffect(() => { localStorage.setItem("person", person); }, [person]);
+  const [person, setPerson] = useState(() => localStorage.getItem(\"person\") || \"J\");
+  useEffect(() => { localStorage.setItem(\"person\", person); }, [person]);
 
   // ▶ weight (exact, decimal)
-  const [weightLb, setWeightLb] = useState(() => parseFloat(localStorage.getItem("weightLb")) || 150);
-  useEffect(() => { localStorage.setItem("weightLb", weightLb); }, [weightLb]);
-  
+  const [weightLb, setWeightLb] = useState(() => parseFloat(localStorage.getItem(\"weightLb\")) || 150);
+  useEffect(() => { localStorage.setItem(\"weightLb\", weightLb); }, [weightLb]);
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
     const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
@@ -91,16 +90,6 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
         (isMale ? 5 : -161)
       )
     : null;
-
-    // ▶ compute BMR from selected profile + latest weight
-  const profile = profiles[person];
-  const weightKg = latestWeight ? latestWeight / 2.20462 : weightLb / 2.20462;
-  const bmr = Math.round(
-    10 * weightKg +
-      6.25 * profile.heightCm -
-      5 * age +
-      (profile.isMale ? 5 : -161)
-  );
 
   // ▶ unified threshold: BMR or fallback 1600
   const calorieThreshold = bmr || 1600;
@@ -271,23 +260,16 @@ useEffect(() => {
 
   // ▶ sync goals on mode, weight & profile
   useEffect(() => {
-    const kg = (latestWeight || weightLb) / 2.20462;
-    // protein: cut/bulk 0.9g/kg, maintenance 0.8g/kg
-    const protFactor = mode === "Maintenance" ? 0.8 : 0.9;
-    setProteinGoal(Math.ceil(kg * protFactor));
-
-    // fat % floors: Jon 25/25/30%, Chava 30/30/35%
-    const fatPct =
-      person === "J"
-        ? mode === "Bulk" ? 0.30 : 0.25
-        : mode === "Bulk" ? 0.35 : 0.30;
-    setFatGoal(Math.ceil((calorieThreshold * fatPct) / 9));
-
-    // carbs floors: cut 1.8, maintenance 2.2, bulk 2.5 g/kg
-    const carbFactor = mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5;
-    setCarbGoal(Math.ceil(kg * carbFactor));
-
-    // deficit goals: cut 500, maintenance 0, bulk -100
+    const pLg = latestWeight || weightLb;
+    const kgCalc = pLg / 2.20462;
+    const pFact = mode === "Maintenance" ? 0.8 : 0.9;
+    setProteinGoal(Math.ceil(kgCalc * pFact));
+    const fPct = person === "J"
+      ? (mode === "Bulk" ? 0.3 : 0.25)
+      : (mode === "Bulk" ? 0.35 : 0.3);
+    setFatGoal(Math.ceil((calorieThreshold * fPct) / 9));
+    const cFact = mode === "Cut" ? 1.8 : mode === "Maintenance" ? 2.2 : 2.5;
+    setCarbGoal(Math.ceil(kgCalc * cFact));
     setDeficitGoal(mode === "Cut" ? 500 : mode === "Maintenance" ? 0 : -100);
   }, [mode, latestWeight, weightLb, person, calorieThreshold]);
 
@@ -1349,31 +1331,43 @@ marginBottom:    "20px"
   alignItems:   "center",
   marginBottom: "8px"
 }}>
-<div style={{ display:"flex", alignItems:"center", marginBottom:"8px" }}>
-  <h2 style={{ flex:1, fontSize:17, fontWeight:600, margin:0 }}>
+  <h2 style={{
+    flex:       1,
+    fontSize:   "17px",
+    fontWeight: "600",
+    margin:     0
+  }}>
     📊 Today
   </h2>
 
-  {/* J/C toggle */}
+  {/* Inline Mode button */}
   <button
-    onClick={() => setPerson(p => (p === "J" ? "C" : "J"))}
+    onClick={() => setShowModes(!showModes)}
     style={{
-      width:32, height:32, borderRadius:"50%",
-      background: person==="J"?"#eee":"#1976d2",
-      color:      person==="J"?"#000":"#fff",
-      border:"none", fontSize:16, marginRight:8
+      backgroundColor: "#1976d2",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px",
+      marginRight:     "8px"
     }}
   >
-    {person}
-  </button>
-
-  {/* Mode selector */}
-  <button onClick={() => setShowModes(v => !v)} style={{ marginRight:8 }}>
     Mode: {mode}
   </button>
 
-  {/* Reset */}
-  <button onClick={resetDay} style={{ /*…existing styles…*/ }}>
+  {/* Reset button */}
+  <button
+    onClick={resetDay}
+    style={{
+      backgroundColor: "#d32f2f",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px"
+    }}
+  >
     Reset
   </button>
 </div>
