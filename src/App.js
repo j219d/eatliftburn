@@ -1,4 +1,31 @@
 
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150;
+  const weightKg = latestWeight / 2.20462;
+  const bmr = typeof getBMR === "function" ? getBMR(activeProfile, latestWeight) : 1610;
+
+  let protein = 0;
+  let fat = 0;
+  let carbs = 0;
+
+  if (mode === "Cut") {
+    protein = Math.ceil(0.9 * weightKg);
+    fat = isJon ? Math.round((bmr * 0.25) / 9) : Math.round((bmr * 0.30) / 9);
+    carbs = Math.round(1.8 * weightKg);
+  } else if (mode === "Maintenance") {
+    protein = Math.ceil(0.8 * weightKg);
+    fat = isJon ? Math.round((bmr * 0.25) / 9) : Math.round((bmr * 0.30) / 9);
+    carbs = Math.round(2.2 * weightKg);
+  } else if (mode === "Bulk") {
+    protein = Math.ceil(0.9 * weightKg);
+    fat = isJon ? Math.round((bmr * 0.30) / 9) : Math.round((bmr * 0.35) / 9);
+    carbs = Math.round(2.5 * weightKg);
+  }
+
+  setProteinGoal(protein);
+  setFatGoal(fat);
+  setCarbGoal(carbs);
+
+
 
 
 
@@ -22,8 +49,17 @@ const heightCm = 170;
 const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
+
+  const profiles = {
+    Jon: { birthDate: "1990-09-21", heightCm: 173, isMale: true },
+    Chava: { birthDate: "1998-10-13", heightCm: 163, isMale: false },
+  };
+  const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
+        
   const [screen, setScreen] = useState("home");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
+  const activeProfile = profiles[person] || profiles["Jon"];
+  const isJon = person === "Jon";
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
@@ -32,20 +68,19 @@ function App() {
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
   });
-  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
+const [showProfileSelector, setShowProfileSelector] = useState(false);
+const [showProfileSelector, setShowProfileSelector] = useState(false);
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
-const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
 );
-const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
 const fiberGoal = 25;
@@ -252,19 +287,10 @@ useEffect(() => {
   // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
     if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
       setDeficitGoal(500);
     } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
       setDeficitGoal(0);
     } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
       setDeficitGoal(-100);
     }
   }, [mode]);
