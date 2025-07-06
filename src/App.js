@@ -29,8 +29,9 @@ function App() {
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
 
   // ▶ current profile (J or C)
-  const [person, setPerson] = useState(() => localStorage.getItem(\"person\") || \"J\");
-  useEffect(() => { localStorage.setItem(\"person\", person); }, [person]);
+const [person, setPerson] = useState(
+  () => localStorage.getItem("person") || "J"
+);
 
   // ▶ weight (exact, decimal)
   const [weightLb, setWeightLb] = useState(() => parseFloat(localStorage.getItem(\"weightLb\")) || 150);
