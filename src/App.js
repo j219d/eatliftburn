@@ -1405,16 +1405,7 @@ marginBottom:    "20px"
 }, 0)
 }
       </div>
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Deficit:</strong>{" "}
-  <span style={{ color: estimatedDeficit >= deficitGoal ? "green" : "red" }}>
-    {estimatedDeficit}
-  </span>
-  <span> / {deficitGoal}</span>
-  {estimatedDeficit >= deficitGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>{(() => {
+{(() => {
   // Compute pass/fail per mode
   const isMet =
     mode === "Maintenance"
