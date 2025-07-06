@@ -28,19 +28,25 @@ function App() {
   // ▶ default deficit goal to saved override or personal threshold
   const [deficitGoal, setDeficitGoal] = useState(() => {
     const saved = parseInt(localStorage.getItem("deficitGoal")
-  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "cut");
+const [mode, setMode] = useState(() => localStorage.getItem("mode") || "cut");
 
-  const macroGoals = {
-    cut: { protein: 140, fat: 50, carbs: 120, fiber: 25, deficit: 500 },
-    maintenance: { protein: 140, fat: 55, carbs: 160, fiber: 25, deficit: 0 },
-    bulk: { protein: 150, fat: 60, carbs: 200, fiber: 25, deficit: -250 }
-  };
+const macroGoals = {
+  cut: { protein: 140, fat: 50, carbs: 120, fiber: 25, deficit: 500 },
+  maintenance: { protein: 140, fat: 55, carbs: 160, fiber: 25, deficit: 0 },
+  bulk: { protein: 150, fat: 60, carbs: 200, fiber: 25, deficit: -250 }
+};
 
-  const { protein: proteinGoal, fat: fatGoal, carbs: carbGoal, fiber: fiberGoal, deficit: targetDeficit } = macroGoals[mode];
+const {
+  protein: proteinGoal,
+  fat: fatGoal,
+  carbs: carbGoal,
+  fiber: fiberGoal,
+  deficit: targetDeficit
+} = macroGoals[mode];
 
-  useEffect(() => {
-    localStorage.setItem("mode", mode);
-  }, [mode]);
+useEffect(() => {
+  localStorage.setItem("mode", mode);
+}, [mode]);
 , 10);
     if (!isNaN(saved)) return saved;
     return calorieThreshold;
