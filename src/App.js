@@ -39,7 +39,11 @@ const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber"
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
-const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+const [mode,
+const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
+useEffect(() => {
+  localStorage.setItem("person", person);
+}, [person]); setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
