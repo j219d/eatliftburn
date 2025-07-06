@@ -1348,16 +1348,10 @@ marginBottom:    "20px"
 
   {/* Inline Mode button */}
   <button
-  onClick={() => setPerson("Jon")}
-  className={`text-2xl ${person === "Jon" ? "opacity-100" : "opacity-50"}`}
+  onClick={() => setPerson(person === "Jon" ? "Chava" : "Jon")}
+  className="text-2xl"
 >
-  👨
-</button>
-<button
-  onClick={() => setPerson("Chava")}
-  className={`text-2xl ${person === "Chava" ? "opacity-100" : "opacity-50"}`}
->
-  👩
+  {person === "Jon" ? "👨" : "👩"}
 </button>
 <button
     onClick={() => setShowModes(!showModes)}
