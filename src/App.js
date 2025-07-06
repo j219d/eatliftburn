@@ -55,6 +55,8 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
 useEffect(() => {
+    console.log("Active Profile:", person);
+    console.log("Mode:", mode);
   localStorage.setItem("person", person);
 }, [person]);
 const [showModes, setShowModes] = useState(false);
@@ -263,7 +265,7 @@ useEffect(() => {
     localStorage.setItem("fatGoal", fatGoal);
     localStorage.setItem("carbGoal", carbGoal);
     localStorage.setItem("mode", mode);
-}, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
+}, [person, mode, calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
   // 🛠️ Whenever mode changes, override the home-page goals
@@ -284,7 +286,7 @@ useEffect(() => {
       setCarbGoal(200);
       setDeficitGoal(-100);
     }
-  }, [mode]);
+  }, [person, mode, mode]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
