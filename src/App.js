@@ -486,6 +486,12 @@ if (screen === "food") {
           🏠 Home
         </button>
       </div>
+<div className="macro-display">
+  <p>Protein Goal: {proteinGoal}g</p>
+  <p>Fat Goal: {fatGoal}g</p>
+  <p>Carb Goal: {carbGoal}g</p>
+</div>
+
 
       <div style={{
         padding:       "24px",
@@ -1342,6 +1348,18 @@ marginBottom:    "20px"
 
   {/* Inline Mode button */}
   <button
+  onClick={() => setPerson("Jon")}
+  className={`text-2xl ${person === "Jon" ? "opacity-100" : "opacity-50"}`}
+>
+  👨
+</button>
+<button
+  onClick={() => setPerson("Chava")}
+  className={`text-2xl ${person === "Chava" ? "opacity-100" : "opacity-50"}`}
+>
+  👩
+</button>
+<button
     onClick={() => setShowModes(!showModes)}
     style={{
       backgroundColor: "#1976d2",
