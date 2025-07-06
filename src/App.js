@@ -39,11 +39,7 @@ const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber"
 const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
 
 // 🧠 Daily macro/water goals
-const [mode,
-const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
-useEffect(() => {
-  localStorage.setItem("person", person);
-}, [person]); setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -232,6 +228,65 @@ const foodOptions = [
 }, 0)
 
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
+
+
+// --- Profile + Macro Calculation Logic START ---
+const [person, setPerson] = useState(() => localStorage.getItem("person") || "Jon");
+
+const profiles = {
+  Jon: {
+    heightCm: 170,
+    birthDate: new Date(1990, 8, 21),
+    isMale: true,
+  },
+  Chava: {
+    heightCm: 163,
+    birthDate: new Date(1998, 9, 13),
+    isMale: false,
+  }
+};
+
+useEffect(() => {
+  localStorage.setItem("person", person);
+}, [person]);
+
+const getAge = (birthDate) => {
+  const today = new Date();
+  return today.getFullYear() - birthDate.getFullYear() -
+    (today < new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate()) ? 1 : 0);
+};
+
+const calculateBMR = (weightKg, profile) => {
+  const age = getAge(profile.birthDate);
+  return Math.round(
+    10 * weightKg + 6.25 * profile.heightCm - 5 * age + (profile.isMale ? 5 : -161)
+  );
+};
+
+useEffect(() => {
+  const weightLog = JSON.parse(localStorage.getItem("weightLog")) || [];
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : (person === "Jon" ? 150 : 125);
+  const weightKg = latestWeight / 2.20462;
+  const profile = profiles[person];
+  const bmr = calculateBMR(weightKg, profile);
+
+  const proteinPerKg = { Cut: 0.9, Maintenance: 0.8, Bulk: 0.9 };
+  const carbsPerKg = { Cut: 1.8, Maintenance: 2.2, Bulk: 2.5 };
+  const fatPercents = {
+    Jon: { Cut: 0.25, Maintenance: 0.25, Bulk: 0.30 },
+    Chava: { Cut: 0.30, Maintenance: 0.30, Bulk: 0.35 }
+  };
+
+  const proteinGoal = Math.ceil(proteinPerKg[mode] * weightKg);
+  const carbGoal = Math.round(carbsPerKg[mode] * weightKg);
+  const fatGoal = Math.round((bmr * fatPercents[person][mode]) / 9);
+
+  setProteinGoal(proteinGoal);
+  setCarbGoal(carbGoal);
+  setFatGoal(fatGoal);
+}, [mode, person]);
+// --- Profile + Macro Calculation Logic END ---
+
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
