@@ -1579,5 +1579,6 @@ setWorkoutLog(prev => ({
       </>
     );
   }
+}
 
 export default App;
