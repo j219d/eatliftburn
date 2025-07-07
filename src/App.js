@@ -132,29 +132,68 @@ function App() {
     </div></div>;
   }
 
-  // --- Main UI (Home + Tabs) ---
-  if(screen==="home"){
+    // --- Main UI (Home + Tabs) ---
+  if (screen === "home") {
     // compute totals
-    const totalBurn = Object.entries(workoutLog).reduce((sum,[t,v])=>typeof v==='object'&&v.cal?sum+v.cal:vudies===null?sum:sum,0);
+    const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
+      if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+        return sum + value.cal;
+      }
+      if (type === "Swim") return sum + Math.round(value * 7);
+      if (type === "Plank") return sum + Math.round(value * 0.04);
+      if (workouts[type]) return sum + Math.round(value * workouts[type]);
+      return sum;
+    }, 0);
     const estimatedDeficit = calorieThreshold + totalBurn - calories;
     const allDone = Object.values(checklist).every(Boolean);
-    return <><div style={{position:'relative',padding:24,paddingBottom:80,maxWidth:500,margin:'auto'}}>
-      <button onClick={()=>setScreen('settings')} style={{position:'absolute',top:10,left:10,fontSize:14}}>⚙️ Settings</button>
-      <h2>Today's Overview</h2>
-      <p>Calories Eaten: {calories} / {calorieThreshold}</p>
-      <p>Calories Burned: {totalBurn}</p>
-      <p>Deficit: {estimatedDeficit} / {mode==='Maintenance'?100:(mode==='Bulk'?'>=100':deficitGoal)}</p>
-      <p>Protein: {protein}g / {proteinGoal}g</p>
-      <p>Fat: {fat}g / {fatGoal}g</p>
-      <p>Carbs: {carbs}g / {carbGoal}g</p>
-      <p>Fiber: {fiber}g / {fiberGoal}g</p>
-      <p>Water: {water+(checklist.concentrace?1:0)} / {waterGoal} bottles</p>
-      <p>Steps: {steps} / {stepGoal}</p>
-      <button onClick={() => setShowModes(!showModes)}>Mode: {mode}</button>
-      {showModes && ['Cut','Maintenance','Bulk'].map(m=><button key={m} onClick={()=>{setMode(m);setShowModes(false);}}>{m}</button>)}
-    </div>{/* Tabs here unchanged: render Food, Workouts, Weight based on screen state below */}
-    {/* Bottom nav omitted for brevity */}
-    </>;
+
+    return (
+      <>
+        {/* — Overview Box — */}
+        <div style={{
+          padding:       "24px",
+          paddingBottom: "80px",
+          fontFamily:    "Inter, Arial, sans-serif",
+          maxWidth:      "500px",
+          margin:        "auto"
+        }}>
+          <button onClick={()=>setScreen('settings')} style={{
+            position:'absolute', top:10, left:10, fontSize:14
+          }}>⚙️ Settings</button>
+          <h2>📊 Today</h2>
+          <p>Calories Eaten: {calories} / {calorieThreshold}</p>
+          <p>Calories Burned: {totalBurn}</p>
+          <p>Deficit: {estimatedDeficit} / {(mode==='Maintenance')? '±100' : (mode==='Bulk')? '≥100' : deficitGoal}</p>
+          <p>Protein: {protein}g / {proteinGoal}g</p>
+          <p>Fat: {fat}g / {fatGoal}g</p>
+          <p>Carbs: {carbs}g / {carbGoal}g</p>
+          <p>Fiber: {fiber}g / {fiberGoal}g</p>
+          <p>Water: {water + (checklist.concentrace?1:0)} / {waterGoal} bottles</p>
+          <p>Steps: {steps} / {stepGoal}</p>
+          <button onClick={() => setShowModes(!showModes)}>Mode: {mode}</button>
+          {showModes && ['Cut','Maintenance','Bulk'].map(m =>
+            <button key={m} onClick={() => { setMode(m); setShowModes(false); }}>{m}</button>
+          )}
+        </div>
+
+        {/* — Fixed Bottom Tab Bar — */}
+        <div style={{
+          position:       "fixed",
+          bottom:         0,
+          left:           0,
+          right:          0,
+          display:        "flex",
+          height:         "56px",
+          backgroundColor:"#fff",
+          borderTop:      "1px solid #ddd",
+          boxShadow:      "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
   }
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
@@ -319,7 +358,6 @@ useEffect(() => {
     localStorage.setItem("carbGoal", carbGoal);
     localStorage.setItem("mode", mode);
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
-
 
   // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
