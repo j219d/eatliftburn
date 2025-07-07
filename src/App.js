@@ -124,9 +124,6 @@ localStorage.setItem("deficitGoal", d);
   const m = today.getMonth() - birthDate.getMonth();
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
-  // ▶ latest weight (lbs)
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
-
   // ▶ true BMR via Mifflin–St Jeor
   const bmr = latestWeight
     ? Math.round(
