@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -12,221 +16,74 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
+
+// ▶ personal constants for BMR calculation
+const heightCm = 170;
+const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
+const isMale = true;
 function App() {
-  // --- Screen management ---
   const [screen, setScreen] = useState("home");
-
-  // --- User profile state (persisted) ---
-  const [sex, setSex] = useState(() => localStorage.getItem("sex") || "");
-  const [heightCm, setHeightCm] = useState(() => {
-    const v = localStorage.getItem("heightCm"); return v ? parseInt(v, 10) : null;
-  });
-  const [birthDate, setBirthDate] = useState(() => localStorage.getItem("birthDate") || "");
-  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit"), 10) || 500);
-  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus"), 10) || 250);
-
-  // --- Daily logs state ---
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
-  const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
-  const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
-  const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
-  const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
-  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || { supplements:false, sunlight:false, concentrace:false, teffilin:false });
+  // ▶ default deficit goal to saved override or personal threshold
+  const [deficitGoal, setDeficitGoal] = useState(() => {
+    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
+    if (!isNaN(saved)) return saved;
+    return calorieThreshold;
+  });
+  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
+const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
+const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
+const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
+const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
+
+// 🧠 Daily macro/water goals
+const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+const [showModes, setShowModes] = useState(false);
+
+const [fatGoal, setFatGoal] = useState(
+  () => parseFloat(localStorage.getItem("fatGoal")) || 50
+);
+const [carbGoal, setCarbGoal] = useState(
+  () => parseFloat(localStorage.getItem("carbGoal")) || 120
+);
+const fiberGoal = 25;
+const waterGoal = 3; // bottles of 27oz (~2.5L)
+  const [stepGoal] = useState(10000);
+  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
+  supplements: false,
+  sunlight: false,
+  concentrace: false,
+  teffilin: false
+});
+const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
 
-  // --- Goals state ---
-  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
-  const [showModes, setShowModes] = useState(false);
-  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 0);
-  const [fatGoal, setFatGoal] = useState(() => parseFloat(localStorage.getItem("fatGoal")) || 0);
-  const [carbGoal, setCarbGoal] = useState(() => parseFloat(localStorage.getItem("carbGoal")) || 0);
-  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal"), 10) || 0);
-  const fiberGoal = 25;
-  const waterGoal = 3;
-  const stepGoal = 10000;
+  // ▶ compute age
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
-  // ─── Persist everything to localStorage ─────────────────────────
-  useEffect(() => {
-    localStorage.setItem("sex", sex);
-    localStorage.setItem("heightCm", heightCm);
-    localStorage.setItem("birthDate", birthDate);
-    localStorage.setItem("cutDeficit", cutDeficit);
-    localStorage.setItem("bulkSurplus", bulkSurplus);
-    ["calories","protein","fat","carbs","fiber","water","steps","mode"]
-      .forEach(key => localStorage.setItem(key, eval(key)));
-    localStorage.setItem("deficitGoal", deficitGoal);
-    localStorage.setItem("proteinGoal", proteinGoal);
-    localStorage.setItem("fatGoal", fatGoal);
-    localStorage.setItem("carbGoal", carbGoal);
-    localStorage.setItem("checklist", JSON.stringify(checklist));
-    localStorage.setItem("foodLog", JSON.stringify(foodLog));
-    localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
-    localStorage.setItem("weightLog", JSON.stringify(weightLog));
-  }, [
-    sex, heightCm, birthDate, cutDeficit, bulkSurplus,
-    calories, protein, fat, carbs, fiber, water, steps, mode,
-    deficitGoal, proteinGoal, fatGoal, carbGoal,
-    checklist, foodLog, workoutLog, weightLog
-  ]);
+  // ▶ latest weight (lbs)
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
 
-  // ─── Recalculate macros on any relevant change ──────────────────
-  useEffect(() => {
-    calculateMacros();
-  }, [mode, latestWeight, sex, heightCm, cutDeficit, bulkSurplus]);
+  // ▶ true BMR via Mifflin–St Jeor
+  const bmr = latestWeight
+    ? Math.round(
+        10 * (latestWeight / 2.20462) +  // lbs → kg
+        6.25 * heightCm -
+        5 * age +
+        (isMale ? 5 : -161)
+      )
+    : null;
 
-  // --- Onboard check (must come *after* your hooks) -------------
-  const isOnboarded = Boolean(sex && heightCm && birthDate && weightLog.length > 0);
-
-  // --- Utility: age from birthDate ------------------------------
-  const getAge = iso => {
-    const bd = new Date(iso), today = new Date();
-    let age = today.getFullYear() - bd.getFullYear();
-    if (
-      today.getMonth() < bd.getMonth() ||
-      (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())
-    ) age--;
-    return age;
-  };
-
-  // --- Latest weight ---
-  const latestWeight = weightLog.length>0 ? weightLog[weightLog.length-1].weight : null;
-
-  // --- BMR calc (Mifflin-St Jeor) ---
-  const calculateBMR = () => {
-    if (!latestWeight||!heightCm||!birthDate||!sex) return null;
-    const age = getAge(birthDate);
-    const kg = latestWeight/2.20462;
-    const s = sex==="male"?5:-161;
-    return Math.round(10*kg + 6.25*heightCm - 5*age + s);
-  };
-  const bmr = calculateBMR();
-  const calorieThreshold = bmr||1600;
-
-  // --- Macro calc ---
-  const calculateMacros = () => {
-    if (!latestWeight||!sex) return;
-    const w=latestWeight; let p,f,c,d;
-    if(mode==="Cut"){p=w*0.9;f=w*(sex==="male"?0.36:0.4);c=w*0.8;d=cutDeficit;}
-    else if(mode==="Maintenance"){p=w*0.8;f=w*(sex==="male"?0.41:0.45);c=w*1.0;d=0;}
-    else {p=w*0.9;f=w*(sex==="male"?0.45:0.5);c=w*1.4;d=-bulkSurplus;}
-    setProteinGoal(Math.round(p));setFatGoal(Math.round(f));setCarbGoal(Math.round(c));setDeficitGoal(d);
-    localStorage.setItem("proteinGoal",Math.round(p));localStorage.setItem("fatGoal",Math.round(f));localStorage.setItem("carbGoal",Math.round(c));localStorage.setItem("deficitGoal",d);
-  };
-
-  // --- Persist all state ---
-  useEffect(()=>{
-    localStorage.setItem("sex",sex);
-    localStorage.setItem("heightCm",heightCm);
-    localStorage.setItem("birthDate",birthDate);
-    localStorage.setItem("cutDeficit",cutDeficit);
-    localStorage.setItem("bulkSurplus",bulkSurplus);
-    ["calories","protein","fat","carbs","fiber","water","steps","mode"].forEach(key=>localStorage.setItem(key,eval(key)));
-    localStorage.setItem("deficitGoal",deficitGoal);
-    localStorage.setItem("proteinGoal",proteinGoal);
-    localStorage.setItem("fatGoal",fatGoal);
-    localStorage.setItem("carbGoal",carbGoal);
-    localStorage.setItem("checklist",JSON.stringify(checklist));
-    localStorage.setItem("foodLog",JSON.stringify(foodLog));
-    localStorage.setItem("workoutLog",JSON.stringify(workoutLog));
-    localStorage.setItem("weightLog",JSON.stringify(weightLog));
-  },[sex,heightCm,birthDate,cutDeficit,bulkSurplus,calories,protein,fat,carbs,fiber,water,steps,mode,deficitGoal,proteinGoal,fatGoal,carbGoal,checklist,foodLog,workoutLog,weightLog]);
-  // Recalc macros when inputs change
-  useEffect(calculateMacros,[mode,latestWeight,sex,heightCm,cutDeficit,bulkSurplus]);
-
-  // --- Onboarding Screen ---
-  if(!isOnboarded){
-    return <div style={{padding:20}}>
-      <h1>Welcome to EatLiftBurn</h1>
-      <p>Enter your details:</p>
-      <div style={{display:'flex',flexDirection:'column',gap:10,maxWidth:300}}>
-        <label>Birthdate:<input type="date" value={birthDate} onChange={e=>setBirthDate(e.target.value)}/></label>
-        <label>Sex:<select value={sex} onChange={e=>setSex(e.target.value)}><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></label>
-        <label>Height (cm):<input type="number" value={heightCm||''} onChange={e=>setHeightCm(parseInt(e.target.value))}/></label>
-        <label>Weight (lbs):<input type="number" value={newWeight} onChange={e=>setNewWeight(e.target.value)}/></label>
-        <button onClick={()=>{const w=parseFloat(newWeight);if(birthDate&&sex&&heightCm&&!isNaN(w)){setWeightLog([{date:new Date().toLocaleDateString(),weight:w}]);setNewWeight('');}}}>Start</button>
-      </div>
-    </div>;
-  }
-
-  // --- Settings Screen ---
-  if(screen==="settings"){
-    return <div style={{padding:20}}><button onClick={()=>setScreen('home')}>⬅️ Back</button><h1>Settings</h1><div style={{display:'flex',flexDirection:'column',gap:10,maxWidth:300}}>
-      <label>Birthdate:<input type="date" value={birthDate} onChange={e=>setBirthDate(e.target.value)}/></label>
-      <label>Sex:<select value={sex} onChange={e=>setSex(e.target.value)}><option value="male">Male</option><option value="female">Female</option></select></label>
-      <label>Height (cm):<input type="number" value={heightCm} onChange={e=>setHeightCm(parseInt(e.target.value))}/></label>
-      <label>Cut Deficit:<input type="number" value={cutDeficit} onChange={e=>setCutDeficit(parseInt(e.target.value))}/></label>
-      <label>Bulk Surplus:<input type="number" value={bulkSurplus} onChange={e=>setBulkSurplus(parseInt(e.target.value))}/></label>
-    </div></div>;
-  }
-
-    // --- Main UI (Home + Tabs) ---
-  if (screen === "home") {
-    // compute totals
-    const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
-      if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-        return sum + value.cal;
-      }
-      if (type === "Swim") return sum + Math.round(value * 7);
-      if (type === "Plank") return sum + Math.round(value * 0.04);
-      if (workouts[type]) return sum + Math.round(value * workouts[type]);
-      return sum;
-    }, 0);
-    const estimatedDeficit = calorieThreshold + totalBurn - calories;
-    const allDone = Object.values(checklist).every(Boolean);
-
-    return (
-      <>
-        {/* — Overview Box — */}
-        <div style={{
-          padding:       "24px",
-          paddingBottom: "80px",
-          fontFamily:    "Inter, Arial, sans-serif",
-          maxWidth:      "500px",
-          margin:        "auto"
-        }}>
-          <button onClick={()=>setScreen('settings')} style={{
-            position:'absolute', top:10, left:10, fontSize:14
-          }}>⚙️ Settings</button>
-          <h2>📊 Today</h2>
-          <p>Calories Eaten: {calories} / {calorieThreshold}</p>
-          <p>Calories Burned: {totalBurn}</p>
-          <p>Deficit: {estimatedDeficit} / {(mode==='Maintenance')? '±100' : (mode==='Bulk')? '≥100' : deficitGoal}</p>
-          <p>Protein: {protein}g / {proteinGoal}g</p>
-          <p>Fat: {fat}g / {fatGoal}g</p>
-          <p>Carbs: {carbs}g / {carbGoal}g</p>
-          <p>Fiber: {fiber}g / {fiberGoal}g</p>
-          <p>Water: {water + (checklist.concentrace?1:0)} / {waterGoal} bottles</p>
-          <p>Steps: {steps} / {stepGoal}</p>
-          <button onClick={() => setShowModes(!showModes)}>Mode: {mode}</button>
-          {showModes && ['Cut','Maintenance','Bulk'].map(m =>
-            <button key={m} onClick={() => { setMode(m); setShowModes(false); }}>{m}</button>
-          )}
-        </div>
-
-        {/* — Fixed Bottom Tab Bar — */}
-        <div style={{
-          position:       "fixed",
-          bottom:         0,
-          left:           0,
-          right:          0,
-          display:        "flex",
-          height:         "56px",
-          backgroundColor:"#fff",
-          borderTop:      "1px solid #ddd",
-          boxShadow:      "0 -1px 4px rgba(0,0,0,0.1)"
-        }}>
-          <button onClick={() => setScreen("food")}     style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")}   style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>⚖️ Weight</button>
-        </div>
-      </>
-    );
-  }
+  // ▶ unified threshold: BMR or fallback 1600
+  const calorieThreshold = bmr || 1600;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
@@ -390,6 +247,7 @@ useEffect(() => {
     localStorage.setItem("carbGoal", carbGoal);
     localStorage.setItem("mode", mode);
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
+
 
   // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
@@ -597,210 +455,6 @@ const inputStyleThird = {
   borderRadius: "8px",
   border: "1px solid #ccc"
 };
-
-
-  if (screen === "home") {
-    return (
-      <>
-        {/* — Overview Box — */}
-        <div style={{
-          padding:       "24px",
-          paddingBottom: "80px",
-          fontFamily:    "Inter, Arial, sans-serif",
-          maxWidth:      "500px",
-          margin:        "auto"
-        }}>
-          <div style={{
-            backgroundColor: "#f9f9f9",
-            borderRadius:    "12px",
-            padding:         "16px",
-            boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
-            marginBottom:    "20px"
-          }}>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-              <h2 style={{ flex: 1, fontSize: "17px", fontWeight: "600", margin: 0 }}>
-                📊 Today
-              </h2>
-              <button
-                onClick={() => setShowModes(!showModes)}
-                style={{
-                  backgroundColor: "#1976d2",
-                  color:           "white",
-                  padding:         "4px 10px",
-                  fontSize:        "13px",
-                  border:          "none",
-                  borderRadius:    "6px",
-                  marginRight:     "8px"
-                }}
-              >
-                Mode: {mode}
-              </button>
-              <button
-                onClick={resetDay}
-                style={{
-                  backgroundColor: "#d32f2f",
-                  color:           "white",
-                  padding:         "4px 10px",
-                  fontSize:        "13px",
-                  border:          "none",
-                  borderRadius:    "6px"
-                }}
-              >
-                Reset
-              </button>
-            </div>
-
-            {showModes && (
-              <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "12px" }}>
-                {["Cut","Maintenance","Bulk"].map(m => (
-                  <button
-                    key={m}
-                    onClick={() => { setMode(m); setShowModes(false); }}
-                    style={{
-                      padding:         "4px 8px",
-                      border:          "none",
-                      borderRadius:    "6px",
-                      backgroundColor: mode === m ? "#1976d2" : "#eee",
-                      color:           mode === m ? "white" : "#000"
-                    }}
-                  >
-                    {m}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Calories Eaten:</strong>{" "}
-              <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
-                {calories}
-              </span>
-            </div>
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Calories Burned:</strong>{" "}
-              {totalBurn}
-            </div>
-            {(() => {
-              const isMet =
-                mode === "Maintenance"
-                  ? Math.abs(estimatedDeficit) <= 100
-                  : mode === "Bulk"
-                    ? estimatedDeficit <= -100
-                    : estimatedDeficit >= deficitGoal;
-              const thresholdLabel =
-                mode === "Maintenance" ? "±100"
-                : mode === "Bulk"        ? "≥100"
-                                        : deficitGoal;
-              return (
-                <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-                  <strong>Deficit:</strong>{" "}
-                  <span style={{ color: isMet ? "green" : "red" }}>
-                    {estimatedDeficit}
-                  </span>{" "}
-                  / {thresholdLabel}
-                  {isMet && <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>}
-                </div>
-              );
-            })()}
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Protein:</strong>{" "}
-              <span style={{ color: protein >= proteinGoal ? "green" : "red" }}>
-                {Math.round(protein * 10) / 10}
-              </span>{" "}
-              / {proteinGoal}
-            </div>
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Fat:</strong>{" "}
-              <span style={{ color: fat >= fatGoal ? "green" : "red" }}>
-                {Math.round(fat * 10) / 10}
-              </span>{" "}
-              / {fatGoal}g
-            </div>
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Carbs:</strong>{" "}
-              <span style={{ color: carbs >= carbGoal ? "green" : "red" }}>
-                {Math.round(carbs * 10) / 10}
-              </span>{" "}
-              / {carbGoal}g
-            </div>
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Fiber:</strong>{" "}
-              <span style={{ color: fiber >= fiberGoal ? "green" : "red" }}>
-                {Math.round(fiber * 10) / 10}
-              </span>{" "}
-              / {fiberGoal}g
-            </div>
-            <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-              <strong>Water:</strong>{" "}
-              <span style={{ color: (water + (checklist.concentrace?1:0)) >= waterGoal ? "green" : "red" }}>
-                {water + (checklist.concentrace?1:0)}
-              </span>{" "}
-              / {waterGoal} bottles
-            </div>
-            <div style={{ fontSize: "16px" }}>
-              <strong>Steps:</strong>{" "}
-              <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
-                {steps}
-              </span>{" "}
-              / {stepGoal}
-            </div>
-          </div>
-
-          {/* — Checklist Box — */}
-          <div style={{
-            backgroundColor: "#f9f9f9",
-            borderRadius:    "12px",
-            padding:         "16px",
-            boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
-            marginBottom:    "12px"
-          }}>
-            <h3 style={{ fontSize: "18px", fontWeight: "600", margin: 0, marginBottom: "12px" }}>
-              {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              {["concentrace","teffilin","sunlight","supplements"].map(key => (
-                <label key={key} style={{ fontSize: "16px" }}>
-                  <input
-                    type="checkbox"
-                    checked={checklist[key]}
-                    onChange={() => setChecklist(prev => ({ ...prev, [key]: !prev[key] }))}
-                    style={{ marginRight: "10px" }}
-                  />
-                  {key === "concentrace" ? "Concentrace 💧"
-                   : key === "teffilin"    ? "Tefillin ✡️"
-                   : key === "sunlight"    ? "Sunlight 🌞"
-                                          : "Supplements 💊"}
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* — Fixed Bottom Tab Bar — */}
-        <div style={{
-          position:       "fixed",
-          bottom:         0,
-          left:           0,
-          right:          0,
-          display:        "flex",
-          height:         "56px",
-          backgroundColor:"#fff",
-          borderTop:      "1px solid #ddd",
-          boxShadow:      "0 -1px 4px rgba(0,0,0,0.1)"
-        }}>
-          <button onClick={()=>setScreen("food")}     style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>
-            🍽️ Food
-          </button>
-          <button onClick={()=>setScreen("workouts")} style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>
-            🏋️ Workouts
-          </button>
-          <button onClick={()=>setScreen("weight")}   style={{ flex:1, border:"none", background:"transparent", fontSize:"16px", cursor:"pointer" }}>
-            ⚖️ Weight
-          </button>
-        </div>
-      </>
-    );
-  }
 
 if (screen === "food") {
   return (
@@ -1649,6 +1303,306 @@ setWorkoutLog(prev => ({
       </>
     );
   }
+
+   return (
+    <>
+      <div style={{
+        padding: "24px",
+        paddingBottom: "80px",            // make room for the tab bar
+        fontFamily: "Inter, Arial, sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+
+    {/* Overview Box */}
+<div style={{
+backgroundColor: "#f9f9f9",
+borderRadius:    "12px",
+padding:         "16px",
+boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
+marginBottom:    "20px"
+}}>
+<div style={{
+  display:      "flex",
+  alignItems:   "center",
+  marginBottom: "8px"
+}}>
+  <h2 style={{
+    flex:       1,
+    fontSize:   "17px",
+    fontWeight: "600",
+    margin:     0
+  }}>
+    📊 Today
+  </h2>
+
+  {/* Inline Mode button */}
+  <button
+    onClick={() => setShowModes(!showModes)}
+    style={{
+      backgroundColor: "#1976d2",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px",
+      marginRight:     "8px"
+    }}
+  >
+    Mode: {mode}
+  </button>
+
+  {/* Reset button */}
+  <button
+    onClick={resetDay}
+    style={{
+      backgroundColor: "#d32f2f",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px"
+    }}
+  >
+    Reset
+  </button>
+</div>
+
+    {showModes && (
+  <div style={{ display: "flex", justifyContent: "center", gap: "8px", marginBottom: "12px" }}>
+    {["Cut","Maintenance","Bulk"].map(m => (
+      <button
+        key={m}
+        onClick={() => { setMode(m); setShowModes(false); }}
+        style={{
+          padding: "4px 8px",
+          border: "none",
+          borderRadius: "6px",
+          backgroundColor: mode === m ? "#1976d2" : "#eee",
+          color: mode === m ? "white" : "#000"
+        }}
+      >
+        {m}
+      </button>
+    ))}
+  </div>
+)}
+
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Calories Eaten:</strong>{" "}
+  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
+    {calories}
+  </span>
+</div>
+      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+        <strong>Calories Burned:</strong>{" "}
+{
+  Object.entries(workoutLog).reduce((sum, [type, value]) => {
+  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+    return sum + value.cal;
+  }
+  if (type === "Swim") return sum + Math.round(value * 7);
+  if (type === "Plank") return sum + Math.round(value * 0.04);
+  if (workouts[type]) return sum + Math.round(value * workouts[type]);
+  return sum;
+}, 0)
+}
+      </div>
+{(() => {
+  // Compute pass/fail per mode
+  const isMet =
+    mode === "Maintenance"
+      ? Math.abs(estimatedDeficit) <= 100
+      : mode === "Bulk"
+        ? estimatedDeficit <= -100
+        : estimatedDeficit >= deficitGoal;
+
+  // Determine the label after the slash
+  const thresholdLabel =
+    mode === "Maintenance"
+      ? "±100"
+      : mode === "Bulk"
+        ? "≥100"
+        : deficitGoal;
+
+  return (
+    <div style={{ fontSize: "16px", marginBottom: "8px" }}>
+      <strong>Deficit:</strong>{" "}
+      <span style={{ color: isMet ? "green" : "red" }}>
+        {estimatedDeficit}
+      </span>{" "}
+      / {thresholdLabel}
+      {isMet && (
+        <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+      )}
+    </div>
+  );
+})()}
+
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Protein:</strong>{" "}
+  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
+    {Math.round(protein * 10) / 10}
+  </span>
+  <span> / {proteinGoal}</span>
+  {Math.round(protein * 10) / 10 >= proteinGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fat:</strong>{" "}
+  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
+    {Math.round(fat * 10) / 10}
+  </span>
+  <span> / {fatGoal}g</span>
+  {Math.round(fat * 10) / 10 >= fatGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Carbs:</strong>{" "}
+  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
+    {Math.round(carbs * 10) / 10}
+  </span>
+  <span> / {carbGoal}g</span>
+  {Math.round(carbs * 10) / 10 >= carbGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Fiber:</strong>{" "}
+  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
+    {Math.round(fiber * 10) / 10}
+  </span>
+  <span> / {fiberGoal}g</span>
+  {Math.round(fiber * 10) / 10 >= fiberGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px", marginBottom: "8px" }}>
+  <strong>Water:</strong>{" "}
+  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
+    {water + (checklist.concentrace ? 1 : 0)}
+  </span>
+  <span> / {waterGoal} bottles</span>
+  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+<div style={{ fontSize: "16px" }}>
+  <strong>Steps:</strong>{" "}
+  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
+    {steps}
+  </span>
+  <span> / {stepGoal}</span>
+  {steps >= stepGoal && (
+    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
+  )}
+</div>
+
+    </div>
+
+    {/* Checklist Box */}
+    <div style={{
+      backgroundColor: "#f9f9f9",
+      borderRadius: "12px",
+      padding: "16px",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+      marginBottom: "12px"
+    }}>
+      <h3 style={{
+  fontSize: "18px",
+  fontWeight: "600",
+  marginTop: "0px",
+  marginBottom: "12px"
+}}>
+  {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
+</h3>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+  {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
+    <label key={key} style={{ fontSize: "16px" }}>
+      <input
+        type="checkbox"
+        checked={checklist[key]}
+        onChange={() =>
+          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+        }
+        style={{ marginRight: "10px" }}
+      />
+      {key === "concentrace"
+        ? "Concentrace 💧"
+        : key === "teffilin"
+        ? "Tefillin ✡️"
+        : key === "sunlight"
+        ? "Sunlight 🌞"
+        : key === "supplements"
+        ? "Supplements 💊"
+        : key}
+    </label>
+  ))}
+</div>
+    </div>
+    
+
+  </div>
+ {/* — Fixed Bottom Tab Bar — */}
+      <div style={{
+        position:     "fixed",
+        bottom:       0,
+        left:         0,
+        right:        0,
+        display:      "flex",
+        height:       "56px",
+        backgroundColor: "#fff",
+        borderTop:    "1px solid #ddd",
+        boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+      }}>
+        <button
+          onClick={() => setScreen("food")}
+          style={{
+            flex:1,
+            border:"none",
+            background:"transparent",
+            fontSize:"16px",
+            cursor:"pointer"
+          }}
+        >
+          🍽️ Food
+        </button>
+        <button
+          onClick={() => setScreen("workouts")}
+          style={{
+            flex:1,
+            border:"none",
+            background:"transparent",
+            fontSize:"16px",
+            cursor:"pointer"
+          }}
+        >
+          🏋️ Workouts
+        </button>
+        <button
+          onClick={() => setScreen("weight")}
+          style={{
+            flex:1,
+            border:"none",
+            background:"transparent",
+            fontSize:"16px",
+            cursor:"pointer"
+          }}
+        >
+          ⚖️ Weight
+        </button>
+      </div>
+    </>
+  );
 }
 
 export default App;
