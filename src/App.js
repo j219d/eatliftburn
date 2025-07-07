@@ -137,47 +137,57 @@ function App() {
       }}>
         <h2>⚙️ Settings</h2>
 
-        <label>Birthday:
-          <input
-            type="date"
-            defaultValue={localStorage.getItem("birthDate") || ""}
-            onChange={e => localStorage.setItem("birthDate", e.target.value)}
-          />
-        </label>
+        <div style={{ marginBottom: "12px" }}>
+          <label>Birthday:<br />
+            <input
+              type="date"
+              defaultValue={localStorage.getItem("birthDate") || ""}
+              onChange={e => localStorage.setItem("birthDate", e.target.value)}
+            />
+          </label>
+        </div>
 
-        <label>Sex:
-          <select
-            defaultValue={localStorage.getItem("sex") || "male"}
-            onChange={e => localStorage.setItem("sex", e.target.value)}
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
+        <div style={{ marginBottom: "12px" }}>
+          <label>Sex:<br />
+            <select
+              defaultValue={localStorage.getItem("sex") || "male"}
+              onChange={e => localStorage.setItem("sex", e.target.value)}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+        </div>
 
-        <label>Height (cm):
-          <input
-            type="number"
-            defaultValue={localStorage.getItem("heightCm") || ""}
-            onChange={e => localStorage.setItem("heightCm", e.target.value)}
-          />
-        </label>
+        <div style={{ marginBottom: "12px" }}>
+          <label>Height (cm):<br />
+            <input
+              type="number"
+              defaultValue={localStorage.getItem("heightCm") || ""}
+              onChange={e => localStorage.setItem("heightCm", e.target.value)}
+            />
+          </label>
+        </div>
 
-        <label>Cut Deficit Goal:
-          <input
-            type="number"
-            value={cutDeficit}
-            onChange={e => setCutDeficit(parseInt(e.target.value))}
-          />
-        </label>
+        <div style={{ marginBottom: "12px" }}>
+          <label>Cut Deficit Goal:<br />
+            <input
+              type="number"
+              value={cutDeficit}
+              onChange={e => setCutDeficit(parseInt(e.target.value))}
+            />
+          </label>
+        </div>
 
-        <label>Bulk Surplus Goal:
-          <input
-            type="number"
-            value={bulkSurplus}
-            onChange={e => setBulkSurplus(parseInt(e.target.value))}
-          />
-        </label>
+        <div style={{ marginBottom: "12px" }}>
+          <label>Bulk Surplus Goal:<br />
+            <input
+              type="number"
+              value={bulkSurplus}
+              onChange={e => setBulkSurplus(parseInt(e.target.value))}
+            />
+          </label>
+        </div>
 
         <div style={{ marginTop: "20px" }}>
           <button onClick={() => setScreen("home")} style={{
@@ -222,8 +232,12 @@ function App() {
 
   const [screen, setScreen] = useState("home");
 
-  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
-  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 250);
+  const [cutDeficit, setCutDeficit] = useState(() =>
+    parseInt(localStorage.getItem("cutDeficit")) || 500
+  );
+  const [bulkSurplus, setBulkSurplus] = useState(() =>
+    parseInt(localStorage.getItem("bulkSurplus")) || 250
+  );
 
   useEffect(() => {
     localStorage.setItem("cutDeficit", cutDeficit);
