@@ -17,12 +17,241 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 
+// 🛡️ Safe JSON parse helper
+const safeParse = (key, fallback) => {
+  try {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+};
+
+
+
 // ▶ personal constants for BMR calculation
 const heightCm = 170;
 const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
+
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    const hasOnboarded = localStorage.getItem("hasOnboarded");
+    return !hasOnboarded;
+  });
+
+  const [userBirthday, setUserBirthday] = useState("");
+  const [userSex, setUserSex] = useState("male");
+  const [userHeight, setUserHeight] = useState("");
+  const [heightUnit, setHeightUnit] = useState("cm");
+  const [userWeight, setUserWeight] = useState("");
+
+  const completeOnboarding = () => {
+    const birthDate = new Date(userBirthday);
+    const weight = parseFloat(userWeight);
+    let height = parseFloat(userHeight);
+
+    if (!birthDate || isNaN(height) || isNaN(weight)) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+
+    if (heightUnit === "in") {
+      height = Math.round(height * 2.54); // convert inches to cm
+    }
+
+    localStorage.setItem("birthDate", userBirthday);
+    localStorage.setItem("sex", userSex);
+    localStorage.setItem("heightCm", height);
+    localStorage.setItem("hasOnboarded", "true");
+
+    const today = new Date().toLocaleDateString();
+    const initialWeightLog = [{ date: today, weight }];
+    setWeightLog(initialWeightLog);
+    localStorage.setItem("weightLog", JSON.stringify(initialWeightLog));
+    setShowOnboarding(false);
+  };
+
+  if (showOnboarding) {
+    return (
+      <div style={{
+        padding: "24px",
+        fontFamily: "sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <h2>Welcome to EatLiftBurn 🎉</h2>
+        <p>Please fill in your basic info to get started:</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
+          <label>
+            Birthday:
+            <input type="date" value={userBirthday} onChange={e => setUserBirthday(e.target.value)} />
+          </label>
+
+          <label>
+            Sex:
+            <select value={userSex} onChange={e => setUserSex(e.target.value)}>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+
+          <label>
+            Height:
+            <div style={{ display: "flex", gap: "8px" }}>
+              <input
+                placeholder="Height"
+                value={userHeight}
+                onChange={e => setUserHeight(e.target.value)}
+                type="number"
+                style={{ flex: 1 }}
+              />
+              <select value={heightUnit} onChange={e => setHeightUnit(e.target.value)}>
+                <option value="cm">cm</option>
+                <option value="in">in</option>
+              </select>
+            </div>
+          </label>
+
+          <label>
+            Weight (lbs):
+            <input placeholder="Weight" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
+          </label>
+
+          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (showOnboarding) return (<div style={{
+        padding: "24px",
+        fontFamily: "sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <h2>Welcome to EatLiftBurn 🎉</h2>
+        <p>Please fill in your basic info to get started:</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
+          <input placeholder="Age" value={userAge} onChange={e => setUserAge(e.target.value)} type="number" />
+          <select value={userSex} onChange={e => setUserSex(e.target.value)}>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <input placeholder="Height (cm)" value={userHeight} onChange={e => setUserHeight(e.target.value)} type="number" />
+          <input placeholder="Weight (lbs)" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
+          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  
   const [screen, setScreen] = useState("home");
+
+  const [cutDeficit, setCutDeficit] = useState(() =>
+    parseInt(localStorage.getItem("cutDeficit")) || 500
+  );
+  const [bulkSurplus, setBulkSurplus] = useState(() =>
+    parseInt(localStorage.getItem("bulkSurplus")) || 250
+  );
+
+  useEffect(() => {
+    localStorage.setItem("cutDeficit", cutDeficit);
+    localStorage.setItem("bulkSurplus", bulkSurplus);
+  }, [cutDeficit, bulkSurplus]);
+
+  useEffect(() => {
+    if (mode === "Cut") {
+      setDeficitGoal(cutDeficit);
+      setProteinGoal(130);
+      setFatGoal(45);
+      setCarbGoal(100);
+    } else if (mode === "Maintenance") {
+      setDeficitGoal(0);
+      setProteinGoal(140);
+      setFatGoal(55);
+      setCarbGoal(160);
+    } else {
+      setDeficitGoal(-1 * bulkSurplus);
+      setProteinGoal(150);
+      setFatGoal(60);
+      setCarbGoal(200);
+    }
+  }, [mode, cutDeficit, bulkSurplus]);
+
+  if (screen === "settings") {
+    return (
+      <div style={{
+        padding: "24px",
+        fontFamily: "sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <h2>⚙️ Settings</h2>
+
+        <label>Birthday:
+          <input
+            type="date"
+            defaultValue={localStorage.getItem("birthDate") || ""}
+            onChange={e => localStorage.setItem("birthDate", e.target.value)}
+          />
+        </label>
+
+        <label>Sex:
+          <select
+            defaultValue={localStorage.getItem("sex") || "male"}
+            onChange={e => localStorage.setItem("sex", e.target.value)}
+          >
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </label>
+
+        <label>Height (cm):
+          <input
+            type="number"
+            defaultValue={localStorage.getItem("heightCm") || ""}
+            onChange={e => localStorage.setItem("heightCm", e.target.value)}
+          />
+        </label>
+
+        <label>Cut Deficit Goal:
+          <input
+            type="number"
+            value={cutDeficit}
+            onChange={e => setCutDeficit(parseInt(e.target.value))}
+          />
+        </label>
+
+        <label>Bulk Surplus Goal:
+          <input
+            type="number"
+            value={bulkSurplus}
+            onChange={e => setBulkSurplus(parseInt(e.target.value))}
+          />
+        </label>
+
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={() => setScreen("home")} style={{
+            padding: "10px 16px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}>
+            Save & Return
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
@@ -51,16 +280,16 @@ const [carbGoal, setCarbGoal] = useState(
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
-  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
+  const [checklist, setChecklist] = useState(() => safeParse("checklist", {
   supplements: false,
   sunlight: false,
   concentrace: false,
   teffilin: false
 });
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
-  const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
-  const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
-  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
+  const [foodLog, setFoodLog] = useState(() => safeParse("foodLog", []));
+  const [workoutLog, setWorkoutLog] = useState(() => safeParse("workoutLog", {}));
+  const [weightLog, setWeightLog] = useState(() => safeParse("weightLog", []));
   const [newWeight, setNewWeight] = useState("");
 
   // ▶ compute age
@@ -70,7 +299,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
   // ▶ latest weight (lbs)
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150; // Default to Jon's weight
 
   // ▶ true BMR via Mifflin–St Jeor
   const bmr = latestWeight
@@ -156,8 +385,7 @@ const foodOptions = [
   { name: "Maple syrup (1 tsp)", cal: 17, prot: 0, fat: 0, carbs: 4.5, fiber: 0 },
   { name: "Maple syrup (1 tbsp)", cal: 52, prot: 0, fat: 0, carbs: 13.4, fiber: 0 },
   { name: "Oats (¼ cup)", cal: 73, prot: 2.4, fat: 1.7, carbs: 11.2, fiber: 2.4 },
-  { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 }, 
-  { name: "Olive oil (½ tbsp)", cal: 60, prot: 0, fat: 7, carbs: 0, fiber: 0 },
+  { name: "Olive oil (1 tsp)", cal: 40, prot: 0, fat: 4.7, carbs: 0, fiber: 0 },  
   { name: "Olive oil (1 tbsp)", cal: 120, prot: 0, fat: 14, carbs: 0, fiber: 0 },
   { name: "Oreo (1 cookie)", cal: 52, prot: 0.35, fat: 2.15, carbs: 7.5, fiber: 0.05 },
   { name: "Oreo (2 cookies)", cal: 104, prot: 0.7, fat: 4.3, carbs: 15, fiber: 0.1 },
@@ -786,7 +1014,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
@@ -1161,7 +1389,7 @@ setWorkoutLog(prev => ({
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
@@ -1298,7 +1526,7 @@ setWorkoutLog(prev => ({
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
