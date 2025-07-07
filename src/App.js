@@ -47,7 +47,6 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
-);
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
