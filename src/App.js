@@ -50,45 +50,46 @@ function App() {
   const waterGoal = 3;
   const stepGoal = 10000;
 
-// ─── Consolidated Persistence & Macro‐Recalc Hooks ────────────────────────────
-useEffect(() => {
-// persist all relevant state
-localStorage.setItem("sex", sex);
-localStorage.setItem("heightCm", heightCm);
-localStorage.setItem("birthDate", birthDate);
-localStorage.setItem("cutDeficit", cutDeficit);
-localStorage.setItem("bulkSurplus", bulkSurplus);
-["calories","protein","fat","carbs","fiber","water","steps","mode"]
-.forEach(key => localStorage.setItem(key, eval(key)));
-localStorage.setItem("deficitGoal", deficitGoal);
-localStorage.setItem("proteinGoal", proteinGoal);
-localStorage.setItem("fatGoal", fatGoal);
-localStorage.setItem("carbGoal", carbGoal);
-localStorage.setItem("checklist", JSON.stringify(checklist));
-localStorage.setItem("foodLog", JSON.stringify(foodLog));
-localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
-localStorage.setItem("weightLog", JSON.stringify(weightLog));
-}, [
-sex, heightCm, birthDate, cutDeficit, bulkSurplus,
-calories, protein, fat, carbs, fiber, water, steps,
-mode, deficitGoal, proteinGoal, fatGoal, carbGoal,
-checklist, foodLog, workoutLog, weightLog
-]);
+  // ─── Persist everything to localStorage ─────────────────────────
+  useEffect(() => {
+    localStorage.setItem("sex", sex);
+    localStorage.setItem("heightCm", heightCm);
+    localStorage.setItem("birthDate", birthDate);
+    localStorage.setItem("cutDeficit", cutDeficit);
+    localStorage.setItem("bulkSurplus", bulkSurplus);
+    ["calories","protein","fat","carbs","fiber","water","steps","mode"]
+      .forEach(key => localStorage.setItem(key, eval(key)));
+    localStorage.setItem("deficitGoal", deficitGoal);
+    localStorage.setItem("proteinGoal", proteinGoal);
+    localStorage.setItem("fatGoal", fatGoal);
+    localStorage.setItem("carbGoal", carbGoal);
+    localStorage.setItem("checklist", JSON.stringify(checklist));
+    localStorage.setItem("foodLog", JSON.stringify(foodLog));
+    localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
+    localStorage.setItem("weightLog", JSON.stringify(weightLog));
+  }, [
+    sex, heightCm, birthDate, cutDeficit, bulkSurplus,
+    calories, protein, fat, carbs, fiber, water, steps, mode,
+    deficitGoal, proteinGoal, fatGoal, carbGoal,
+    checklist, foodLog, workoutLog, weightLog
+  ]);
 
-useEffect(() => {
-// recalc your macros whenever relevant inputs change
-calculateMacros();
-}, [mode, latestWeight, sex, heightCm, cutDeficit, bulkSurplus]);
-// ───────────────────────────────────────────────────────────────────────────────
+  // ─── Recalculate macros on any relevant change ──────────────────
+  useEffect(() => {
+    calculateMacros();
+  }, [mode, latestWeight, sex, heightCm, cutDeficit, bulkSurplus]);
 
-// --- Onboard check ---
-const isOnboarded = sex && heightCm && birthDate && weightLog.length > 0;
+  // --- Onboard check (must come *after* your hooks) -------------
+  const isOnboarded = Boolean(sex && heightCm && birthDate && weightLog.length > 0);
 
-// --- Utility: age from birthDate ---
-const getAge = iso => {
+  // --- Utility: age from birthDate ------------------------------
+  const getAge = iso => {
     const bd = new Date(iso), today = new Date();
     let age = today.getFullYear() - bd.getFullYear();
-    if (today.getMonth()<bd.getMonth() || (today.getMonth()===bd.getMonth() && today.getDate()<bd.getDate())) age--;
+    if (
+      today.getMonth() < bd.getMonth() ||
+      (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())
+    ) age--;
     return age;
   };
 
