@@ -296,7 +296,8 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   sunlight: false,
   concentrace: false,
   teffilin: false
-});
+  })
+  );
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => safeParse("foodLog", []));
   const [workoutLog, setWorkoutLog] = useState(() => safeParse("workoutLog", {}));
