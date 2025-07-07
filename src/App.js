@@ -47,11 +47,6 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
 
-const [fatGoal, setFatGoal] = useState(
-  () => parseFloat(localStorage.getItem("fatGoal")) || 50
-);
-const [carbGoal, setCarbGoal] = useState(
-  () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
