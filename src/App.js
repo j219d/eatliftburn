@@ -150,15 +150,9 @@ function App() {
     );
   }
 
-  
   const [screen, setScreen] = useState("home");
-
-  const [cutDeficit, setCutDeficit] = useState(() =>
-    parseInt(localStorage.getItem("cutDeficit")) || 500
-  );
-  const [bulkSurplus, setBulkSurplus] = useState(() =>
-    parseInt(localStorage.getItem("bulkSurplus")) || 250
-  );
+  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
+  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 250);
 
   useEffect(() => {
     localStorage.setItem("cutDeficit", cutDeficit);
