@@ -17,262 +17,27 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 
-// 🛡️ Safe JSON parse helper
-const safeParse = (key, fallback) => {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-
-
-// ▶ personal constants for BMR calculation
-const heightCm = 170;
-const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
-const isMale = true;
+// Hard-coded personal constants removed — now dynamic per user
 function App() {
-
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    const hasOnboarded = localStorage.getItem("hasOnboarded");
-    return !hasOnboarded;
-  });
-
-  const [userBirthday, setUserBirthday] = useState("");
-  const [userSex, setUserSex] = useState("male");
-  const [userHeight, setUserHeight] = useState("");
-  const [heightUnit, setHeightUnit] = useState("cm");
-  const [userWeight, setUserWeight] = useState("");
-
-  const completeOnboarding = () => {
-    const birthDate = new Date(userBirthday);
-    const weight = parseFloat(userWeight);
-    let height = parseFloat(userHeight);
-
-    if (!birthDate || isNaN(height) || isNaN(weight)) {
-      alert("Please fill out all fields correctly.");
-      return;
-    }
-
-    if (heightUnit === "in") {
-      height = Math.round(height * 2.54); // convert inches to cm
-    }
-
-    localStorage.setItem("birthDate", userBirthday);
-    localStorage.setItem("sex", userSex);
-    localStorage.setItem("heightCm", height);
-    localStorage.setItem("hasOnboarded", "true");
-
-    const today = new Date().toLocaleDateString();
-    const initialWeightLog = [{ date: today, weight }];
-    setWeightLog(initialWeightLog);
-    localStorage.setItem("weightLog", JSON.stringify(initialWeightLog));
-    setShowOnboarding(false);
-  };
-
-  if (showOnboarding) {
-    return (
-      <div style={{
-        padding: "24px",
-        fontFamily: "sans-serif",
-        maxWidth: "500px",
-        margin: "auto"
-      }}>
-        <h2>Welcome to EatLiftBurn 🎉</h2>
-        <p>Please fill in your basic info to get started:</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
-          <label>
-            Birthday:
-            <input type="date" value={userBirthday} onChange={e => setUserBirthday(e.target.value)} />
-          </label>
-
-          <label>
-            Sex:
-            <select value={userSex} onChange={e => setUserSex(e.target.value)}>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </label>
-
-          <label>
-            Height:
-            <div style={{ display: "flex", gap: "8px" }}>
-              <input
-                placeholder="Height"
-                value={userHeight}
-                onChange={e => setUserHeight(e.target.value)}
-                type="number"
-                style={{ flex: 1 }}
-              />
-              <select value={heightUnit} onChange={e => setHeightUnit(e.target.value)}>
-                <option value="cm">cm</option>
-                <option value="in">in</option>
-              </select>
-            </div>
-          </label>
-
-          <label>
-            Weight (lbs):
-            <input placeholder="Weight" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
-          </label>
-
-          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
-            Continue
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  
-  if (screen === "settings") {
-    return (
-      <div style={{
-        padding: "24px",
-        fontFamily: "sans-serif",
-        maxWidth: "500px",
-        margin: "auto"
-      }}>
-        <h2>⚙️ Settings</h2>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label>Birthday:<br />
-            <input
-              type="date"
-              defaultValue={localStorage.getItem("birthDate") || ""}
-              onChange={e => localStorage.setItem("birthDate", e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label>Sex:<br />
-            <select
-              defaultValue={localStorage.getItem("sex") || "male"}
-              onChange={e => localStorage.setItem("sex", e.target.value)}
-            >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </label>
-        </div>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label>Height (cm):<br />
-            <input
-              type="number"
-              defaultValue={localStorage.getItem("heightCm") || ""}
-              onChange={e => localStorage.setItem("heightCm", e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label>Cut Deficit Goal:<br />
-            <input
-              type="number"
-              value={cutDeficit}
-              onChange={e => setCutDeficit(parseInt(e.target.value))}
-            />
-          </label>
-        </div>
-
-        <div style={{ marginBottom: "12px" }}>
-          <label>Bulk Surplus Goal:<br />
-            <input
-              type="number"
-              value={bulkSurplus}
-              onChange={e => setBulkSurplus(parseInt(e.target.value))}
-            />
-          </label>
-        </div>
-
-        <div style={{ marginTop: "20px" }}>
-          <button onClick={() => setScreen("home")} style={{
-            padding: "10px 16px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            borderRadius: "8px"
-          }}>
-            Save & Return
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-
-  if (showOnboarding) return (<div style={{
-        padding: "24px",
-        fontFamily: "sans-serif",
-        maxWidth: "500px",
-        margin: "auto"
-      }}>
-        <h2>Welcome to EatLiftBurn 🎉</h2>
-        <p>Please fill in your basic info to get started:</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
-          <input placeholder="Age" value={userAge} onChange={e => setUserAge(e.target.value)} type="number" />
-          <select value={userSex} onChange={e => setUserSex(e.target.value)}>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          <input placeholder="Height (cm)" value={userHeight} onChange={e => setUserHeight(e.target.value)} type="number" />
-          <input placeholder="Weight (lbs)" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
-          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
-            Continue
-          </button>
-        </div>
-      </div>
-    );
-  }
+// --- User profile state ---
+const [sex, setSex] = useState(() => localStorage.getItem("sex") || "");
+const [heightCm, setHeightCm] = useState(() => {
+const v = localStorage.getItem("heightCm");
+return v ? parseInt(v, 10) : null;
+});
+const [birthDate, setBirthDate] = useState(() => localStorage.getItem("birthDate") || "");
+const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit"), 10) || 500);
+const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus"), 10) || 250);
 
   const [screen, setScreen] = useState("home");
-
-  const [cutDeficit, setCutDeficit] = useState(() =>
-    parseInt(localStorage.getItem("cutDeficit")) || 500
-  );
-  const [bulkSurplus, setBulkSurplus] = useState(() =>
-    parseInt(localStorage.getItem("bulkSurplus")) || 250
-  );
-
-  useEffect(() => {
-    localStorage.setItem("cutDeficit", cutDeficit);
-    localStorage.setItem("bulkSurplus", bulkSurplus);
-  }, [cutDeficit, bulkSurplus]);
-
-  useEffect(() => {
-    if (mode === "Cut") {
-      setDeficitGoal(cutDeficit);
-      setProteinGoal(130);
-      setFatGoal(45);
-      setCarbGoal(100);
-    } else if (mode === "Maintenance") {
-      setDeficitGoal(0);
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-    } else {
-      setDeficitGoal(-1 * bulkSurplus);
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-    }
-  }, [mode, cutDeficit, bulkSurplus]);
-
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
-  const [deficitGoal, setDeficitGoal] = useState(() => {
-    const saved = parseInt(localStorage.getItem("deficitGoal"), 10);
-    if (!isNaN(saved)) return saved;
-    return calorieThreshold;
-  });
-  const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 140);
+  const [deficitGoal, setDeficitGoal] = useState(() => parseInt(localStorage.getItem("deficitGoal"), 10) || 0);
+const [proteinGoal, setProteinGoal] = useState(() => parseFloat(localStorage.getItem("proteinGoal")) || 0);
+const [fatGoal, setFatGoal] = useState(() => parseFloat(localStorage.getItem("fatGoal")) || 0);
+const [carbGoal, setCarbGoal] = useState(() => parseFloat(localStorage.getItem("carbGoal")) || 0);
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
@@ -291,18 +56,73 @@ const [carbGoal, setCarbGoal] = useState(
 const fiberGoal = 25;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
-  const [checklist, setChecklist] = useState(() => safeParse("checklist", {
+  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
   sunlight: false,
   concentrace: false,
   teffilin: false
-  })
-  );
+});
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
-  const [foodLog, setFoodLog] = useState(() => safeParse("foodLog", []));
-  const [workoutLog, setWorkoutLog] = useState(() => safeParse("workoutLog", {}));
-  const [weightLog, setWeightLog] = useState(() => safeParse("weightLog", []));
+  const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
+  const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
+  const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
   const [newWeight, setNewWeight] = useState("");
+
+// --- Utility: compute age from birthDate ---
+const getAge = (isoDate) => {
+const bd = new Date(isoDate);
+const today = new Date();
+let age = today.getFullYear() - bd.getFullYear();
+const m = today.getMonth() - bd.getMonth();
+if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) age--;
+return age;
+};
+
+// --- Latest weight (lbs) ---
+const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
+
+// --- BMR via Mifflin–St Jeor ---
+const calculateBMR = () => {
+if (!latestWeight || !heightCm || !birthDate || !sex) return null;
+const age = getAge(birthDate);
+const weightKg = latestWeight / 2.20462;
+const s = sex === "male" ? 5 : -161;
+return Math.round(10 * weightKg + 6.25 * heightCm - 5 * age + s);
+};
+
+const bmr = calculateBMR();
+const calorieThreshold = bmr || 1600;
+
+// --- Macro computation ---
+const calculateMacros = () => {
+if (!latestWeight || !sex) return;
+const w = latestWeight;
+let p, f, c, d;
+if (mode === "Cut") {
+p = w * 0.9;
+f = w * (sex === "male" ? 0.36 : 0.4);
+c = w * 0.8;
+d = cutDeficit;
+} else if (mode === "Maintenance") {
+p = w * 0.8;
+f = w * (sex === "male" ? 0.41 : 0.45);
+c = w * 1.0;
+d = 0;
+} else { // Bulk
+p = w * 0.9;
+f = w * (sex === "male" ? 0.45 : 0.5);
+c = w * 1.4;
+d = -bulkSurplus;
+}
+setProteinGoal(Math.round(p));
+setFatGoal(Math.round(f));
+setCarbGoal(Math.round(c));
+setDeficitGoal(d);
+localStorage.setItem("proteinGoal", Math.round(p));
+localStorage.setItem("fatGoal", Math.round(f));
+localStorage.setItem("carbGoal", Math.round(c));
+localStorage.setItem("deficitGoal", d);
+};
 
   // ▶ compute age
   const today = new Date();
@@ -311,7 +131,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
 
   // ▶ latest weight (lbs)
-  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : 150; // Default to Jon's weight
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
 
   // ▶ true BMR via Mifflin–St Jeor
   const bmr = latestWeight
@@ -490,25 +310,32 @@ useEffect(() => {
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
-  // 🛠️ Whenever mode changes, override the home-page goals
-  useEffect(() => {
-    if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
-      setDeficitGoal(500);
-    } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-      setDeficitGoal(0);
-    } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-      setDeficitGoal(-100);
-    }
-  }, [mode]);
+// --- Persist settings & logs ---
+useEffect(() => {
+localStorage.setItem("sex", sex);
+localStorage.setItem("heightCm", heightCm);
+localStorage.setItem("birthDate", birthDate);
+localStorage.setItem("cutDeficit", cutDeficit);
+localStorage.setItem("bulkSurplus", bulkSurplus);
+localStorage.setItem("calories", calories);
+localStorage.setItem("protein", protein);
+localStorage.setItem("fat", fat);
+localStorage.setItem("carbs", carbs);
+localStorage.setItem("fiber", fiber);
+localStorage.setItem("water", water);
+localStorage.setItem("steps", steps);
+localStorage.setItem("deficitGoal", deficitGoal);
+localStorage.setItem("proteinGoal", proteinGoal);
+localStorage.setItem("fatGoal", fatGoal);
+localStorage.setItem("carbGoal", carbGoal);
+localStorage.setItem("mode", mode);
+localStorage.setItem("foodLog", JSON.stringify(foodLog));
+localStorage.setItem("workoutLog", JSON.stringify(workoutLog));
+localStorage.setItem("weightLog", JSON.stringify(weightLog));
+}, [sex, heightCm, birthDate, cutDeficit, bulkSurplus, calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, fatGoal, carbGoal, mode, foodLog, workoutLog, weightLog]);
+
+// Recalculate macros whenever key inputs change
+useEffect(() => { calculateMacros(); }, [mode, latestWeight, sex, heightCm, cutDeficit, bulkSurplus]);
 
   const resetDay = () => {
   const confirmReset = window.confirm("Are you sure?");
@@ -1026,7 +853,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
@@ -1401,7 +1228,7 @@ setWorkoutLog(prev => ({
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
@@ -1538,7 +1365,7 @@ setWorkoutLog(prev => ({
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button><button onClick={() => setScreen("settings")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚙️ Settings</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
