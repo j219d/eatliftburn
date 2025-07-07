@@ -126,58 +126,7 @@ function App() {
     );
   }
 
-  if (showOnboarding) return (<div style={{
-        padding: "24px",
-        fontFamily: "sans-serif",
-        maxWidth: "500px",
-        margin: "auto"
-      }}>
-        <h2>Welcome to EatLiftBurn 🎉</h2>
-        <p>Please fill in your basic info to get started:</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
-          <input placeholder="Age" value={userAge} onChange={e => setUserAge(e.target.value)} type="number" />
-          <select value={userSex} onChange={e => setUserSex(e.target.value)}>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          <input placeholder="Height (cm)" value={userHeight} onChange={e => setUserHeight(e.target.value)} type="number" />
-          <input placeholder="Weight (lbs)" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
-          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
-            Continue
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const [screen, setScreen] = useState("home");
-  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
-  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 250);
-
-  useEffect(() => {
-    localStorage.setItem("cutDeficit", cutDeficit);
-    localStorage.setItem("bulkSurplus", bulkSurplus);
-  }, [cutDeficit, bulkSurplus]);
-
-  useEffect(() => {
-    if (mode === "Cut") {
-      setDeficitGoal(cutDeficit);
-      setProteinGoal(130);
-      setFatGoal(45);
-      setCarbGoal(100);
-    } else if (mode === "Maintenance") {
-      setDeficitGoal(0);
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-    } else {
-      setDeficitGoal(-1 * bulkSurplus);
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-    }
-  }, [mode, cutDeficit, bulkSurplus]);
-
+  
   if (screen === "settings") {
     return (
       <div style={{
@@ -245,6 +194,60 @@ function App() {
       </div>
     );
   }
+
+
+  if (showOnboarding) return (<div style={{
+        padding: "24px",
+        fontFamily: "sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+        <h2>Welcome to EatLiftBurn 🎉</h2>
+        <p>Please fill in your basic info to get started:</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "20px" }}>
+          <input placeholder="Age" value={userAge} onChange={e => setUserAge(e.target.value)} type="number" />
+          <select value={userSex} onChange={e => setUserSex(e.target.value)}>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <input placeholder="Height (cm)" value={userHeight} onChange={e => setUserHeight(e.target.value)} type="number" />
+          <input placeholder="Weight (lbs)" value={userWeight} onChange={e => setUserWeight(e.target.value)} type="number" />
+          <button onClick={completeOnboarding} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}>
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const [screen, setScreen] = useState("home");
+
+  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
+  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 250);
+
+  useEffect(() => {
+    localStorage.setItem("cutDeficit", cutDeficit);
+    localStorage.setItem("bulkSurplus", bulkSurplus);
+  }, [cutDeficit, bulkSurplus]);
+
+  useEffect(() => {
+    if (mode === "Cut") {
+      setDeficitGoal(cutDeficit);
+      setProteinGoal(130);
+      setFatGoal(45);
+      setCarbGoal(100);
+    } else if (mode === "Maintenance") {
+      setDeficitGoal(0);
+      setProteinGoal(140);
+      setFatGoal(55);
+      setCarbGoal(160);
+    } else {
+      setDeficitGoal(-1 * bulkSurplus);
+      setProteinGoal(150);
+      setFatGoal(60);
+      setCarbGoal(200);
+    }
+  }, [mode, cutDeficit, bulkSurplus]);
 
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
