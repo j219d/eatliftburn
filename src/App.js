@@ -338,7 +338,7 @@ const logWorkout = (type, reps) => {
 }
 
   if (type === "Run") {
-    const runSteps = Math.round(reps * 800);
+    const runSteps = Math.round(reps * 1100);
     setSteps(prev => prev + runSteps);
   }
 };
