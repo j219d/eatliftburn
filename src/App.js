@@ -337,65 +337,48 @@ const logWorkout = (type, reps) => {
   setSteps(prev => prev + reps);
 }
 
-  if (type === "Run") {
-    const runSteps = Math.round(reps * 800);
-    setSteps(prev => prev + runSteps);
-  }
-};
-
-
-  const deleteWorkout = (type) => {
-  const reps = workoutLog[type];
-
-  // Calculate burn (optional – only needed if displayed or used elsewhere)
-  const burn =
-  type === "Run"
-    ? Math.round(reps * 65)
-    : type === "Steps"
-    ? Math.round(reps * 0.04)
-    : type === "Plank"
-    ? Math.round(reps * 0.04)
-    : Math.round(reps * workouts[type]);
-
-  // ✅ Fix step count reversals
-  if (type === "Steps") {
-  const stepCount = workoutLog["Steps"]?.reps || 0;
-  setSteps(prev => Math.max(0, prev - stepCount));
-}
-
+  
 if (type === "Run") {
-  const stepCount = workoutLog["Run"]?.stepsAdded || 0;
-  setSteps(prev => Math.max(0, prev - stepCount));
+  const runTimeMin = parseFloat(customWorkout.runTime);
+  const runKm = parseFloat(customWorkout.runKm);
+
+  if (isNaN(runTimeMin) || isNaN(runKm) || runKm <= 0 || runTimeMin <= 0) return;
+
+  const paceMinPerKm = runTimeMin / runKm;
+
+  let met;
+  if (paceMinPerKm > 7.5)      met = 8.3;
+  else if (paceMinPerKm > 6.2) met = 9.8;
+  else if (paceMinPerKm > 5.5) met = 10.5;
+  else if (paceMinPerKm > 5.0) met = 11.0;
+  else                         met = 11.5;
+
+  const weightLb = latestWeight || 150;
+  const weightKg = weightLb / 2.20462;
+  const durationHr = runTimeMin / 60;
+
+  const cal = Math.round(met * weightKg * durationHr);
+  const runSteps = Math.round(runKm * 1250);
+
+  setSteps(prev => prev + runSteps);
+  setWorkoutLog(prev => ({
+    ...prev,
+    [type]: {
+      time: runTimeMin,
+      reps: runKm,
+      cal,
+      stepsAdded: runSteps
+    }
+  }));
+
+  setCustomWorkout(prev => ({
+    ...prev,
+    runTime: "",
+    runKm: ""
+  }));
+  return;
 }
 
-  if (type === "Treadmill" && reps?.steps) {
-  setSteps(prev => Math.max(0, prev - reps.steps));
-}
-
-  setWorkoutLog((prev) => {
-    const updated = { ...prev };
-    delete updated[type];
-    return updated;
-  });
-};
-
-
-  const addFood = (food) => {
-  const completeFood = {
-    name: food.name || "Unnamed",
-    cal: parseInt(food.cal) || 0,
-    prot: parseInt(food.prot) || 0,
-    fat: parseFloat(food.fat) || 0,
-    carbs: parseFloat(food.carbs) || 0,
-    fiber: parseFloat(food.fiber) || 0,
-    water: parseInt(food.water) || 0, // 👈 Add this line
-    time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  };
-
-  if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
-    console.error("Invalid food entry:", food);
-    return;
-  }
 
   setFoodLog(prev => [...prev, completeFood]);
   setCalories(prev => prev + completeFood.cal);
