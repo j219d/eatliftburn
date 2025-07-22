@@ -143,6 +143,7 @@ const foodOptions = [
   { name: "Chicken breast (150g)", cal: 248, prot: 46, fat: 5.4, carbs: 0, fiber: 0 },
   { name: "Chicken breast (160g)", cal: 264, prot: 50, fat: 5.8, carbs: 0, fiber: 0 },
   { name: "Chicken breast (200g)", cal: 330, prot: 62, fat: 7.2, carbs: 0, fiber: 0 },
+  { name: "Chocolate chips (10g)", cal: 58, prot: 1, fat: 4, carbs: 5, fiber: 1 },
   { name: "Corn (100g)", cal: 85, prot: 2.2, fat: 1.3, carbs: 15.3, fiber: 1.5 },
   { name: "Cottage cheese 5% (50g)", cal: 48, prot: 5.5, fat: 2.5, carbs: 0.8, fiber: 0 },
   { name: "Cottage cheese 5% (100g)", cal: 95, prot: 11, fat: 5, carbs: 1.5, fiber: 0 },
