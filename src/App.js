@@ -177,6 +177,7 @@ const foodOptions = [
   { name: "Lychee (10 fruits)",cal: 60, prot: 1.0, fat: 0.1, carbs: 16, fiber: 1.0 },
   { name: "Mac n' Cheese (½ box of Goodles)",cal: 338, prot: 19, fat: 6, carbs: 60, fiber: 9 },
   { name: "Maple syrup (1 tsp)", cal: 17, prot: 0, fat: 0, carbs: 4.5, fiber: 0 },
+  { name: "Maple syrup (½ tbsp)", cal: 26, prot: 0, fat: 0, carbs: 6.7, fiber: 0 },
   { name: "Maple syrup (1 tbsp)", cal: 52, prot: 0, fat: 0, carbs: 13.4, fiber: 0 },
   { name: "Oats (¼ cup)", cal: 73, prot: 2.4, fat: 1.7, carbs: 11.2, fiber: 2.4 },
   { name: "Oats (½ cup)", cal: 146, prot: 4.8, fat: 3.4, carbs: 22.4, fiber: 4.8 },
