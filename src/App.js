@@ -48,7 +48,7 @@ const [fatGoal, setFatGoal] = useState(
 const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
-const fiberGoal = 25;
+const fiberGoal = 28;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
