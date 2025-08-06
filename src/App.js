@@ -128,6 +128,7 @@ const foodOptions = [
   { name: "Blueberries (1 cup)", cal: 84, prot: 1.1, fat: 0.5, carbs: 21.4, fiber: 3.6 },
   { name: "Brazil nut", cal: 33, prot: 0.75, fat: 3.4, carbs: 0.6, fiber: 0.2 },
   { name: "Bread (sourdough rye slice 56g)", cal: 145, prot: 4.5, fat: 1.0, carbs: 27, fiber: 3.3 },
+  { name: "Bread (Lechamim bun 75g)", cal: 225, prot: 7, fat: 4.5, carbs: 40, fiber: 1.5 },
   { name: "Broccoli (50g)",  cal: 18, prot: 1.2, fat: 0.2, carbs: 3.5, fiber: 1.7 },
   { name: "Broccoli (100g)", cal: 35, prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 },
   { name: "Broccoli (150g)", cal: 53, prot: 3.6, fat: 0.6, carbs: 10.5, fiber: 5.0 },
