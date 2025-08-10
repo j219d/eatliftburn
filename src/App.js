@@ -2,13 +2,23 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 // ===== Aligned Bars Helpers (same start & end for all) =====
-import React, { useRef, useLayoutEffect } from "react";
-
 function useAlignedColumns(ref) {
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
@@ -34,44 +44,30 @@ function useAlignedColumns(ref) {
   }, [ref]);
 }
 
-const _rowStyle = {
+const RowStyle = {
   display: "grid",
   gridTemplateColumns: "var(--label-col) 1fr var(--num-col)",
   alignItems: "center",
   gap: 12,
   marginBottom: 18
 };
-const _labelStyle = { fontSize: 16, fontWeight: 600, whiteSpace: "nowrap", paddingRight: 8 };
-const _numStyle   = { fontSize: 13, color: "#666", whiteSpace: "nowrap", textAlign: "right", paddingLeft: 4, fontVariantNumeric: "tabular-nums" };
-const _trackStyle = { height: 28, background: "#eef1f5", borderRadius: 999, overflow: "hidden" };
-const _fillStyle  = (pct) => ({ height: "100%", width: `${pct*100}%`, borderRadius: 999, background: "linear-gradient(90deg,#2b76ff,#6aa7ff)", transition: "width .25s" });
+const LabelStyle = { fontSize: 16, fontWeight: 600, whiteSpace: "nowrap", paddingRight: 8 };
+const NumStyle   = { fontSize: 13, color: "#666", whiteSpace: "nowrap", textAlign: "right", paddingLeft: 4, fontVariantNumeric: "tabular-nums" };
+const TrackStyle = { height: 28, background: "#eef1f5", borderRadius: 999, overflow: "hidden" };
+const fillStyle  = (pct) => ({ height: "100%", width: `${pct*100}%`, borderRadius: 999, background: "linear-gradient(90deg,#2b76ff,#6aa7ff)", transition: "width .25s" });
 
 const ProgressBarRow = ({ label, value, max, right }) => {
   const safeMax = Math.max(1, Number(max) || 0);
   const pct = Math.max(0, Math.min(1, (Number(value) || 0) / safeMax));
   return (
-    <div style={_rowStyle}>
-      <span data-metric-label style={_labelStyle}>{label}</span>
-      <div style={_trackStyle}><div style={_fillStyle(pct)} /></div>
-      <span data-metric-num style={_numStyle}>{right}</span>
+    <div style={RowStyle}>
+      <span data-metric-label style={LabelStyle}>{label}</span>
+      <div style={TrackStyle}><div style={fillStyle(pct)} /></div>
+      <span data-metric-num style={NumStyle}>{right}</span>
     </div>
   );
 };
 // ===== End Aligned Bars Helpers =====
-
-
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 
 // ▶ personal constants for BMR calculation
@@ -318,6 +314,8 @@ const foodOptions = [
 }, 0)
 
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
+const caloriesBudget = calorieThreshold + totalBurn;
+const waterCount     = water + (checklist?.concentrace ? 1 : 0);
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -1702,23 +1700,3 @@ marginBottom:    "20px"
 }
 
 export default App;
-
-
-{/* === Aligned metrics (bars start/end exactly the same) === */}
-{(() => {
-  const _ref = useRef(null);
-  useAlignedColumns(_ref);
-  return (
-    <div ref={_ref} style={{ "--label-col": "0px", "--num-col": "0px" }}>
-      <ProgressBarRow label="Calories" value={calories} max={caloriesBudget} right={`${Math.round(calories)} / ${Math.round(caloriesBudget)}`} />
-      <ProgressBarRow label="Protein"  value={protein}  max={proteinGoal}     right={`${Math.round(protein)} / ${proteinGoal}`} />
-      <ProgressBarRow label="Fat"      value={fat}      max={fatGoal}         right={`${Math.round(fat)} / ${fatGoal}`} />
-      <ProgressBarRow label="Carbs"    value={carbs}    max={carbGoal}        right={`${Math.round(carbs)} / ${carbGoal}`} />
-      <ProgressBarRow label="Fiber"    value={fiber}    max={fiberGoal}       right={`${Math.round(fiber)} / ${fiberGoal}`} />
-      <ProgressBarRow label="Water"    value={waterCount} max={waterGoal}     right={`${waterCount} / ${waterGoal}`} />
-      <ProgressBarRow label="Steps"    value={steps}    max={stepGoal}        right={`${steps} / ${stepGoal}`} />
-    </div>
-  );
-})()}
-{/* === End aligned metrics === */}
-
