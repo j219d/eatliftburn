@@ -15,13 +15,11 @@ import {
 } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
-
 // ===== Aligned Bars Helpers (same start & end for all) =====
 function useAlignedColumns(ref) {
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
-
     const measure = () => {
       const labels = el.querySelectorAll("[data-metric-label]");
       const nums   = el.querySelectorAll("[data-metric-num]");
@@ -31,34 +29,22 @@ function useAlignedColumns(ref) {
       el.style.setProperty("--label-col", `${maxLabel + 12}px`);
       el.style.setProperty("--num-col",   `${maxNum + 8}px`);
     };
-
     const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
     let ro;
-    ready.then(() => {
-      measure();
-      ro = new ResizeObserver(measure);
-      ro.observe(el);
-      window.addEventListener("resize", measure);
-    });
+    ready.then(() => { measure(); ro = new ResizeObserver(measure); ro.observe(el); window.addEventListener("resize", measure); });
     return () => { ro && ro.disconnect(); window.removeEventListener("resize", measure); };
   }, [ref]);
 }
 
-const RowStyle = {
-  display: "grid",
-  gridTemplateColumns: "var(--label-col) 1fr var(--num-col)",
-  alignItems: "center",
-  gap: 12,
-  marginBottom: 18
-};
-const LabelStyle = { fontSize: 16, fontWeight: 600, whiteSpace: "nowrap", paddingRight: 8 };
-const NumStyle   = { fontSize: 13, color: "#666", whiteSpace: "nowrap", textAlign: "right", paddingLeft: 4, fontVariantNumeric: "tabular-nums" };
-const TrackStyle = { height: 28, background: "#eef1f5", borderRadius: 999, overflow: "hidden" };
-const fillStyle  = (pct) => ({ height: "100%", width: `${pct*100}%`, borderRadius: 999, background: "linear-gradient(90deg,#2b76ff,#6aa7ff)", transition: "width .25s" });
+const RowStyle   = { display:"grid", gridTemplateColumns:"var(--label-col) 1fr var(--num-col)", alignItems:"center", gap:12, marginBottom:18 };
+const LabelStyle = { fontSize:16, fontWeight:600, whiteSpace:"nowrap", paddingRight:8 };
+const NumStyle   = { fontSize:13, color:"#666", whiteSpace:"nowrap", textAlign:"right", paddingLeft:4, fontVariantNumeric:"tabular-nums" };
+const TrackStyle = { height:28, background:"#eef1f5", borderRadius:999, overflow:"hidden" };
+const fillStyle  = pct => ({ height:"100%", width:`${pct*100}%`, borderRadius:999, background:"linear-gradient(90deg,#2b76ff,#6aa7ff)", transition:"width .25s" });
 
 const ProgressBarRow = ({ label, value, max, right }) => {
   const safeMax = Math.max(1, Number(max) || 0);
-  const pct = Math.max(0, Math.min(1, (Number(value) || 0) / safeMax));
+  const pct = Math.max(0, Math.min(1, (Number(value)||0)/safeMax));
   return (
     <div style={RowStyle}>
       <span data-metric-label style={LabelStyle}>{label}</span>
@@ -314,8 +300,8 @@ const foodOptions = [
 }, 0)
 
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
-const caloriesBudget = calorieThreshold + totalBurn;
-const waterCount     = water + (checklist?.concentrace ? 1 : 0);
+const caloriesBudget   = calorieThreshold + totalBurn;
+const waterCount       = water + (checklist?.concentrace ? 1 : 0);
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -1482,127 +1468,24 @@ marginBottom:    "20px"
   </div>
 )}
 
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Calories Eaten:</strong>{" "}
-  <span style={{ color: calories >= calorieThreshold ? "green" : "red" }}>
-    {calories}
-  </span>
-</div>
-      <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-        <strong>Calories Burned:</strong>{" "}
-{
-  Object.entries(workoutLog).reduce((sum, [type, value]) => {
-  if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-    return sum + value.cal;
-  }
-  if (type === "Swim") return sum + Math.round(value * 7);
-  if (type === "Plank") return sum + Math.round(value * 0.04);
-  if (workouts[type]) return sum + Math.round(value * workouts[type]);
-  return sum;
-}, 0)
-}
-      </div>
+      {/* === Aligned metrics (bars start/end exactly the same) === */}
 {(() => {
-  // Compute pass/fail per mode
-  const isMet =
-    mode === "Maintenance"
-      ? Math.abs(estimatedDeficit) <= 100
-      : mode === "Bulk"
-        ? estimatedDeficit <= -100
-        : estimatedDeficit >= deficitGoal;
-
-  // Determine the label after the slash
-  const thresholdLabel =
-    mode === "Maintenance"
-      ? "±100"
-      : mode === "Bulk"
-        ? "≥100"
-        : deficitGoal;
-
+  const _ref = useRef(null);
+  useAlignedColumns(_ref);
   return (
-    <div style={{ fontSize: "16px", marginBottom: "8px" }}>
-      <strong>Deficit:</strong>{" "}
-      <span style={{ color: isMet ? "green" : "red" }}>
-        {estimatedDeficit}
-      </span>{" "}
-      / {thresholdLabel}
-      {isMet && (
-        <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-      )}
+    <div ref={_ref} style={{ "--label-col": "0px", "--num-col": "0px" }}>
+      <ProgressBarRow label="Calories" value={calories} max={caloriesBudget} right={`${Math.round(calories)} / ${Math.round(caloriesBudget)}`} />
+      <ProgressBarRow label="Protein"  value={protein}  max={proteinGoal}     right={`${Math.round(protein)} / ${proteinGoal}`} />
+      <ProgressBarRow label="Fat"      value={fat}      max={fatGoal}         right={`${Math.round(fat)} / ${fatGoal}`} />
+      <ProgressBarRow label="Carbs"    value={carbs}    max={carbGoal}        right={`${Math.round(carbs)} / ${carbGoal}`} />
+      <ProgressBarRow label="Fiber"    value={fiber}    max={fiberGoal}       right={`${Math.round(fiber)} / ${fiberGoal}`} />
+      <ProgressBarRow label="Water"    value={waterCount} max={waterGoal}     right={`${waterCount} / ${waterGoal}`} />
+      <ProgressBarRow label="Steps"    value={steps}    max={stepGoal}        right={`${steps} / ${stepGoal}`} />
     </div>
   );
 })()}
-
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Protein:</strong>{" "}
-  <span style={{ color: Math.round(protein * 10) / 10 >= proteinGoal ? "green" : "red" }}>
-    {Math.round(protein * 10) / 10}
-  </span>
-  <span> / {proteinGoal}</span>
-  {Math.round(protein * 10) / 10 >= proteinGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Fat:</strong>{" "}
-  <span style={{ color: Math.round(fat * 10) / 10 >= fatGoal ? "green" : "red" }}>
-    {Math.round(fat * 10) / 10}
-  </span>
-  <span> / {fatGoal}g</span>
-  {Math.round(fat * 10) / 10 >= fatGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Carbs:</strong>{" "}
-  <span style={{ color: Math.round(carbs * 10) / 10 >= carbGoal ? "green" : "red" }}>
-    {Math.round(carbs * 10) / 10}
-  </span>
-  <span> / {carbGoal}g</span>
-  {Math.round(carbs * 10) / 10 >= carbGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Fiber:</strong>{" "}
-  <span style={{ color: Math.round(fiber * 10) / 10 >= fiberGoal ? "green" : "red" }}>
-    {Math.round(fiber * 10) / 10}
-  </span>
-  <span> / {fiberGoal}g</span>
-  {Math.round(fiber * 10) / 10 >= fiberGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px", marginBottom: "8px" }}>
-  <strong>Water:</strong>{" "}
-  <span style={{ color: (water + (checklist.concentrace ? 1 : 0)) >= waterGoal ? "green" : "red" }}>
-    {water + (checklist.concentrace ? 1 : 0)}
-  </span>
-  <span> / {waterGoal} bottles</span>
-  {(water + (checklist.concentrace ? 1 : 0)) >= waterGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-<div style={{ fontSize: "16px" }}>
-  <strong>Steps:</strong>{" "}
-  <span style={{ color: steps >= stepGoal ? "green" : "red" }}>
-    {steps}
-  </span>
-  <span> / {stepGoal}</span>
-  {steps >= stepGoal && (
-    <span style={{ fontSize: "12px", marginLeft: "4px" }}>✅</span>
-  )}
-</div>
-
-    </div>
-
-    {/* Checklist Box */}
+{/* === End aligned metrics === */}
+{/* Checklist Box */}
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
