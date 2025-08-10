@@ -562,7 +562,9 @@ const inputStyleThird = {
   border: "1px solid #ccc"
 };
 
-  // ---------- Progress bar component ----------
+  
+const MID_W = 140; // unified middle input width for alignment
+// ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
   
@@ -633,7 +635,7 @@ if (screen === "food") {
         }}>
           🏠 Home
         </button>
-      {/* Toast 
+      {/* Toast }
       {toastMsg && (
         <div style={{ position:"fixed", bottom:"72px", left:0, right:0, display:"flex", justifyContent:"center", zIndex:1000 }}>
           <div style={{ background:"#333", color:"#fff", padding:"8px 12px", borderRadius:"999px", fontSize:"14px", boxShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>
@@ -660,10 +662,10 @@ if (screen === "food") {
           🍽️ Food Log
         </h1>
 
-        {/* ← the rest of your Food UI goes here unchanged 
+        {/* ← the rest of your Food UI goes here unchanged }
 
       <div style={{ marginBottom: "20px" }}>
-{/* 👇 search filter input 
+{/* 👇 search filter input }
 <div
   style={{
     display:       "flex",
@@ -711,7 +713,7 @@ if (screen === "food") {
   </div>
 </div>
 
-        {/* Live search results (instant pick) 
+        {/* Live search results (instant pick) }
         {foodSearch && foodSearch.length >= 2 && (
           <div style={{ background:"#fff", border:"1px solid #ddd", borderRadius:"8px", margin:"8px 0", overflow:"hidden" }}>
             {foodOptions.filter(f => f.name.toLowerCase().includes(foodSearch.toLowerCase())).slice(0,8).map((f, idx) => (
@@ -757,7 +759,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
      <div style={{ marginBottom: "24px" }}>
-    {/* six inputs in a 3×2 grid, each 80% wide 
+    {/* six inputs in a 3×2 grid, each 80% wide }
   <div
     style={{
       display: "grid",
@@ -947,7 +949,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 </div>
       
 </div>
-{/* — Fixed Bottom Tab Bar — 
+{/* — Fixed Bottom Tab Bar — }
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1010,7 +1012,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         }}>
           🏋️ Workouts
         </h1>
-      {/* ====== STANDARD STRENGTH ROWS (unchanged behavior) ====== 
+      {/* ====== STANDARD STRENGTH ROWS (unchanged behavior) ====== }
       {[
         ["Core Pull", "Reps"],
         ["Biceps", "Reps"],
@@ -1019,13 +1021,13 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         ["Plank", "Seconds"]
       ].map(([type, ph], i) => (
         <div key={`std-${i}`} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-          <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+          <label style={{ width: MID_W, fontSize: "16px" }}>{type}</label>
           <input
             type="text" inputMode="decimal"
             placeholder={ph}
             value={customWorkout[type] || ""}
             onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-            style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ width: MID_W, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <button
             onClick={() => {
@@ -1042,16 +1044,16 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </div>
       ))}
 
-      {/* ====== ORDER AFTER PLANK: BIKE, SWIM, RUN, TREADMILL, STEPS ====== 
+      {/* ====== ORDER AFTER PLANK: BIKE, SWIM, RUN, TREADMILL, STEPS ====== }
 
-      {/* Bike (km) 
+      {/* Bike (km) }
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Bike</label>
+        <label style={{ width: MID_W, fontSize: "16px" }}>Bike</label>
         <input
           type="text" inputMode="decimal" placeholder="Kilometers"
           value={customWorkout.Bike || ""}
           onChange={(e) => setCustomWorkout({ ...customWorkout, Bike: e.target.value })}
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: MID_W, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -1068,14 +1070,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Swim (laps) 
+      {/* Swim (laps) }
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+        <label style={{ width: MID_W, fontSize: "16px" }}>Swim</label>
         <input
           type="number" inputMode="numeric" min="0" placeholder="Laps"
           value={customWorkout.Swim || ""}
           onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: MID_W, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -1091,14 +1093,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Run (km) 
+      {/* Run (km) }
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Run</label>
+        <label style={{ width: MID_W, fontSize: "16px" }}>Run</label>
         <input
           type="text" inputMode="decimal" placeholder="Kilometers"
           value={customWorkout.Run || ""}
           onChange={(e) => setCustomWorkout({ ...customWorkout, Run: e.target.value })}
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: MID_W, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -1124,52 +1126,49 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Treadmill (Cal + KM) — equal inputs, no overlap */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-
-  {/* middle: fixed 208px = 100 + 8 gap + 100, so Add lines up */}
-  <div style={{ width: "208px", display: "flex", gap: "8px" }}>
-    <input
-      type="number" inputMode="numeric" min="0" placeholder="Cal"
-      value={customWorkout.treadCal || ""}
-      onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-      style={{ width: "100px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
-    />
-    <input
-      type="text" inputMode="decimal" placeholder="KM"
-      value={customWorkout.treadKm || ""}
-      onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-      style={{ width: "100px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
-    />
-  </div>
-
-  <button
-    onClick={() => {
-      const cal = parseInt(customWorkout.treadCal);
-      const km  = parseFloat(customWorkout.treadKm);
-      if (!isNaN(cal) && !isNaN(km)) {
-        const estimatedSteps = Math.round(km * 1250);
-        setSteps(prev => prev + estimatedSteps);
-        setWorkoutLog(prev => ({
-          ...prev,
-          Treadmill: {
-            cal:   (prev.Treadmill?.cal   || 0) + cal,
-            steps: (prev.Treadmill?.steps || 0) + estimatedSteps
-          }
-        }));
-        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
-      }
-    }}
-    style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
-  >
-    Add
-  </button>
-</div>
-
-{/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input 
+      {/* Treadmill (Cal + KM) — fixed 100px middle column, no overlap }
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <div style={{ width: "100px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <label style={{ width: MID_W, fontSize: "16px" }}>Treadmill</label>
+        <div style={{ width: MID_W, display: "flex", gap: "4px" }}>
+          <input
+            type="number" inputMode="numeric" min="0" placeholder="Cal"
+            value={customWorkout.treadCal || ""}
+            onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+            style={{ flex: 1, minWidth: 0, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <input
+            type="text" inputMode="decimal" placeholder="KM"
+            value={customWorkout.treadKm || ""}
+            onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+            style={{ flex: 1, minWidth: 0, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+        </div>
+        <button
+          onClick={() => {
+            const cal = parseInt(customWorkout.treadCal);
+            const km  = parseFloat(customWorkout.treadKm);
+            if (!isNaN(cal) && !isNaN(km)) {
+              const estimatedSteps = Math.round(km * 1250);
+              setSteps(prev => prev + estimatedSteps);
+              setWorkoutLog(prev => ({
+                ...prev,
+                Treadmill: {
+                  cal:   (prev.Treadmill?.cal   || 0) + cal,
+                  steps: (prev.Treadmill?.steps || 0) + estimatedSteps
+                }
+              }));
+              setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+            }
+          }}
+          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+        >
+          Add
+        </button>
+      </div>
+
+      {/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input }
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <div style={{ width: MID_W, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ fontSize: "16px" }}>Steps</span>
           <button
             onClick={cycleStepIntensity}
@@ -1183,7 +1182,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           type="number" inputMode="numeric" min="0" placeholder="Steps"
           value={customWorkout.Steps || ""}
           onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
-          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: MID_W, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
@@ -1211,7 +1210,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           Add
         </button>
       </div>
-Logged Workouts
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
             Logged Workouts
@@ -1285,7 +1283,7 @@ Logged Workouts
         </>
 
     </div>
- {/* — Fixed Bottom Tab Bar — 
+ {/* — Fixed Bottom Tab Bar — }
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1366,7 +1364,7 @@ Logged Workouts
           ⚖️ Weight Tracker
         </h1>
 
-        {/* Latest weight 
+        {/* Latest weight }
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
             {latestWeight} lb
@@ -1376,7 +1374,7 @@ Logged Workouts
           </div>
         </div>
 
-      {/* Input 
+      {/* Input }
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
         <input type="text" inputMode="decimal"
           placeholder="Enter weight"
@@ -1399,7 +1397,7 @@ Logged Workouts
         </button>
       </div>
 
-      {/* Chart 
+      {/* Chart }
       {weightLog.length > 0 && (
         <div style={{
           backgroundColor: "#fff",
@@ -1412,7 +1410,7 @@ Logged Workouts
         </div>
       )}
 
-      {/* History 
+      {/* History }
       <ul style={{ paddingLeft: "16px" }}>
         {weightLog.map((w, i) => (
           <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
@@ -1422,7 +1420,7 @@ Logged Workouts
         ))}
     </ul>
   </div>
- {/* — Fixed Bottom Tab Bar — 
+ {/* — Fixed Bottom Tab Bar — }
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1534,7 +1532,7 @@ Logged Workouts
           </div>
         </div>
 
-        {/* — Fixed Bottom Tab Bar — 
+        {/* — Fixed Bottom Tab Bar — }
         <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
                       borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
           <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
@@ -1555,7 +1553,7 @@ Logged Workouts
         margin: "auto"
       }}>
 
-    {/* Overview Box 
+    {/* Overview Box }
 <div style={{
 backgroundColor: "#f9f9f9",
 borderRadius:    "12px",
@@ -1577,7 +1575,7 @@ marginBottom:    "20px"
     📊 Today
   </h2>
 
-  {/* Inline Mode button 
+  {/* Inline Mode button }
   <button
     onClick={() => setShowModes(!showModes)}
     style={{
@@ -1593,7 +1591,7 @@ marginBottom:    "20px"
     Mode: {mode}
   </button>
 
-  {/* Reset button 
+  {/* Reset button }
   <button
     onClick={resetDay}
     style={{
@@ -1644,7 +1642,7 @@ marginBottom:    "20px"
 )}
 
       
-      {/* === Progress bars (temp shown above numbers for verification) === 
+      {/* === Progress bars (temp shown above numbers for verification) === }
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
@@ -1657,7 +1655,7 @@ marginBottom:    "20px"
 
     </div>
 
-    {/* Checklist Box 
+    {/* Checklist Box }
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
@@ -1721,7 +1719,7 @@ marginBottom:    "20px"
     
 
   </div>
- {/* — Fixed Bottom Tab Bar — 
+ {/* — Fixed Bottom Tab Bar — }
       <div style={{
         position:     "fixed",
         bottom:       0,
