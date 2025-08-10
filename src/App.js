@@ -1510,16 +1510,7 @@ setWorkoutLog(prev => ({
                   else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); }
                   setScreen("home");
                 }}
-    localStorage.setItem("cutProtein", String(cutProtein));
-    localStorage.setItem("cutFat", String(cutFat));
-    localStorage.setItem("cutCarb", String(cutCarb));
-    localStorage.setItem("maintProtein", String(maintProtein));
-    localStorage.setItem("maintFat", String(maintFat));
-    localStorage.setItem("maintCarb", String(maintCarb));
-    localStorage.setItem("bulkProtein", String(bulkProtein));
-    localStorage.setItem("bulkFat", String(bulkFat));
-    localStorage.setItem("bulkCarb", String(bulkCarb)); setScreen("home"); }}
-                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
+                style={{ flex:1, padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
               >
                 Save
               </button>
