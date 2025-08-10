@@ -51,6 +51,23 @@ const [carbGoal, setCarbGoal] = useState(
 const fiberGoal = 28;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
+  // ▶ Mode offsets (editable in Mode Settings)
+  const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
+  const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 100);
+  // Per-mode macro presets
+  const [cutProtein, setCutProtein] = useState(() => parseFloat(localStorage.getItem('cutProtein')) || 140);
+  const [cutFat, setCutFat] = useState(() => parseFloat(localStorage.getItem('cutFat')) || 50);
+  const [cutCarb, setCutCarb] = useState(() => parseFloat(localStorage.getItem('cutCarb')) || 120);
+
+  const [maintProtein, setMaintProtein] = useState(() => parseFloat(localStorage.getItem('maintProtein')) || 140);
+  const [maintFat, setMaintFat] = useState(() => parseFloat(localStorage.getItem('maintFat')) || 55);
+  const [maintCarb, setMaintCarb] = useState(() => parseFloat(localStorage.getItem('maintCarb')) || 160);
+
+  const [bulkProtein, setBulkProtein] = useState(() => parseFloat(localStorage.getItem('bulkProtein')) || 150);
+  const [bulkFat, setBulkFat] = useState(() => parseFloat(localStorage.getItem('bulkFat')) || 60);
+  const [bulkCarb, setBulkCarb] = useState(() => parseFloat(localStorage.getItem('bulkCarb')) || 200);
+
+
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
   sunlight: false,
@@ -268,11 +285,25 @@ const foodOptions = [
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 // dynamic goals used by progress bars
-const modeCalOffset = mode === "Cut" ? -500 : (mode === "Bulk" ? 100 : 0);
+const modeCalOffset = mode === "Cut" ? -cutDeficit : (mode === "Bulk" ? bulkSurplus : 0);
 const caloriesBudget = Math.max(0, calorieThreshold + totalBurn + modeCalOffset); // dynamic goal that grows with steps/workouts and shifts by mode (Cut -500, Bulk +100) // grows as you add steps/workouts
 const waterCount = water + (checklist.concentrace ? 1 : 0); // Concentrace counts as 1 bottle
 
 useEffect(() => {
+    if (mode === "Cut") {
+      setProteinGoal(cutProtein);
+      setFatGoal(cutFat);
+      setCarbGoal(cutCarb);
+    } else if (mode === "Maintenance") {
+      setProteinGoal(maintProtein);
+      setFatGoal(maintFat);
+      setCarbGoal(maintCarb);
+    } else {
+      setProteinGoal(bulkProtein);
+      setFatGoal(bulkFat);
+      setCarbGoal(bulkCarb);
+    }
+
   localStorage.setItem("calories", calories);
   localStorage.setItem("protein", protein);
   localStorage.setItem("fat", fat);
@@ -289,11 +320,36 @@ useEffect(() => {
     localStorage.setItem("fatGoal", fatGoal);
     localStorage.setItem("carbGoal", carbGoal);
     localStorage.setItem("mode", mode);
+    localStorage.setItem("cutDeficit", String(cutDeficit));
+    localStorage.setItem("bulkSurplus", String(bulkSurplus));
+    localStorage.setItem("cutProtein", String(cutProtein));
+    localStorage.setItem("cutFat", String(cutFat));
+    localStorage.setItem("cutCarb", String(cutCarb));
+    localStorage.setItem("maintProtein", String(maintProtein));
+    localStorage.setItem("maintFat", String(maintFat));
+    localStorage.setItem("maintCarb", String(maintCarb));
+    localStorage.setItem("bulkProtein", String(bulkProtein));
+    localStorage.setItem("bulkFat", String(bulkFat));
+    localStorage.setItem("bulkCarb", String(bulkCarb));
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
   // 🛠️ Whenever mode changes, override the home-page goals
   useEffect(() => {
+    if (mode === "Cut") {
+      setProteinGoal(cutProtein);
+      setFatGoal(cutFat);
+      setCarbGoal(cutCarb);
+    } else if (mode === "Maintenance") {
+      setProteinGoal(maintProtein);
+      setFatGoal(maintFat);
+      setCarbGoal(maintCarb);
+    } else {
+      setProteinGoal(bulkProtein);
+      setFatGoal(bulkFat);
+      setCarbGoal(bulkCarb);
+    }
+
     if (mode === "Cut") {
       setProteinGoal(140);
       setFatGoal(50);
@@ -1393,6 +1449,96 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
+
+
+  if (screen === "modeSettings") {
+    return (
+      <>
+        <div style={{position:"fixed", top:0, left:0, right:0, height:"56px", backgroundColor:"#fff",
+                     borderBottom:"1px solid #ddd", boxShadow:"0 1px 4px rgba(0,0,0,0.1)",
+                     display:"flex", alignItems:"center", justifyContent:"center", zIndex:100}}>
+          <button onClick={() => setScreen("home")} style={{ border:"none", background:"transparent", fontSize:"18px", cursor:"pointer"}}>
+            🏠 Home
+          </button>
+        </div>
+
+        <div style={{ padding:"24px", paddingTop:"58px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto"}}>
+          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"16px"}}>⚙️ Mode Settings</h1>
+
+          <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
+            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+              Cut deficit (calories):
+              <input
+                type="number"
+                min="0"
+                value={cutDeficit}
+                onChange={(e) => setCutDeficit(Math.max(0, parseInt(e.target.value || "0")))}
+                style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+              />
+            </label>
+
+            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+              Bulk surplus (calories):
+              <input
+                type="number"
+                min="0"
+                value={bulkSurplus}
+                onChange={(e) => setBulkSurplus(Math.max(0, parseInt(e.target.value || "0")))}
+                style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+              />
+            </label>
+
+            <div style={{ display:"flex", gap:"8px" }}>
+              <button
+                onClick={() => { localStorage.setItem("cutDeficit", String(cutDeficit)); localStorage.setItem("bulkSurplus", String(bulkSurplus));
+    localStorage.setItem("cutProtein", String(cutProtein));
+    localStorage.setItem("cutFat", String(cutFat));
+    localStorage.setItem("cutCarb", String(cutCarb));
+    localStorage.setItem("maintProtein", String(maintProtein));
+    localStorage.setItem("maintFat", String(maintFat));
+    localStorage.setItem("maintCarb", String(maintCarb));
+    localStorage.setItem("bulkProtein", String(bulkProtein));
+    localStorage.setItem("bulkFat", String(bulkFat));
+    localStorage.setItem("bulkCarb", String(bulkCarb)); setScreen("home"); }}
+                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => { setCutDeficit(500); setBulkSurplus(100); }}
+                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
+              >
+                Reset to defaults
+              </button>
+            </div>
+          </div>
+        
+          <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
+          <label>Protein (g): <input type="number" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)} /></label>
+          <label>Fat (g): <input type="number" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)} /></label>
+          <label>Carbs (g): <input type="number" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)} /></label>
+
+          <h2>🧰 Maintenance Macros</h2>
+          <label>Protein (g): <input type="number" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)} /></label>
+          <label>Fat (g): <input type="number" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)} /></label>
+          <label>Carbs (g): <input type="number" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)} /></label>
+
+          <h2>🍚 Bulk Macros</h2>
+          <label>Protein (g): <input type="number" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)} /></label>
+          <label>Fat (g): <input type="number" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)} /></label>
+          <label>Carbs (g): <input type="number" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)} /></label>
+        </div>
+
+        {/* — Fixed Bottom Tab Bar — */}
+        <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
+                      borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
+          <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
     );
