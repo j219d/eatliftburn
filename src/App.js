@@ -117,6 +117,20 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   // ▶ unified threshold: BMR or fallback 1600
   const calorieThreshold = bmr || 1600;
 
+  // ▶ Personalized calories-per-step using latest weight
+  const weightKgForSteps = latestWeight ? latestWeight / 2.20462 : 80; // fallback 80 kg if no entries yet
+  // kcal/min = MET * 3.5 * kg / 200; kcal/step = (kcal/min) / cadence
+  const stepProfiles = {
+    slow:   { label: "Steps (Slow)",   met: 2.3, cadence: 80 },   // easy around-the-house
+    normal: { label: "Steps (Normal)", met: 3.3, cadence: 100 },  // regular walk
+    brisk:  { label: "Steps (Brisk)",  met: 4.3, cadence: 120 },  // purposeful brisk
+  };
+  const kcalPerStep = Object.fromEntries(Object.entries(stepProfiles).map(([k, p]) => {
+    const kcalPerMin = p.met * 3.5 * weightKgForSteps / 200;
+    return [k, kcalPerMin / p.cadence];
+  }));
+
+
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
@@ -452,6 +466,13 @@ if (type === "Run") {
   if (type === "Treadmill" && reps?.steps) {
   setSteps(prev => Math.max(0, prev - reps.steps));
 }
+
+
+  // Subtract steps for intensity-specific step entries
+  if (type === "Steps (Slow)" || type === "Steps (Normal)" || type === "Steps (Brisk)") {
+    const reps = typeof workoutLog[type] === "object" ? (workoutLog[type].reps || 0) : (workoutLog[type] || 0);
+    setSteps(prev => Math.max(0, prev - reps));
+  }
 
   setWorkoutLog((prev) => {
     const updated = { ...prev };
@@ -1091,35 +1112,50 @@ setWorkoutLog(prev => ({
       ))}
 
       {/* Steps section - separate from workouts */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+      {/* Steps section (with intensity) */}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px", flexWrap: "wrap" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
+        <select
+          value={customWorkout.stepIntensity || "normal"}
+          onChange={(e) => setCustomWorkout({ ...customWorkout, stepIntensity: e.target.value })}
+          style={{ padding: "8px", borderRadius: "8px", border: "1px solid #ccc", fontSize: "14px" }}
+        >
+          <option value="slow">Slow</option>
+          <option value="normal">Normal</option>
+          <option value="brisk">Brisk</option>
+        </select>
         <input
           type="number" inputMode="numeric" min="0"
           placeholder="Steps"
           value={customWorkout["Steps"] || ""}
-          onChange={(e) =>
-            setCustomWorkout({ ...customWorkout, Steps: e.target.value })
-          }
+          onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
           style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={() => {
-            const steps = parseInt(customWorkout["Steps"]);
-            if (!isNaN(steps)) {
-              const stepCalories = Math.round(steps * 0.035); // updated: 0.035 kcal/step
+            const stepsVal = parseInt(customWorkout["Steps"]);
+            const intensity = customWorkout.stepIntensity || "normal";
+            if (!isNaN(stepsVal)) {
+              const kps = kcalPerStep[intensity];
+              const cal = Math.round(stepsVal * kps);
+              const typeKey = intensity === "slow" ? "Steps (Slow)" : (intensity === "brisk" ? "Steps (Brisk)" : "Steps (Normal)");
+
+              // Update total steps
               setSteps(prev => {
-  const newSteps = prev + steps;
-  localStorage.setItem("steps", newSteps.toString());
-  return newSteps;
-});
- // steps tracker
+                const newSteps = prev + stepsVal;
+                localStorage.setItem("steps", newSteps.toString());
+                return newSteps;
+              });
+
+              // Log the specific steps entry with calories
               setWorkoutLog(prev => ({
-  ...prev,
-  Steps: {
-    reps: (prev["Steps"]?.reps || 0) + steps,
-    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.035)
-  }
-}));
+                ...prev,
+                [typeKey]: {
+                  reps: (prev[typeKey]?.reps || 0) + stepsVal,
+                  cal:  (prev[typeKey]?.cal  || 0) + cal
+                }
+              }));
+
               setCustomWorkout({ ...customWorkout, Steps: "" });
             }
           }}
