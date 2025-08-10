@@ -1413,7 +1413,7 @@ setWorkoutLog(prev => ({
 
       {/* Input */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
-        <input
+        <input type="number" min="0" inputMode="numeric"
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
