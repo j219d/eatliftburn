@@ -798,7 +798,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Fat"
-      type="number" inputMode="numeric" min="0"
+      type="text" inputMode="decimal"
       value={customFood.fat}
       onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
       style={{
@@ -810,7 +810,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Carbs"
-      type="number" inputMode="numeric" min="0"
+      type="text" inputMode="decimal"
       value={customFood.carbs}
       onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
       style={{
@@ -822,7 +822,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Fiber"
-      type="number" inputMode="numeric" min="0"
+      type="text" inputMode="decimal"
       value={customFood.fiber}
       onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
       style={{
@@ -1010,7 +1010,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
           <input
-  type="number" inputMode="numeric" min="0"
+  type="text" inputMode="decimal"
   step={type === "Run" ? "0.01" : "1"}
   placeholder={(
   type === "Run" || type === "Bike"
@@ -1156,9 +1156,9 @@ setWorkoutLog(prev => ({
   />
   
   <input
-    type="number" inputMode="numeric" min="0"
+    type="text" inputMode="decimal"
     placeholder="KM"
-    step="0.01"
+   
     value={customWorkout.treadKm || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
     style={{
@@ -1415,7 +1415,7 @@ setWorkoutLog(prev => ({
 
       {/* Input */}
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
-        <input type="number" min="0" inputMode="numeric"
+        <input type="text" inputMode="decimal"
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
@@ -1551,23 +1551,23 @@ setWorkoutLog(prev => ({
         
           <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🧰 Maintenance Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🍚 Bulk Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
         </div>
 
