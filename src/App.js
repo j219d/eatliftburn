@@ -1180,23 +1180,26 @@ setWorkoutLog(prev => ({
       </div>
 
 
-      {/* Treadmill (explicit row) */}
+      
+      {/* Treadmill (explicit row, aligned) */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-        <input
-          type="number" inputMode="numeric" min="0"
-          placeholder="Cal"
-          value={customWorkout.treadCal || ""}
-          onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-          style={{ width: "60px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <input
-          type="text" inputMode="decimal"
-          placeholder="KM"
-          value={customWorkout.treadKm || ""}
-          onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-          style={{ width: "56px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
+        <div style={{ width: "100px", display: "flex", gap: "8px" }}>
+          <input
+            type="number" inputMode="numeric" min="0"
+            placeholder="Cal"
+            value={customWorkout.treadCal || ""}
+            onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
+            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", minWidth: 0 }}
+          />
+          <input
+            type="text" inputMode="decimal"
+            placeholder="KM"
+            value={customWorkout.treadKm || ""}
+            onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
+            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", minWidth: 0 }}
+          />
+        </div>
         <button
           onClick={() => {
             const cal = parseInt(customWorkout.treadCal);
@@ -1211,14 +1214,13 @@ setWorkoutLog(prev => ({
               setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
             }
           }}
-          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
+          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px", marginLeft: "auto" }}
         >
           Add
         </button>
       </div>
-
-
-      {/* Steps (explicit row with single toggle) */}
+    
+      {/* Steps (explicit row with single toggle, aligned) */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
         <button
@@ -1261,14 +1263,12 @@ setWorkoutLog(prev => ({
               setCustomWorkout({ ...customWorkout, Steps: "" });
             }
           }}
-          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
+          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px", marginLeft: "auto" }}
         >
           Add
         </button>
       </div>
-
-
-      {/* Logged Workouts */}
+    {/* Logged Workouts */}
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
             Logged Workouts
