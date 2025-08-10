@@ -2,7 +2,7 @@
 
 
 
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -15,45 +15,6 @@ import {
 } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
-// ===== Aligned Bars Helpers (same start & end for all) =====
-function useAlignedColumns(ref) {
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const measure = () => {
-      const labels = el.querySelectorAll("[data-metric-label]");
-      const nums   = el.querySelectorAll("[data-metric-num]");
-      let maxLabel = 0, maxNum = 0;
-      labels.forEach(n => { maxLabel = Math.max(maxLabel, Math.ceil(n.getBoundingClientRect().width)); });
-      nums.forEach(n   => { maxNum   = Math.max(maxNum,   Math.ceil(n.getBoundingClientRect().width)); });
-      el.style.setProperty("--label-col", `${maxLabel + 12}px`);
-      el.style.setProperty("--num-col",   `${maxNum + 8}px`);
-    };
-    const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    let ro;
-    ready.then(() => { measure(); ro = new ResizeObserver(measure); ro.observe(el); window.addEventListener("resize", measure); });
-    return () => { ro && ro.disconnect(); window.removeEventListener("resize", measure); };
-  }, [ref]);
-}
-
-const RowStyle   = { display:"grid", gridTemplateColumns:"var(--label-col) 1fr var(--num-col)", alignItems:"center", gap:12, marginBottom:18 };
-const LabelStyle = { fontSize:16, fontWeight:600, whiteSpace:"nowrap", paddingRight:8 };
-const NumStyle   = { fontSize:13, color:"#666", whiteSpace:"nowrap", textAlign:"right", paddingLeft:4, fontVariantNumeric:"tabular-nums" };
-const TrackStyle = { height:28, background:"#eef1f5", borderRadius:999, overflow:"hidden" };
-const fillStyle  = pct => ({ height:"100%", width:`${pct*100}%`, borderRadius:999, background:"linear-gradient(90deg,#2b76ff,#6aa7ff)", transition:"width .25s" });
-
-const ProgressBarRow = ({ label, value, max, right }) => {
-  const safeMax = Math.max(1, Number(max) || 0);
-  const pct = Math.max(0, Math.min(1, (Number(value)||0)/safeMax));
-  return (
-    <div style={RowStyle}>
-      <span data-metric-label style={LabelStyle}>{label}</span>
-      <div style={TrackStyle}><div style={fillStyle(pct)} /></div>
-      <span data-metric-num style={NumStyle}>{right}</span>
-    </div>
-  );
-};
-// ===== End Aligned Bars Helpers =====
 
 
 // ▶ personal constants for BMR calculation
@@ -87,7 +48,7 @@ const [fatGoal, setFatGoal] = useState(
 const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
-const fiberGoal = 25;
+const fiberGoal = 28;
 const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [stepGoal] = useState(10000);
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
@@ -167,6 +128,11 @@ const foodOptions = [
   { name: "Blueberries (1 cup)", cal: 84, prot: 1.1, fat: 0.5, carbs: 21.4, fiber: 3.6 },
   { name: "Brazil nut", cal: 33, prot: 0.75, fat: 3.4, carbs: 0.6, fiber: 0.2 },
   { name: "Bread (sourdough rye slice 56g)", cal: 145, prot: 4.5, fat: 1.0, carbs: 27, fiber: 3.3 },
+  { name: "Bread (Lechamim bun 75g)", cal: 225, prot: 7, fat: 4.5, carbs: 40, fiber: 1.5 },
+  { name: "Broccoli (50g)",  cal: 18, prot: 1.2, fat: 0.2, carbs: 3.5, fiber: 1.7 },
+  { name: "Broccoli (100g)", cal: 35, prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 },
+  { name: "Broccoli (150g)", cal: 53, prot: 3.6, fat: 0.6, carbs: 10.5, fiber: 5.0 },
+  { name: "Broccoli (200g)", cal: 70, prot: 4.8, fat: 0.8, carbs: 14.0, fiber: 6.6 },
   { name: "Butter (1 tsp)", cal: 35, prot: 0, fat: 4, carbs: 0, fiber: 0 },
   { name: "Butter (½ tbsp)", cal: 51, prot: 0.05, fat: 5.8, carbs: 0, fiber: 0 },
   { name: "Butter (1 tbsp)", cal: 102, prot: 0.1, fat: 11.5, carbs: 0, fiber: 0 },
@@ -249,7 +215,7 @@ const foodOptions = [
   { name: "Protein bar (maxx)", cal: 217, prot: 21, fat: 6.8, carbs: 20, fiber: 3.9 },
   { name: "Protein bar (quest chocolate peanut butter)", cal: 190, prot: 20, fat: 9, carbs: 22, fiber: 11 },
   { name: "Protein bar (quest cookie dough)", cal: 190, prot: 21, fat: 9, carbs: 21, fiber: 12 },
-  { name: "Protein bar (quest mini cookie dough)", cal: 80, prot: 8, fat: 3.5, carbs: 9, fiber: 3 },
+  { name: "Protein bar (quest mini cookie dough)", cal: 80, prot: 8, fat: 3.5, carbs: 9, fiber: 5 },
   { name: "Protein chips (quest)", cal: 140, prot: 20, fat: 4.5, carbs: 4, fiber: 1 },
   { name: "Protein Ice Cream (PBfit Banana 1 vanilla)", cal: 409, prot: 44, fat: 3, carbs: 56, fiber: 5 },
   { name: "Protein Ice Cream (plain+unflavored)", cal: 257, prot: 36, fat: 2.5, carbs: 21, fiber: 0 },
@@ -300,8 +266,10 @@ const foodOptions = [
 }, 0)
 
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
-const caloriesBudget   = calorieThreshold + totalBurn;
-const waterCount       = water + (checklist?.concentrace ? 1 : 0);
+
+// dynamic goals used by progress bars
+const caloriesBudget = calorieThreshold + totalBurn; // grows as you add steps/workouts
+const waterCount = water + (checklist.concentrace ? 1 : 0); // Concentrace counts as 1 bottle
 
 useEffect(() => {
   localStorage.setItem("calories", calories);
@@ -349,7 +317,6 @@ useEffect(() => {
 
   setCalories(0);
   setProtein(0);
-  (0);
   setFat(0);
   setCarbs(0);
   setFiber(0);
@@ -529,6 +496,35 @@ const inputStyleThird = {
   borderRadius: "8px",
   border: "1px solid #ccc"
 };
+
+  // ---------- Progress bar component ----------
+  const Progress = ({ label, value, goal, suffix = "" }) => {
+    const safeGoal = goal > 0 ? goal : 1;
+    const pct = Math.max(0, Math.min(100, (value / safeGoal) * 100));
+    return (
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
+          <span><strong>{label}</strong></span>
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>
+            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+          </span>
+        </div>
+        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999 }}>
+          <div
+            style={{
+              width: `${pct}%`,
+              height: "100%",
+              borderRadius: 999,
+              background: "linear-gradient(90deg,#2b76ff,#6aa7ff)",
+              transition: "width .25s ease"
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+  // --------------------------------------------
+
 
 if (screen === "food") {
   return (
@@ -1466,26 +1462,22 @@ marginBottom:    "20px"
       </button>
     ))}
   </div>
-)}
 
-      {/* === Aligned metrics (bars start/end exactly the same) === */}
-{(() => {
-  const _ref = useRef(null);
-  useAlignedColumns(_ref);
-  return (
-    <div ref={_ref} style={{ "--label-col": "0px", "--num-col": "0px" }}>
-      <ProgressBarRow label="Calories" value={calories} max={caloriesBudget} right={`${Math.round(calories)} / ${Math.round(caloriesBudget)}`} />
-      <ProgressBarRow label="Protein"  value={protein}  max={proteinGoal}     right={`${Math.round(protein)} / ${proteinGoal}`} />
-      <ProgressBarRow label="Fat"      value={fat}      max={fatGoal}         right={`${Math.round(fat)} / ${fatGoal}`} />
-      <ProgressBarRow label="Carbs"    value={carbs}    max={carbGoal}        right={`${Math.round(carbs)} / ${carbGoal}`} />
-      <ProgressBarRow label="Fiber"    value={fiber}    max={fiberGoal}       right={`${Math.round(fiber)} / ${fiberGoal}`} />
-      <ProgressBarRow label="Water"    value={waterCount} max={waterGoal}     right={`${waterCount} / ${waterGoal}`} />
-      <ProgressBarRow label="Steps"    value={steps}    max={stepGoal}        right={`${steps} / ${stepGoal}`} />
+
+      {/* === Progress bars === */}
+      <Progress label="Calories" value={calories} goal={caloriesBudget} />
+      <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" />
+      <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" />
+      <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" />
+      <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} />
+      <Progress label="Steps"    value={steps}    goal={stepGoal} />
+
+
+
     </div>
-  );
-})()}
-{/* === End aligned metrics === */}
-{/* Checklist Box */}
+
+    {/* Checklist Box */}
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
@@ -1583,3 +1575,4 @@ marginBottom:    "20px"
 }
 
 export default App;
+
