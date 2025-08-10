@@ -625,11 +625,6 @@ if (screen === "food") {
         }}>
           🏠 Home
         </button>
-      </div>
-
-      <div style={{
-        padding:       "24px",
-        paddingTop:    "58px",
       {/* Toast */}
       {toastMsg && (
         <div style={{ position:"fixed", bottom:"72px", left:0, right:0, display:"flex", justifyContent:"center", zIndex:1000 }}>
@@ -638,6 +633,11 @@ if (screen === "food") {
           </div>
         </div>
       )}
+      </div>
+
+      <div style={{
+        padding:       "24px",
+        paddingTop:    "58px",
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -702,6 +702,21 @@ if (screen === "food") {
     </button>
   </div>
 </div>
+
+        {/* Live search results (instant pick) */}
+        {foodSearch && foodSearch.length >= 2 && (
+          <div style={{ background:"#fff", border:"1px solid #ddd", borderRadius:"8px", margin:"8px 0", overflow:"hidden" }}>
+            {foodOptions.filter(f => f.name.toLowerCase().includes(foodSearch.toLowerCase())).slice(0,8).map((f, idx) => (
+              <button key={idx} onClick={() => { addFood({ ...f, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }); setFoodSearch(""); }}
+                style={{ display:"block", width:"100%", textAlign:"left", padding:"10px 12px", border:"none", background:"white", cursor:"pointer" }}>
+                {f.name}
+              </button>
+            ))}
+            {foodOptions.filter(f => f.name.toLowerCase().includes(foodSearch.toLowerCase())).length === 0 && (
+              <div style={{ padding:"10px 12px", color:"#666" }}>No matches</div>
+            )}
+          </div>
+        )}
 
         <select
           defaultValue=""
