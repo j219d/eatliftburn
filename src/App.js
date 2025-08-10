@@ -1127,7 +1127,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       {/* Treadmill (Cal + KM) — fixed 100px middle column, no overlap */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-        <div style={{ width: "100px", display: "flex", gap: "4px" }}>
+        <div style={{ width: "140px", display: "flex", gap: "4px" }}>
           <input
             type="number" inputMode="numeric" min="0" placeholder="Cal"
             value={customWorkout.treadCal || ""}
@@ -1166,7 +1166,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
       {/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <div style={{ width: "100px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ width: "140px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ fontSize: "16px" }}>Steps</span>
           <button
             onClick={cycleStepIntensity}
@@ -1208,7 +1208,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           Add
         </button>
       </div>
-Logged Workouts */}
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
             Logged Workouts
