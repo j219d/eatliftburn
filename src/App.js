@@ -1559,6 +1559,7 @@ setWorkoutLog(prev => ({
               <input type="number" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }} />
             </label>
           </div>
+          </div>
         {/* — Fixed Bottom Tab Bar — */}
         <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
                       borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
