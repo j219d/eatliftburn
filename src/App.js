@@ -1475,7 +1475,9 @@ marginBottom:    "20px"
       <Progress label="Steps"    value={steps}    goal={stepGoal} />
 
 
-{/* Checklist Box */}
+    </div>
+
+    {/* Checklist Box */}
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
