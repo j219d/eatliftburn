@@ -364,22 +364,7 @@ useEffect(() => {
       setCarbGoal(bulkCarb);
     }
 
-    if (mode === "Cut") {
-      setProteinGoal(140);
-      setFatGoal(50);
-      setCarbGoal(120);
-      setDeficitGoal(500);
-    } else if (mode === "Maintenance") {
-      setProteinGoal(140);
-      setFatGoal(55);
-      setCarbGoal(160);
-      setDeficitGoal(0);
-    } else { // Bulk
-      setProteinGoal(150);
-      setFatGoal(60);
-      setCarbGoal(200);
-      setDeficitGoal(-100);
-    }
+// removed hardcoded goal overrides on mode change; goals come from user settings now
   }, [mode]);
 
   const resetDay = () => {
@@ -1508,7 +1493,33 @@ setWorkoutLog(prev => ({
 
             <div style={{ display:"flex", gap:"8px" }}>
               <button
-                onClick={() => { localStorage.setItem("cutDeficit", String(cutDeficit)); localStorage.setItem("bulkSurplus", String(bulkSurplus));
+              onClick={() => { 
+                localStorage.setItem("cutDeficit", String(cutDeficit));
+                localStorage.setItem("bulkSurplus", String(bulkSurplus));
+                localStorage.setItem("cutProtein", String(cutProtein));
+                localStorage.setItem("cutFat", String(cutFat));
+                localStorage.setItem("cutCarb", String(cutCarb));
+                localStorage.setItem("maintProtein", String(maintProtein));
+                localStorage.setItem("maintFat", String(maintFat));
+                localStorage.setItem("maintCarb", String(maintCarb));
+                localStorage.setItem("bulkProtein", String(bulkProtein));
+                localStorage.setItem("bulkFat", String(bulkFat));
+                localStorage.setItem("bulkCarb", String(bulkCarb));
+                if (mode === "Cut") {
+                  setProteinGoal(cutProtein);
+                  setFatGoal(cutFat);
+                  setCarbGoal(cutCarb);
+                } else if (mode === "Maintenance") {
+                  setProteinGoal(maintProtein);
+                  setFatGoal(maintFat);
+                  setCarbGoal(maintCarb);
+                } else {
+                  setProteinGoal(bulkProtein);
+                  setFatGoal(bulkFat);
+                  setCarbGoal(bulkCarb);
+                }
+                setScreen("home");
+              }}
     localStorage.setItem("cutProtein", String(cutProtein));
     localStorage.setItem("cutFat", String(cutFat));
     localStorage.setItem("cutCarb", String(cutCarb));
@@ -1639,6 +1650,20 @@ marginBottom:    "20px"
         {m}
       </button>
     ))}
+      <button
+        onClick={() => { setShowModes(false); setScreen("modeSettings"); }}
+        style={{
+          padding: "4px 8px",
+          border: "none",
+          borderRadius: "6px",
+          backgroundColor: "#eee",
+          color: "#000"
+        }}
+        title="Mode Settings"
+        aria-label="Open mode settings"
+      >
+        ⚙️
+      </button>
   </div>
 )}
 
