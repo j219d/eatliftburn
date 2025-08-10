@@ -118,13 +118,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const calorieThreshold = bmr || 1600;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
-  
-// Steps intensity + per-step kcal factors
-const [stepIntensity, setStepIntensity] = useState("Med");
-const STEP_FACTORS = { Slow: 0.028, Med: 0.039, Fast: 0.051 };
-const cycleStepIntensity = () =>
-  setStepIntensity(prev => (prev === "Med" ? "Fast" : prev === "Fast" ? "Slow" : "Med"));
-const [customWorkout, setCustomWorkout] = useState({});
+  const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
   const [foodSearch,   setFoodSearch]   = useState("");
 
