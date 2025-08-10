@@ -1182,25 +1182,28 @@ setWorkoutLog(prev => ({
 </div>
       {/* Steps (inline with small toggle) */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
-        <div style={{ display: "flex", gap: "6px" }}>
-          {/* small chips: slow/med/fast */}
-          {["slow","med","fast"].map(opt => (
-            <button
-              key={opt}
-              onClick={() => setCustomWorkout({ ...customWorkout, stepIntensity: opt })}
-              style={{
-                padding: "4px 8px",
-                fontSize: "12px",
-                borderRadius: "999px",
-                border: customWorkout.stepIntensity === opt ? "1px solid #0070f3" : "1px solid #ccc",
-                background: customWorkout.stepIntensity === opt ? "#e8f0ff" : "#fff",
-                cursor: "pointer"
-              }}
-            >
-              {opt}
-            </button>
-          ))}
+        <div>
+          {/* single tiny toggle cycling med → fast → slow */}
+          <button
+            onClick={() => {
+              const order = ["med","fast","slow"];
+              const cur = customWorkout.stepIntensity || "med";
+              const next = order[(order.indexOf(cur) + 1) % order.length];
+              setCustomWorkout({ ...customWorkout, stepIntensity: next });
+            }}
+            style={{
+              padding: "4px 8px",
+              fontSize: "12px",
+              borderRadius: "999px",
+              border: "1px solid #ccc",
+              background: "#fff",
+              cursor: "pointer",
+              minWidth: "56px",
+              textTransform: "capitalize"
+            }}
+          >
+            {(customWorkout.stepIntensity || "med")}
+          </button>
         </div>
         <input
           type="number" inputMode="numeric" min="0"
