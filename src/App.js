@@ -500,15 +500,23 @@ const inputStyleThird = {
   // ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false }) => {
+  
+  // ---------- Progress bar component ----------
+  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
     const safeGoal = goal > 0 ? goal : 1;
     const pctRaw = (value / safeGoal) * 100;
     const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
     const isOver = value > safeGoal;
+    const isMet = value >= safeGoal;
 
-    const fillStyle = isOver && dangerWhenOver
-      ? { background: "#ff4d4f" } // red when over and enabled
-      : { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // default blue
+    let fillStyle;
+    if (dangerWhenOver && isOver) {
+      fillStyle = { background: "#ff4d4f" }; // red
+    } else if (successWhenMet && isMet) {
+      fillStyle = { background: "#22c55e" }; // green
+    } else {
+      fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
+    }
 
     return (
       <div style={{ marginBottom: 12 }}>
@@ -1476,12 +1484,12 @@ marginBottom:    "20px"
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" />
-      <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" />
-      <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" />
-      <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" />
-      <Progress label="Water"    value={waterCount} goal={waterGoal} />
-      <Progress label="Steps"    value={steps}    goal={stepGoal} />
+      <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
+      <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
+      <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
+      <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet />
+      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
     </div>
