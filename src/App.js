@@ -1124,11 +1124,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Treadmill (Cal + KM) — fixed 100px middle column, no overlap 
       {/* Treadmill (Cal + KM) — equal inputs, no overlap */}
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-  {/* middle: fixed 208px = 100 + 8 gap + 100 */}
+
+  {/* middle: fixed 208px = 100 + 8 gap + 100, so Add lines up */}
   <div style={{ width: "208px", display: "flex", gap: "8px" }}>
     <input
       type="number" inputMode="numeric" min="0" placeholder="Cal"
@@ -1143,6 +1143,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       style={{ width: "100px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
     />
   </div>
+
   <button
     onClick={() => {
       const cal = parseInt(customWorkout.treadCal);
@@ -1163,6 +1164,448 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
   >
     Add
+  </button>
+</div>
+
+{/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input 
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <div style={{ width: "100px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: "16px" }}>Steps</span>
+          <button
+            onClick={cycleStepIntensity}
+            aria-label="Cycle steps intensity"
+            style={{ minWidth: "44px", padding: "6px 8px", fontSize: "12px", borderRadius: "999px", border: "1px solid #ccc", background: "#f7f7f7" }}
+          >
+            {stepIntensity}
+          </button>
+        </div>
+        <input
+          type="number" inputMode="numeric" min="0" placeholder="Steps"
+          value={customWorkout.Steps || ""}
+          onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
+          style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={() => {
+            const stepsVal = parseInt(customWorkout.Steps);
+            if (!isNaN(stepsVal)) {
+              const perStep = STEP_FACTORS[stepIntensity] ?? 0.039;
+              const cals = Math.round(stepsVal * perStep);
+              setSteps(prev => {
+                const newSteps = prev + stepsVal;
+                localStorage.setItem("steps", String(newSteps));
+                return newSteps;
+              });
+              setWorkoutLog(prev => ({
+                ...prev,
+                Steps: {
+                  reps: (prev.Steps?.reps || 0) + stepsVal,
+                  cal:  (prev.Steps?.cal  || 0) + cals
+                }
+              }));
+              setCustomWorkout({ ...customWorkout, Steps: "" });
+            }
+          }}
+          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+        >
+          Add
+        </button>
+      </div>
+Logged Workouts
+        <>
+          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
+            Logged Workouts
+          </h2>
+          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
+            {Object.entries(workoutLog).map(([type, value], i) => {
+              let display = "";
+
+              // Object-type entries (Run, Steps, Bike, Treadmill…)
+              if (typeof value === "object" && value !== null) {
+                const reps = value.reps ?? 0;
+                const cal = value.cal ?? 0;
+                const steps = value.stepsAdded ?? value.steps ?? 0;
+                if (type === "Treadmill") {
+                  display = `${cal} cal, ${steps} steps`;
+                } else if (type === "Run") {
+                  display = `${reps} km – ${cal} cal, ${steps} steps`;
+                } else if (type === "Steps") {
+                  display = `${reps} steps – ${cal} cal`;
+                } else if (type === "Bike") {
+                  display = `${reps} km – ${cal} cal`;
+                } else {
+                  display = `${reps} reps – ${cal} cal`;
+                }
+
+              // Number-type entries (Swim, Plank, or other reps)
+              } else if (type === "Swim") {
+                const laps = value;
+                const cal = Math.round(laps * 7);
+                display = `${laps} laps – ${cal} cal`;
+              } else if (type === "Plank") {
+                const cal = Math.round(value * 0.04);
+                display = `${value} sec – ${cal} cal`;
+              } else if (workouts[type]) {
+                const cal = Math.round(value * workouts[type]);
+                display = `${value} reps – ${cal} cal`;
+              } else {
+                display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+              }
+
+              return (
+                <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+                  {type}: {display}
+                  <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
+                    ❌
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div style={{
+            backgroundColor: "#f1f1f1",
+            padding: "12px 16px",
+            borderRadius: "10px",
+            textAlign: "center",
+            fontSize: "18px",
+            fontWeight: "bold"
+          }}>
+            Total Burn: {
+              Object.entries(workoutLog).reduce((sum, [type, value]) => {
+                if (typeof value === "object" && value !== null && typeof value.cal === "number") {
+                  return sum + value.cal;
+                }
+                if (type === "Swim") return sum + Math.round(value * 7);
+                if (type === "Plank") return sum + Math.round(value * 0.04);
+                if (workouts[type]) return sum + Math.round(value * workouts[type]);
+                return sum;
+              }, 0)
+            } cal
+          </div>
+        </>
+
+    </div>
+ {/* — Fixed Bottom Tab Bar — 
+        <div style={{
+          position:     "fixed",
+          bottom:       0,
+          left:         0,
+          right:        0,
+          display:      "flex",
+          height:       "56px",
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
+
+  if (screen === "weight") {
+  const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
+  const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
+
+  const data = {
+    labels: weightLog.map((w) => w.date),
+    datasets: [
+      {
+        label: "Weight (lbs)",
+        data: weightLog.map((w) => w.weight),
+        borderColor: "#0070f3",
+        backgroundColor: "#0070f3",
+        fill: false,
+        tension: 0.3,
+      },
+    ],
+  };
+
+  return (
+    <>
+      <div style={{
+        position:        "fixed",
+        top:             0,
+        left:            0,
+        right:           0,
+        height:          "56px",
+        backgroundColor: "#fff",
+        borderBottom:    "1px solid #ddd",
+        boxShadow:       "0 1px 4px rgba(0,0,0,0.1)",
+        display:         "flex",
+        alignItems:      "center",
+        justifyContent:  "center",
+        zIndex:          100
+      }}>
+        <button onClick={() => setScreen("home")} style={{
+          border:     "none",
+          background: "transparent",
+          fontSize:   "18px",
+          cursor:     "pointer"
+        }}>
+          🏠 Home
+        </button>
+      </div>
+
+      <div style={{
+        padding:       "24px",
+        paddingTop:    "58px",
+        paddingBottom: "80px",
+        fontFamily:    "Inter, Arial, sans-serif",
+        maxWidth:      "500px",
+        margin:        "auto"
+      }}>
+        <h1 style={{
+          fontSize:    "24px",
+          fontWeight:  "bold",
+          textAlign:   "center",
+          marginBottom:"12px"
+        }}>
+          ⚖️ Weight Tracker
+        </h1>
+
+        {/* Latest weight 
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
+            {latestWeight} lb
+          </div>
+          <div style={{ fontSize: "14px", color: "#666" }}>
+            {latestDate}
+          </div>
+        </div>
+
+      {/* Input 
+      <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
+        <input type="text" inputMode="decimal"
+          placeholder="Enter weight"
+          value={newWeight}
+          onChange={(e) => setNewWeight(e.target.value)}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+        />
+        <button
+          onClick={addWeight}
+          style={{
+            padding: "10px 16px",
+            fontSize: "16px",
+            backgroundColor: "#0070f3",
+            color: "white",
+            border: "none",
+            borderRadius: "8px"
+          }}
+        >
+          Log
+        </button>
+      </div>
+
+      {/* Chart 
+      {weightLog.length > 0 && (
+        <div style={{
+          backgroundColor: "#fff",
+          padding: "16px",
+          borderRadius: "12px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+          marginBottom: "24px"
+        }}>
+          <Line data={data} />
+        </div>
+      )}
+
+      {/* History 
+      <ul style={{ paddingLeft: "16px" }}>
+        {weightLog.map((w, i) => (
+          <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
+            {w.date}: {w.weight} lbs{" "}
+            <button onClick={() => deleteWeight(i)} style={{ marginLeft: "8px" }}>❌</button>
+          </li>
+        ))}
+    </ul>
+  </div>
+ {/* — Fixed Bottom Tab Bar — 
+        <div style={{
+          position:     "fixed",
+          bottom:       0,
+          left:         0,
+          right:        0,
+          display:      "flex",
+          height:       "56px",
+          backgroundColor: "#fff",
+          borderTop:    "1px solid #ddd",
+          boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
+        }}>
+          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
+
+
+  if (screen === "modeSettings") {
+    return (
+      <>
+        <div style={{position:"fixed", top:0, left:0, right:0, height:"56px", backgroundColor:"#fff",
+                     borderBottom:"1px solid #ddd", boxShadow:"0 1px 4px rgba(0,0,0,0.1)",
+                     display:"flex", alignItems:"center", justifyContent:"center", zIndex:100}}>
+          <button onClick={() => setScreen("home")} style={{ border:"none", background:"transparent", fontSize:"18px", cursor:"pointer"}}>
+            🏠 Home
+          </button>
+        </div>
+
+        <div style={{ padding:"24px", paddingTop:"58px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto"}}>
+          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"16px"}}>⚙️ Mode Settings</h1>
+
+          <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
+            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+              Cut deficit (calories):
+              <input
+                type="number" inputMode="numeric" min="0"
+                min="0"
+                value={cutDeficit}
+                onChange={(e) => setCutDeficit(Math.max(0, parseInt(e.target.value || "0")))}
+                style={{ width:"110px", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+              />
+            </label>
+
+            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+              Bulk surplus (calories):
+              <input
+                type="number" inputMode="numeric" min="0"
+                min="0"
+                value={bulkSurplus}
+                onChange={(e) => setBulkSurplus(Math.max(0, parseInt(e.target.value || "0")))}
+                style={{ width:"110px", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+              />
+            </label>
+
+            <div style={{ display:"flex", gap:"8px" }}>
+              <button
+                onClick={() => { 
+                  localStorage.setItem("cutDeficit", String(cutDeficit));
+                  localStorage.setItem("bulkSurplus", String(bulkSurplus));
+                  localStorage.setItem("cutProtein", String(cutProtein));
+                  localStorage.setItem("cutFat", String(cutFat));
+                  localStorage.setItem("cutCarb", String(cutCarb));
+                  localStorage.setItem("maintProtein", String(maintProtein));
+                  localStorage.setItem("maintFat", String(maintFat));
+                  localStorage.setItem("maintCarb", String(maintCarb));
+                  localStorage.setItem("bulkProtein", String(bulkProtein));
+                  localStorage.setItem("bulkFat", String(bulkFat));
+                  localStorage.setItem("bulkCarb", String(bulkCarb));
+                  if (mode === "Cut") { setProteinGoal(cutProtein); setFatGoal(cutFat); setCarbGoal(cutCarb); }
+                  else if (mode === "Maintenance") { setProteinGoal(maintProtein); setFatGoal(maintFat); setCarbGoal(maintCarb); }
+                  else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); }
+                  setScreen("home");
+                }}
+                style={{ flex:1, padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => { setCutDeficit(500); setBulkSurplus(100); setCutProtein(140); setCutFat(50); setCutCarb(120); setMaintProtein(140); setMaintFat(55); setMaintCarb(160); setBulkProtein(150); setBulkFat(60); setBulkCarb(200); if (mode === "Cut") { setProteinGoal(140); setFatGoal(50); setCarbGoal(120); } else if (mode === "Maintenance") { setProteinGoal(140); setFatGoal(55); setCarbGoal(160); } else { setProteinGoal(150); setFatGoal(60); setCarbGoal(200); } } }
+                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
+              >
+                Reset to defaults
+              </button>
+            </div>
+          </div>
+        
+          <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          </div>
+
+          <h2>🧰 Maintenance Macros</h2>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          </div>
+
+          <h2>🍚 Bulk Macros</h2>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
+          <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          </div>
+        </div>
+
+        {/* — Fixed Bottom Tab Bar — 
+        <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
+                      borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
+          <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+        </div>
+      </>
+    );
+  }
+
+   return (
+    <>
+      <div style={{
+        padding: "24px",
+        paddingBottom: "80px",            // make room for the tab bar
+        fontFamily: "Inter, Arial, sans-serif",
+        maxWidth: "500px",
+        margin: "auto"
+      }}>
+
+    {/* Overview Box 
+<div style={{
+backgroundColor: "#f9f9f9",
+borderRadius:    "12px",
+padding:         "16px",
+boxShadow:       "0 1px 4px rgba(0,0,0,0.05)",
+marginBottom:    "20px"
+}}>
+<div style={{
+  display:      "flex",
+  alignItems:   "center",
+  marginBottom: "14px"
+}}>
+  <h2 style={{
+    flex:       1,
+    fontSize:   "17px",
+    fontWeight: "600",
+    margin:     0
+  }}>
+    📊 Today
+  </h2>
+
+  {/* Inline Mode button 
+  <button
+    onClick={() => setShowModes(!showModes)}
+    style={{
+      backgroundColor: "#1976d2",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px",
+      marginRight:     "8px"
+    }}
+  >
+    Mode: {mode}
+  </button>
+
+  {/* Reset button 
+  <button
+    onClick={resetDay}
+    style={{
+      backgroundColor: "#d32f2f",
+      color:           "white",
+      padding:         "4px 10px",
+      fontSize:        "13px",
+      border:          "none",
+      borderRadius:    "6px"
+    }}
+  >
+    Reset
   </button>
 </div>
 
