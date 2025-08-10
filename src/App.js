@@ -23,6 +23,7 @@ const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
   const [screen, setScreen] = useState("home");
+  const [toastMsg, setToastMsg] = useState("");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
@@ -629,6 +630,14 @@ if (screen === "food") {
       <div style={{
         padding:       "24px",
         paddingTop:    "58px",
+      {/* Toast */}
+      {toastMsg && (
+        <div style={{ position:"fixed", bottom:"72px", left:0, right:0, display:"flex", justifyContent:"center", zIndex:1000 }}>
+          <div style={{ background:"#333", color:"#fff", padding:"8px 12px", borderRadius:"999px", fontSize:"14px", boxShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>
+            {toastMsg}
+          </div>
+        </div>
+      )}
         paddingBottom: "80px",
         fontFamily:    "Inter, Arial, sans-serif",
         maxWidth:      "500px",
@@ -748,7 +757,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Calories"
-      type="number"
+      type="number" inputMode="numeric" min="0"
       value={customFood.cal}
       onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
       style={{
@@ -760,7 +769,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Protein"
-      type="number"
+      type="number" inputMode="numeric" min="0"
       value={customFood.prot}
       onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
       style={{
@@ -772,7 +781,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Fat"
-      type="number"
+      type="number" inputMode="numeric" min="0"
       value={customFood.fat}
       onChange={e => setCustomFood({ ...customFood, fat: e.target.value })}
       style={{
@@ -784,7 +793,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Carbs"
-      type="number"
+      type="number" inputMode="numeric" min="0"
       value={customFood.carbs}
       onChange={e => setCustomFood({ ...customFood, carbs: e.target.value })}
       style={{
@@ -796,7 +805,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Fiber"
-      type="number"
+      type="number" inputMode="numeric" min="0"
       value={customFood.fiber}
       onChange={e => setCustomFood({ ...customFood, fiber: e.target.value })}
       style={{
@@ -984,7 +993,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
           <input
-  type="number"
+  type="number" inputMode="numeric" min="0"
   step={type === "Run" ? "0.01" : "1"}
   placeholder={(
   type === "Run" || type === "Bike"
@@ -1068,7 +1077,7 @@ setWorkoutLog(prev => ({
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
         <input
-          type="number"
+          type="number" inputMode="numeric" min="0"
           placeholder="Steps"
           value={customWorkout["Steps"] || ""}
           onChange={(e) =>
@@ -1115,7 +1124,7 @@ setWorkoutLog(prev => ({
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
   
   <input
-    type="number"
+    type="number" inputMode="numeric" min="0"
     placeholder="Cal"
     value={customWorkout.treadCal || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
@@ -1130,7 +1139,7 @@ setWorkoutLog(prev => ({
   />
   
   <input
-    type="number"
+    type="number" inputMode="numeric" min="0"
     placeholder="KM"
     step="0.01"
     value={customWorkout.treadKm || ""}
@@ -1184,7 +1193,7 @@ setWorkoutLog(prev => ({
   <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
 
   <input
-    type="number"
+    type="number" inputMode="numeric" min="0"
     placeholder="Laps"
     value={customWorkout["Swim"] || ""}
     onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
@@ -1472,7 +1481,7 @@ setWorkoutLog(prev => ({
             <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
               Cut deficit (calories):
               <input
-                type="number"
+                type="number" inputMode="numeric" min="0"
                 min="0"
                 value={cutDeficit}
                 onChange={(e) => setCutDeficit(Math.max(0, parseInt(e.target.value || "0")))}
@@ -1483,7 +1492,7 @@ setWorkoutLog(prev => ({
             <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
               Bulk surplus (calories):
               <input
-                type="number"
+                type="number" inputMode="numeric" min="0"
                 min="0"
                 value={bulkSurplus}
                 onChange={(e) => setBulkSurplus(Math.max(0, parseInt(e.target.value || "0")))}
@@ -1525,23 +1534,23 @@ setWorkoutLog(prev => ({
         
           <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="numeric" min="0" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="numeric" min="0" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="numeric" min="0" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🧰 Maintenance Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="numeric" min="0" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="numeric" min="0" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="numeric" min="0" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🍚 Bulk Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="number" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="number" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="number" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="numeric" min="0" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="numeric" min="0" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="numeric" min="0" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*" style={{ width:"80px" }} /></label>
           </div>
         </div>
 
