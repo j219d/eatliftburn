@@ -633,7 +633,7 @@ if (screen === "food") {
         }}>
           🏠 Home
         </button>
-      {/* Toast */}
+      {/* Toast 
       {toastMsg && (
         <div style={{ position:"fixed", bottom:"72px", left:0, right:0, display:"flex", justifyContent:"center", zIndex:1000 }}>
           <div style={{ background:"#333", color:"#fff", padding:"8px 12px", borderRadius:"999px", fontSize:"14px", boxShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>
@@ -660,10 +660,10 @@ if (screen === "food") {
           🍽️ Food Log
         </h1>
 
-        {/* ← the rest of your Food UI goes here unchanged */}
+        {/* ← the rest of your Food UI goes here unchanged 
 
       <div style={{ marginBottom: "20px" }}>
-{/* 👇 search filter input */}
+{/* 👇 search filter input 
 <div
   style={{
     display:       "flex",
@@ -711,7 +711,7 @@ if (screen === "food") {
   </div>
 </div>
 
-        {/* Live search results (instant pick) */}
+        {/* Live search results (instant pick) 
         {foodSearch && foodSearch.length >= 2 && (
           <div style={{ background:"#fff", border:"1px solid #ddd", borderRadius:"8px", margin:"8px 0", overflow:"hidden" }}>
             {foodOptions.filter(f => f.name.toLowerCase().includes(foodSearch.toLowerCase())).slice(0,8).map((f, idx) => (
@@ -757,7 +757,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
      <div style={{ marginBottom: "24px" }}>
-    {/* six inputs in a 3×2 grid, each 80% wide */}
+    {/* six inputs in a 3×2 grid, each 80% wide 
   <div
     style={{
       display: "grid",
@@ -947,7 +947,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 </div>
       
 </div>
-{/* — Fixed Bottom Tab Bar — */}
+{/* — Fixed Bottom Tab Bar — 
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1010,7 +1010,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         }}>
           🏋️ Workouts
         </h1>
-      {/* ====== STANDARD STRENGTH ROWS (unchanged behavior) ====== */}
+      {/* ====== STANDARD STRENGTH ROWS (unchanged behavior) ====== 
       {[
         ["Core Pull", "Reps"],
         ["Biceps", "Reps"],
@@ -1042,9 +1042,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </div>
       ))}
 
-      {/* ====== ORDER AFTER PLANK: BIKE, SWIM, RUN, TREADMILL, STEPS ====== */}
+      {/* ====== ORDER AFTER PLANK: BIKE, SWIM, RUN, TREADMILL, STEPS ====== 
 
-      {/* Bike (km) */}
+      {/* Bike (km) 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Bike</label>
         <input
@@ -1068,7 +1068,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Swim (laps) */}
+      {/* Swim (laps) 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
         <input
@@ -1091,7 +1091,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Run (km) */}
+      {/* Run (km) 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Run</label>
         <input
@@ -1124,10 +1124,10 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Treadmill (Cal + KM) — fixed 100px middle column, no overlap */}
+      {/* Treadmill (Cal + KM) — fixed 100px middle column, no overlap 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
-        <div style={{ width: "100px", display: "flex", gap: "4px" }}>
+        <div style={{ width: "120px", display: "flex", gap: "6px" }}>
           <input
             type="number" inputMode="numeric" min="0" placeholder="Cal"
             value={customWorkout.treadCal || ""}
@@ -1164,7 +1164,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      {/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input */}
+      {/* Steps with compact Med/Fast/Slow cycler kept BETWEEN label and input 
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <div style={{ width: "100px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ fontSize: "16px" }}>Steps</span>
@@ -1208,7 +1208,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           Add
         </button>
       </div>
-Logged Workouts */}
+Logged Workouts
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
             Logged Workouts
@@ -1282,7 +1282,7 @@ Logged Workouts */}
         </>
 
     </div>
- {/* — Fixed Bottom Tab Bar — */}
+ {/* — Fixed Bottom Tab Bar — 
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1363,7 +1363,7 @@ Logged Workouts */}
           ⚖️ Weight Tracker
         </h1>
 
-        {/* Latest weight */}
+        {/* Latest weight 
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
           <div style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>
             {latestWeight} lb
@@ -1373,7 +1373,7 @@ Logged Workouts */}
           </div>
         </div>
 
-      {/* Input */}
+      {/* Input 
       <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
         <input type="text" inputMode="decimal"
           placeholder="Enter weight"
@@ -1396,7 +1396,7 @@ Logged Workouts */}
         </button>
       </div>
 
-      {/* Chart */}
+      {/* Chart 
       {weightLog.length > 0 && (
         <div style={{
           backgroundColor: "#fff",
@@ -1409,7 +1409,7 @@ Logged Workouts */}
         </div>
       )}
 
-      {/* History */}
+      {/* History 
       <ul style={{ paddingLeft: "16px" }}>
         {weightLog.map((w, i) => (
           <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
@@ -1419,7 +1419,7 @@ Logged Workouts */}
         ))}
     </ul>
   </div>
- {/* — Fixed Bottom Tab Bar — */}
+ {/* — Fixed Bottom Tab Bar — 
         <div style={{
           position:     "fixed",
           bottom:       0,
@@ -1531,7 +1531,7 @@ Logged Workouts */}
           </div>
         </div>
 
-        {/* — Fixed Bottom Tab Bar — */}
+        {/* — Fixed Bottom Tab Bar — 
         <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
                       borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
           <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
@@ -1552,7 +1552,7 @@ Logged Workouts */}
         margin: "auto"
       }}>
 
-    {/* Overview Box */}
+    {/* Overview Box 
 <div style={{
 backgroundColor: "#f9f9f9",
 borderRadius:    "12px",
@@ -1574,7 +1574,7 @@ marginBottom:    "20px"
     📊 Today
   </h2>
 
-  {/* Inline Mode button */}
+  {/* Inline Mode button 
   <button
     onClick={() => setShowModes(!showModes)}
     style={{
@@ -1590,7 +1590,7 @@ marginBottom:    "20px"
     Mode: {mode}
   </button>
 
-  {/* Reset button */}
+  {/* Reset button 
   <button
     onClick={resetDay}
     style={{
@@ -1641,7 +1641,7 @@ marginBottom:    "20px"
 )}
 
       
-      {/* === Progress bars (temp shown above numbers for verification) === */}
+      {/* === Progress bars (temp shown above numbers for verification) === 
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
@@ -1654,7 +1654,7 @@ marginBottom:    "20px"
 
     </div>
 
-    {/* Checklist Box */}
+    {/* Checklist Box 
     <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
@@ -1718,7 +1718,7 @@ marginBottom:    "20px"
     
 
   </div>
- {/* — Fixed Bottom Tab Bar — */}
+ {/* — Fixed Bottom Tab Bar — 
       <div style={{
         position:     "fixed",
         bottom:       0,
