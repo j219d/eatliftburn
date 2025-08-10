@@ -74,6 +74,15 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   concentrace: false,
   teffilin: false
 });
+// collapsed/expanded state for the Checklist
+const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(
+  () => localStorage.getItem("isChecklistCollapsed") === "true"
+);
+
+// keep it persisted
+useEffect(() => {
+  localStorage.setItem("isChecklistCollapsed", String(isChecklistCollapsed));
+}, [isChecklistCollapsed]);
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
@@ -1641,50 +1650,88 @@ marginBottom:    "20px"
 
     </div>
 
-    {/* Checklist Box */}
-    <div style={{
-      backgroundColor: "#f9f9f9",
-      borderRadius: "12px",
-      padding: "16px",
-      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-      marginBottom: "12px"
-    }}>
-      <h3 style={{
-  fontSize: "18px",
-  fontWeight: "600",
-  marginTop: "0px",
-  marginBottom: "12px"
-}}>
-  {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
-</h3>
+{/* Checklist Box */}
+<div
+  style={{
+    backgroundColor: "#f9f9f9",
+    borderRadius: "12px",
+    padding: "12px 16px",
+    boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+    marginBottom: "12px"
+  }}
+>
+  {/* Header with collapse/expand toggle */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      cursor: "pointer",
+      userSelect: "none"
+    }}
+    onClick={() => setIsChecklistCollapsed((c) => !c)}
+  >
+    <span style={{ fontSize: "18px" }}>
+      {isChecklistCollapsed ? "▶" : "▼"}
+    </span>
+    <h3
+      style={{
+        fontSize: "18px",
+        fontWeight: 600,
+        margin: 0,
+        flex: 1
+      }}
+    >
+      {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
+    </h3>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-  {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
-    <label key={key} style={{ fontSize: "16px" }}>
-      <input
-        type="checkbox"
-        checked={checklist[key]}
-        onChange={() =>
-          setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
-        }
-        style={{ marginRight: "10px" }}
-      />
-      {key === "concentrace"
-        ? "Concentrace 💧"
-        : key === "teffilin"
-        ? "Tefillin ✡️"
-        : key === "sunlight"
-        ? "Sunlight 🌞"
-        : key === "supplements"
-        ? "Supplements 💊"
-        : key}
-    </label>
-  ))}
-</div>
-    </div>
-    
-
+    {/* Extra click target on the right (optional) */}
+    <button
+      aria-label={isChecklistCollapsed ? "Expand checklist" : "Collapse checklist"}
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsChecklistCollapsed((c) => !c);
+      }}
+      style={{
+        border: "none",
+        background: "transparent",
+        fontSize: "18px",
+        lineHeight: 1,
+        cursor: "pointer"
+      }}
+      title={isChecklistCollapsed ? "Expand" : "Collapse"}
+    >
+      {isChecklistCollapsed ? "➕" : "➖"}
+    </button>
   </div>
+
+  {/* Body (hidden when collapsed) */}
+  {!isChecklistCollapsed && (
+    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+      {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
+        <label key={key} style={{ fontSize: "16px" }}>
+          <input
+            type="checkbox"
+            checked={checklist[key]}
+            onChange={() =>
+              setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+            }
+            style={{ marginRight: "10px" }}
+          />
+          {key === "concentrace"
+            ? "Concentrace 💧"
+            : key === "teffilin"
+            ? "Tefillin ✡️"
+            : key === "sunlight"
+            ? "Sunlight 🌞"
+            : key === "supplements"
+            ? "Supplements 💊"
+            : key}
+        </label>
+      ))}
+    </div>
+  )}
+</div>
  {/* — Fixed Bottom Tab Bar — */}
       <div style={{
         position:     "fixed",
@@ -1739,4 +1786,3 @@ marginBottom:    "20px"
 }
 
 export default App;
-
