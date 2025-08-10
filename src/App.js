@@ -1181,8 +1181,7 @@ setWorkoutLog(prev => ({
 
 
       
-      
-      {/* Treadmill (explicit row, aligned tighter) */}
+      {/* Treadmill (explicit row, aligned) */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
         <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
         <div style={{ width: "100px", display: "flex", gap: "8px" }}>
@@ -1191,14 +1190,14 @@ setWorkoutLog(prev => ({
             placeholder="Cal"
             value={customWorkout.treadCal || ""}
             onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
-            style={{ width: "46px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", minWidth: 0 }}
           />
           <input
             type="text" inputMode="decimal"
             placeholder="KM"
             value={customWorkout.treadKm || ""}
             onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
-            style={{ width: "46px", padding: "6px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+            style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", minWidth: 0 }}
           />
         </div>
         <button
@@ -1210,7 +1209,10 @@ setWorkoutLog(prev => ({
               setSteps(prev => prev + estimatedSteps);
               setWorkoutLog(prev => ({
                 ...prev,
-                Treadmill: { cal: (prev.Treadmill?.cal || 0) + cal, steps: (prev.Treadmill?.steps || 0) + estimatedSteps }
+                Treadmill: {
+                  cal: (prev.Treadmill?.cal || 0) + cal,
+                  steps: (prev.Treadmill?.steps || 0) + estimatedSteps
+                }
               }));
               setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
             }
@@ -1220,147 +1222,7 @@ setWorkoutLog(prev => ({
           Add
         </button>
       </div>
-    <button
-          onClick={() => {
-            const cal = parseInt(customWorkout.treadCal);
-            const km = parseFloat(customWorkout.treadKm);
-            if (!isNaN(cal) && !isNaN(km)) {
-              const estimatedSteps = Math.round(km * 1250);
-              setSteps(prev => prev + estimatedSteps);
-              setWorkoutLog(prev => ({
-                ...prev,
-                Treadmill: { cal: (prev.Treadmill?.cal || 0) + cal, steps: (prev.Treadmill?.steps || 0) + estimatedSteps }
-              }));
-              setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
-            }
-          }}
-          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px", marginLeft: "auto" }}
-        >
-          Add
-        </button>
-      </div>
-    
-      
-      {/* Steps (explicit row with single toggle, aligned tighter) */}
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-        <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
-        <button
-          onClick={() => {
-            const order = ["med","fast","slow"];
-            const cur = customWorkout.stepIntensity || "med";
-            const next = order[(order.indexOf(cur) + 1) % order.length];
-            setCustomWorkout({ ...customWorkout, stepIntensity: next });
-          }}
-          style={{ padding: "4px 6px", fontSize: "12px", borderRadius: "999px", border: "1px solid #ccc", background: "#fff", cursor: "pointer", minWidth: "32px", textTransform: "capitalize" }}
-        >
-          {(customWorkout.stepIntensity || "med")}
-        </button>
-        <input
-          type="number" inputMode="numeric" min="0"
-          placeholder="Steps"
-          value={customWorkout["Steps"] || ""}
-          onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
-          style={{ width: "68px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-        />
-        <button
-          onClick={() => {
-            const stepsVal = parseInt(customWorkout["Steps"]);
-            if (!isNaN(stepsVal)) {
-              const mode = (customWorkout.stepIntensity || "med");
-              const perStep = mode === "fast" ? 0.045 : mode === "slow" ? 0.028 : 0.035;
-              const cals = Math.round(stepsVal * perStep);
-              setSteps(prev => {
-                const newSteps = prev + stepsVal;
-                localStorage.setItem("steps", newSteps.toString());
-                return newSteps;
-              });
-              const label = "Steps (" + (mode === "fast" ? "Fast" : mode === "slow" ? "Slow" : "Med") + ")";
-              setWorkoutLog(prev => ({
-                ...prev,
-                [label]: {
-                  reps: (prev[label]?.reps || 0) + stepsVal,
-                  cal:  (prev[label]?.cal  || 0) + cals
-                }
-              }));
-              setCustomWorkout({ ...customWorkout, Steps: "" });
-            }
-          }}
-          style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
-        >
-          Add
-        </button>
-      </div>
-    {/* Logged Workouts */}
-        <>
-          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
-            Logged Workouts
-          </h2>
-          <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
-            {Object.entries(workoutLog).map(([type, value], i) => {
-              let display = "";
 
-              // Object-type entries (Run, Steps, Bike, Treadmill…)
-              if (typeof value === "object" && value !== null) {
-                const reps = value.reps ?? 0;
-                const cal = value.cal ?? 0;
-                const steps = value.stepsAdded ?? value.steps ?? 0;
-                if (type === "Treadmill") {
-                  display = `${cal} cal, ${steps} steps`;
-                } else if (type === "Run") {
-                  display = `${reps} km – ${cal} cal, ${steps} steps`;
-                } else if (type === "Steps") {
-                  display = `${reps} steps – ${cal} cal`;
-                } else if (type === "Bike") {
-                  display = `${reps} km – ${cal} cal`;
-                } else {
-                  display = `${reps} reps – ${cal} cal`;
-                }
-
-              // Number-type entries (Swim, Plank, or other reps)
-              } else if (type === "Swim") {
-                const laps = value;
-                const cal = Math.round(laps * 7);
-                display = `${laps} laps – ${cal} cal`;
-              } else if (type === "Plank") {
-                const cal = Math.round(value * 0.04);
-                display = `${value} sec – ${cal} cal`;
-              } else if (workouts[type]) {
-                const cal = Math.round(value * workouts[type]);
-                display = `${value} reps – ${cal} cal`;
-              } else {
-                display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
-              }
-
-              return (
-                <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-                  {type}: {display}
-                  <button onClick={() => deleteWorkout(type)} style={{ marginLeft: "8px" }}>
-                    ❌
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-          <div style={{
-            backgroundColor: "#f1f1f1",
-            padding: "12px 16px",
-            borderRadius: "10px",
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold"
-          }}>
-            Total Burn: {
-              Object.entries(workoutLog).reduce((sum, [type, value]) => {
-                if (typeof value === "object" && value !== null && typeof value.cal === "number") {
-                  return sum + value.cal;
-                }
-                if (type === "Swim") return sum + Math.round(value * 7);
-                if (type === "Plank") return sum + Math.round(value * 0.04);
-                if (workouts[type]) return sum + Math.round(value * workouts[type]);
-                return sum;
-              }, 0)
-            } cal
-          </div>
         </>
 
     </div>
