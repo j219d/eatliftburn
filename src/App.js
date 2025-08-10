@@ -1656,14 +1656,30 @@ marginBottom:    "20px"
   marginTop: "0px",
   marginBottom: "12px"
 }}>
+<h3 style={{
+  fontSize: "18px",
+  fontWeight: "600",
+  marginTop: "0px",
+  marginBottom: "12px",
+  display: "flex",
+  alignItems: "center",
+  gap: "6px"
+}}>
+  <button
+    onClick={() => setIsChecklistCollapsed(v => !v)}
+    style={{
+      border: "none",
+      background: "transparent",
+      fontSize: "16px",
+      cursor: "pointer",
+      padding: 0
+    }}
+    aria-label={isChecklistCollapsed ? "Expand checklist" : "Collapse checklist"}
+  >
+    {isChecklistCollapsed ? "▶" : "▼"}
+  </button>
   {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
-<button
-  onClick={() => setIsChecklistCollapsed(v => !v)}
-  style={{ marginBottom: "8px", padding: "6px 10px", borderRadius: "6px", border: "1px solid #ddd", background: "#fff", cursor: "pointer" }}
-  aria-label={isChecklistCollapsed ? "Expand checklist" : "Collapse checklist"}
->
-  {isChecklistCollapsed ? "Expand Checklist" : "Collapse Checklist"}
-</button>
+</h3>
 </h3>
 
 {!isChecklistCollapsed && (      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
