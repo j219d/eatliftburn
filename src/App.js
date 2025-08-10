@@ -1012,126 +1012,151 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </h1>
 
       {/* Strength + Run entries */}
-      {
-Object.keys(workouts)
-  .filter(type => type !== "Run" && type !== "Bike")
-  .map((type, i) => (
-    <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-      <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
-      <input
-        type="text" inputMode="decimal"
-        step="1"
-        placeholder={type === "Plank" ? "Seconds" : "Reps"}
-        value={customWorkout[type] || ""}
-        onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-        style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-      />
-      <button
-        onClick={() => {
-          const input = parseFloat(customWorkout[type]);
-          if (!isNaN(input)) {
-            setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
-            setCustomWorkout({ ...customWorkout, [type]: "" });
+      {Object.keys(workouts).map((type, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+          <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
+          <input
+  type="text" inputMode="decimal"
+  step={type === "Run" ? "0.01" : "1"}
+  placeholder={(
+  type === "Run" || type === "Bike"
+    ? "Kilometers"
+    : type === "Plank"
+    ? "Seconds"
+    : type === "Swim"
+    ? "Laps"
+    : "Reps"
+)}
+
+  value={customWorkout[type] || ""}
+  onChange={(e) =>
+    setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+  }
+  style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+/>
+          <button
+            onClick={() => {
+  const input = parseFloat(customWorkout[type]);
+  if (!isNaN(input)) {
+    // --- NEW: handle Bike rides
+if (type === "Bike") {
+const cal = Math.round(input * 15);        // 15 cal/km
+setWorkoutLog(prev => ({
+...prev,
+[type]: { reps: input, cal }
+}));
+setCustomWorkout({ ...customWorkout, [type]: "" });
+return;
+}
+// existing Run handling
+if (type === "Run") {
+  const cal = Math.round(input * 60);
+  const runSteps = Math.round(input * 1100);
+
+  setSteps(prev => prev + runSteps);
+
+setWorkoutLog(prev => {
+  const prevReps = prev[type]?.reps || 0;
+  const prevCal = prev[type]?.cal || 0;
+  const prevSteps = prev[type]?.stepsAdded || 0;
+
+  return {
+    ...prev,
+    [type]: {
+      reps: prevReps + input,
+      cal: prevCal + cal,
+      stepsAdded: prevSteps + runSteps
+    }
+  };
+});
+
+  setCustomWorkout({ ...customWorkout, [type]: "" });
+  return; // Exit early
+}
+
+    // fallback for other reps-based workouts
+setWorkoutLog(prev => ({
+...prev,
+[type]: (prev[type] || 0) + input
+}));
+    setCustomWorkout({ ...customWorkout, [type]: "" });
+  }
+}}
+            style={{
+              padding: "8px 12px",
+              fontSize: "16px",
+              backgroundColor: "#0070f3",
+              color: "white",
+              border: "none",
+              borderRadius: "8px"
+            }}
+          >
+            Add
+          </button>
+        </div>
+      ))}
+
+      {/* Steps section - separate from workouts */}
+<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+  <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
+  {/* fixed 100px cluster: tiny toggle + small input so Add aligns */}
+  <div style={{ width: "100px", display: "flex", gap: "4px", alignItems: "center" }}>
+    <button
+      onClick={cycleStepIntensity}
+      aria-label="Cycle steps intensity"
+      style={{ width: "44px", padding: "6px 0", fontSize: "12px", borderRadius: "999px", border: "1px solid #ccc", background: "#f7f7f7", textTransform: "capitalize" }}
+    >
+      {stepIntensity}
+    </button>
+    <input
+      type="number" inputMode="numeric" min="0"
+      placeholder="Steps"
+      value={customWorkout["Steps"] || ""}
+      onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
+      style={{ width: "52px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+    />
+  </div>
+  <button
+    onClick={() => {
+      const stepsVal = parseInt(customWorkout["Steps"]);
+      if (!isNaN(stepsVal)) {
+        const perStep = STEP_FACTORS[stepIntensity] ?? 0.039;
+        const cals = Math.round(stepsVal * perStep);
+        setSteps(prev => {
+          const newSteps = prev + stepsVal;
+          localStorage.setItem("steps", String(newSteps));
+          return newSteps;
+        });
+        setWorkoutLog(prev => ({
+          ...prev,
+          Steps: {
+            reps: (prev.Steps?.reps || 0) + stepsVal,
+            cal: (prev.Steps?.cal || 0) + cals
           }
-        }}
-        style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
-      >
-        Add
-      </button>
-    </div>
-  ))
-
-
-      
-{/* --- Cardio order: Bike, Swim, Run, Treadmill, Steps --- */}
-
-{/* Bike */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Bike</label>
-  <input
-    type="text" inputMode="decimal" step="0.01" placeholder="Kilometers"
-    value={customWorkout.Bike || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, Bike: e.target.value })}
-    style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-  />
-  <button
-    onClick={() => {
-      const km = parseFloat(customWorkout.Bike);
-      if (isNaN(km)) return;
-      const cal = Math.round(km * 15);
-      setWorkoutLog(prev => ({ ...prev, Bike: { reps: (prev.Bike?.reps || 0) + km, cal: (prev.Bike?.cal || 0) + cal } }));
-      setCustomWorkout({ ...customWorkout, Bike: "" });
+        }));
+        setCustomWorkout({ ...customWorkout, Steps: "" });
+      }
     }}
     style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
   >
     Add
   </button>
 </div>
-
-{/* Swim (50m laps) */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
-  <input
-    type="number" inputMode="numeric" min="0" placeholder="Laps"
-    value={customWorkout.Swim || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
-    style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-  />
-  <button
-    onClick={() => {
-      const laps = parseInt(customWorkout.Swim, 10);
-      if (isNaN(laps)) return;
-      setWorkoutLog(prev => ({ ...prev, Swim: (prev.Swim || 0) + laps }));
-      setCustomWorkout({ ...customWorkout, Swim: "" });
-    }}
-    style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
-  >
-    Add
-  </button>
-</div>
-
-{/* Run */}
-<div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Run</label>
-  <input
-    type="text" inputMode="decimal" step="0.01" placeholder="Kilometers"
-    value={customWorkout.Run || ""}
-    onChange={(e) => setCustomWorkout({ ...customWorkout, Run: e.target.value })}
-    style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
-  />
-  <button
-    onClick={() => {
-      const km = parseFloat(customWorkout.Run);
-      if (isNaN(km)) return;
-      const cal = Math.round(km * 60);
-      const runSteps = Math.round(km * 1100);
-      setSteps(prev => prev + runSteps);
-      setWorkoutLog(prev => {
-        const prevReps = prev.Run?.reps || 0;
-        const prevCal  = prev.Run?.cal  || 0;
-        const prevStp  = prev.Run?.stepsAdded || 0;
-        return { ...prev, Run: { reps: prevReps + km, cal: prevCal + cal, stepsAdded: prevStp + runSteps } };
-      });
-      setCustomWorkout({ ...customWorkout, Run: "" });
-    }}
-    style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
-  >
-    Add
-  </button>
-</div>
-
-{/* Treadmill (100px cluster aligns Add) */}
+{/* Treadmill Entry */}
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
   <label style={{ width: "100px", fontSize: "16px" }}>Treadmill</label>
+  {/* fixed 100px cluster keeps Add column aligned with other rows */}
   <div style={{ width: "100px", display: "flex", gap: "4px" }}>
     <input
-      type="number" inputMode="numeric" min="0" placeholder="Cal"
+      type="number" inputMode="numeric" min="0"
+      placeholder="Cal"
       value={customWorkout.treadCal || ""}
       onChange={(e) => setCustomWorkout({ ...customWorkout, treadCal: e.target.value })}
       style={{ width: "48px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
     />
     <input
-      type="text" inputMode="decimal" placeholder="KM"
+      type="text" inputMode="decimal"
+      placeholder="KM"
       value={customWorkout.treadKm || ""}
       onChange={(e) => setCustomWorkout({ ...customWorkout, treadKm: e.target.value })}
       style={{ width: "48px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
@@ -1139,60 +1164,70 @@ Object.keys(workouts)
   </div>
   <button
     onClick={() => {
-      const cal = parseInt(customWorkout.treadCal, 10);
-      const km  = parseFloat(customWorkout.treadKm);
-      if (isNaN(cal) || isNaN(km)) return;
-      const estSteps = Math.round(km * 1250);
-      setSteps(prev => prev + estSteps);
-      setWorkoutLog(prev => ({
-        ...prev,
-        Treadmill: {
-          cal:   (prev.Treadmill?.cal   || 0) + cal,
-          steps: (prev.Treadmill?.steps || 0) + estSteps
-        }
-      }));
-      setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      const cal = parseInt(customWorkout.treadCal);
+      const km = parseFloat(customWorkout.treadKm);
+      if (!isNaN(cal) && !isNaN(km)) {
+        const estimatedSteps = Math.round(km * 1250);
+        setSteps(prev => prev + estimatedSteps);
+        setWorkoutLog(prev => ({
+          ...prev,
+          Treadmill: {
+            cal: (prev.Treadmill?.cal || 0) + cal,
+            steps: (prev.Treadmill?.steps || 0) + estimatedSteps
+          }
+        }));
+        setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      }
     }}
     style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
   >
     Add
   </button>
 </div>
-
-{/* Steps — toggle sits between label and input */}
+{/* Swim Entry (50m laps, 7 cal/lap) */}
 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-  <label style={{ width: "100px", fontSize: "16px" }}>Steps</label>
-  <div style={{ width: "100px", display: "flex", gap: "4px", alignItems: "center" }}>
-    <button
-      onClick={cycleStepIntensity}
-      aria-label="Cycle steps intensity"
-      style={{ width: "44px", padding: "6px 0", fontSize: "12px", borderRadius: "999px", border: "1px solid #ccc", background: "#f7f7f7" }}
-    >
-      {stepIntensity}
-    </button>
-    <input
-      type="number" inputMode="numeric" min="0" placeholder="Steps"
-      value={customWorkout.Steps || ""}
-      onChange={(e) => setCustomWorkout({ ...customWorkout, Steps: e.target.value })}
-      style={{ width: "52px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
-    />
-  </div>
+  <label style={{ width: "100px", fontSize: "16px" }}>Swim</label>
+
+  <input
+    type="number" inputMode="numeric" min="0"
+    placeholder="Laps"
+    value={customWorkout["Swim"] || ""}
+    onChange={(e) => setCustomWorkout({ ...customWorkout, Swim: e.target.value })}
+    style={{
+      width: "100px",
+      padding: "8px",
+      fontSize: "16px",
+      borderRadius: "8px",
+      border: "1px solid #ccc",
+    }}
+  />
+
   <button
     onClick={() => {
-      const n = parseInt(customWorkout.Steps, 10);
-      if (isNaN(n)) return;
-      const cal = Math.round(n * (STEP_FACTORS[stepIntensity] ?? 0.039));
-      setSteps(prev => { const s = prev + n; localStorage.setItem("steps", String(s)); return s; });
-      setWorkoutLog(prev => ({ ...prev, Steps: { reps: (prev.Steps?.reps || 0) + n, cal: (prev.Steps?.cal || 0) + cal } }));
-      setCustomWorkout({ ...customWorkout, Steps: "" });
+      const laps = parseInt(customWorkout["Swim"]);
+      if (!isNaN(laps)) {
+        const cal = Math.round(laps * 7); // 7 cal per 50m lap
+        setWorkoutLog(prev => ({
+          ...prev,
+          Swim: (prev.Swim || 0) + laps
+        }));
+        setCustomWorkout({ ...customWorkout, Swim: "" });
+      }
     }}
-    style={{ padding: "8px 12px", fontSize: "16px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px" }}
+    style={{
+      padding: "8px 12px",
+      fontSize: "16px",
+      backgroundColor: "#0070f3",
+      color: "white",
+      border: "none",
+      borderRadius: "8px"
+    }}
   >
     Add
   </button>
 </div>
 
-Logged Workouts */}
+        {/* Logged Workouts */}
         <>
           <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
             Logged Workouts
