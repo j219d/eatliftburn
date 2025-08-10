@@ -268,7 +268,8 @@ const foodOptions = [
 const estimatedDeficit = calorieThreshold + totalBurn - calories;
 
 // dynamic goals used by progress bars
-const caloriesBudget = calorieThreshold + totalBurn; // grows as you add steps/workouts
+const modeCalOffset = mode === "Cut" ? -500 : (mode === "Bulk" ? 100 : 0);
+const caloriesBudget = Math.max(0, calorieThreshold + totalBurn + modeCalOffset); // dynamic goal that grows with steps/workouts and shifts by mode (Cut -500, Bulk +100) // grows as you add steps/workouts
 const waterCount = water + (checklist.concentrace ? 1 : 0); // Concentrace counts as 1 bottle
 
 useEffect(() => {
