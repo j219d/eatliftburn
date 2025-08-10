@@ -283,7 +283,9 @@ const foodOptions = [
   { name: "Walnuts (3)", cal: 78, prot: 1.8, fat: 7.8, carbs: 1.8, fiber: 0.9 },
   { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
-  { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
+  { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
+  { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
+  { name: "Yogurt 2% (Fage)", cal: 100, prot: 215, fat: 3, carbs: 5, fiber: 0 }
 ];
 
 
@@ -1549,23 +1551,23 @@ setWorkoutLog(prev => ({
         
           <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🧰 Maintenance Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🍚 Bulk Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  pattern="[0-9]*[.,]?[0-9]*" style={{ width:"80px" }} /></label>
+          <label>Protein (g): <input type="number" inputMode="decimal" min="0" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Fat (g): <input type="number" inputMode="decimal" min="0" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="number" inputMode="decimal" min="0" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  step="any" style={{ width:"80px" }} /></label>
           </div>
         </div>
 
