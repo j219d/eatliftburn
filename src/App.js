@@ -1577,7 +1577,7 @@ marginBottom:    "20px"
 <div style={{
   display:      "flex",
   alignItems:   "center",
-  marginBottom: "8px"
+  marginBottom: "14px"
 }}>
   <h2 style={{
     flex:       1,
@@ -1656,6 +1656,7 @@ marginBottom:    "20px"
 
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
+      <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
