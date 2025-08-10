@@ -498,9 +498,18 @@ const inputStyleThird = {
 };
 
   // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "" }) => {
+  
+  // ---------- Progress bar component ----------
+  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false }) => {
     const safeGoal = goal > 0 ? goal : 1;
-    const pct = Math.max(0, Math.min(100, (value / safeGoal) * 100));
+    const pctRaw = (value / safeGoal) * 100;
+    const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
+    const isOver = value > safeGoal;
+
+    const fillStyle = isOver && dangerWhenOver
+      ? { background: "#ff4d4f" } // red when over and enabled
+      : { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // default blue
+
     return (
       <div style={{ marginBottom: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
@@ -509,14 +518,14 @@ const inputStyleThird = {
             {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
           </span>
         </div>
-        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999 }}>
+        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
           <div
             style={{
               width: `${pct}%`,
               height: "100%",
               borderRadius: 999,
-              background: "linear-gradient(90deg,#2b76ff,#6aa7ff)",
-              transition: "width .25s ease"
+              transition: "width .25s ease",
+              ...fillStyle
             }}
           />
         </div>
@@ -1466,7 +1475,7 @@ marginBottom:    "20px"
 
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
-      <Progress label="Calories" value={calories} goal={caloriesBudget} />
+      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" />
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" />
       <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" />
