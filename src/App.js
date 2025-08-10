@@ -283,9 +283,7 @@ const foodOptions = [
   { name: "Walnuts (3)", cal: 78, prot: 1.8, fat: 7.8, carbs: 1.8, fiber: 0.9 },
   { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
-  { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
-  { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
-  { name: "Yogurt 2% (Fage)", cal: 100, prot: 215, fat: 3, carbs: 5, fiber: 0 }
+  { name: "Yogurt 0%", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 }
 ];
 
 
@@ -774,7 +772,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Calories"
-      type="number" inputMode="numeric" min="0"
+      type="text" inputMode="decimal"
       value={customFood.cal}
       onChange={e => setCustomFood({ ...customFood, cal: e.target.value })}
       style={{
@@ -786,7 +784,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     />
     <input
       placeholder="Protein"
-      type="number" inputMode="numeric" min="0"
+      type="text" inputMode="decimal"
       value={customFood.prot}
       onChange={e => setCustomFood({ ...customFood, prot: e.target.value })}
       style={{
