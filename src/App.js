@@ -74,7 +74,20 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   concentrace: false,
   teffilin: false
 });
-const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(false);
+// collapsed/expanded state for the Checklist (persisted)
+const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(() => {
+  try {
+    return localStorage.getItem("isChecklistCollapsed") === "true";
+  } catch {
+    return false;
+  }
+});
+
+useEffect(() => {
+  try {
+    localStorage.setItem("isChecklistCollapsed", String(isChecklistCollapsed));
+  } catch {}
+}, [isChecklistCollapsed]);
 const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
@@ -1650,39 +1663,36 @@ marginBottom:    "20px"
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "12px"
     }}>
-      <h3 style={{
-  fontSize: "18px",
-  fontWeight: "600",
-  marginTop: "0px",
-  marginBottom: "12px"
-}}>
-<h3 style={{
-  fontSize: "18px",
-  fontWeight: "600",
-  marginTop: "0px",
-  marginBottom: "12px",
+<div style={{
   display: "flex",
   alignItems: "center",
-  gap: "6px"
+  gap: "8px",
+  marginTop: "0px",
+  marginBottom: "0px"
 }}>
+  <h3 style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>
+    {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
+  </h3>
   <button
     onClick={() => setIsChecklistCollapsed(v => !v)}
     style={{
+      marginLeft: "auto",
       border: "none",
       background: "transparent",
+      color: "inherit",
       fontSize: "16px",
+      lineHeight: 1,
       cursor: "pointer",
       padding: 0
     }}
     aria-label={isChecklistCollapsed ? "Expand checklist" : "Collapse checklist"}
+    title={isChecklistCollapsed ? "Expand" : "Collapse"}
   >
     {isChecklistCollapsed ? "▶" : "▼"}
   </button>
-  {allChecklistItemsComplete ? "✅" : "☑️"} Checklist
-</h3>
-</h3>
+</div>
 
-{!isChecklistCollapsed && (      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+{!isChecklistCollapsed && (<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
   {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
     <label key={key} style={{ fontSize: "16px" }}>
       <input
@@ -1704,7 +1714,7 @@ marginBottom:    "20px"
         : key}
     </label>
   ))}
-</div>) }
+</div>)}
     </div>
     
 
