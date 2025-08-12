@@ -285,7 +285,7 @@ const foodOptions = [
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
   { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
-  { name: "Yogurt 2% (Fage)", cal: 100, prot: 15, fat: 3, carbs: 5, fiber: 0 }
+  { name: "Yogurt 2% (Fage)", cal: 100, prot: 215, fat: 3, carbs: 5, fiber: 0 }
 ];
 
 
@@ -557,49 +557,77 @@ const inputStyleThird = {
 };
 
   // ---------- Progress bar component ----------
-  
-  // ---------- Progress bar component ----------
-  
-  // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
-    const safeGoal = goal > 0 ? goal : 1;
-    const pctRaw = (value / safeGoal) * 100;
-    const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
-    const isOver = value > safeGoal;
-    const isMet = value >= safeGoal;
+const Progress = ({
+  label,
+  value,
+  goal,
+  suffix = "",
+  dangerWhenOver = false,
+  successWhenMet = false,
+  toleranceKcal = 0,     // NEW: pass 75 for calories in Maintenance
+}) => {
+  const safeGoal = goal > 0 ? goal : 1;
+  const pctRaw = (value / safeGoal) * 100;
+  const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
+  const isOver = value > safeGoal;
+  const isMet = value >= safeGoal;
 
-    let fillStyle;
-    if (dangerWhenOver && isOver) {
-      fillStyle = { background: "#ff4d4f" }; // red
-    } else if (successWhenMet && isMet) {
-      fillStyle = { background: "#22c55e" }; // green
-    } else {
-      fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
-    }
+  // tolerance states
+  const tol = Math.max(0, toleranceKcal || 0);
+  const withinTolUnder = !isOver && tol > 0 && (safeGoal - value) <= tol;
+  const withinTolOver  =  isOver && tol > 0 && (value - safeGoal) <= tol;
 
-    return (
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
-          <span><strong>{label}</strong></span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
-          </span>
-        </div>
-        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
-          <div
-            style={{
-              width: `${pct}%`,
-              height: "100%",
-              borderRadius: 999,
-              transition: "width .25s ease",
-              ...fillStyle
-            }}
-          />
-        </div>
+  // base color
+  let background = "linear-gradient(90deg,#2b76ff,#6aa7ff)"; // blue
+  if (dangerWhenOver && isOver) background = "#ff4d4f";      // red for over
+
+  // edge hints
+  const EDGE = 12; // px
+  let boxShadow = "none";
+
+  // Under goal but close: red whisper on the right edge
+  if (withinTolUnder) {
+    boxShadow = `inset -${EDGE}px 0 0 0 rgba(255,77,79,0.55)`;
+  }
+
+  // Over goal but still within tolerance: blue tab on the left edge
+  if (withinTolOver) {
+    // soften the red a touch so it doesn't scream
+    background = "#ff9aa0";
+    boxShadow = `inset ${EDGE}px 0 0 0 rgba(46,128,255,0.85)`;
+  }
+
+  // success green (used by your other bars if you want)
+  if (successWhenMet && isMet && !dangerWhenOver) {
+    background = "#22c55e";
+    boxShadow = "none";
+  }
+
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
+        <span><strong>{label}</strong></span>
+        <span style={{ fontVariantNumeric: "tabular-nums" }}>
+          {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+        </span>
       </div>
-    );
-  };
-  // --------------------------------------------
+      <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
+        <div
+          style={{
+            width: `${pct}%`,
+            height: "100%",
+            borderRadius: 999,
+            transition: "width .25s ease",
+            background,
+            boxShadow, // the subtle edge cue
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+// --------------------------------------------
+
 
 
 if (screen === "food") {
@@ -1683,7 +1711,7 @@ marginBottom:    "20px"
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
-      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
+      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver  toleranceKcal={mode === "Maintenance" ? 75 : 0} />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
       <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
