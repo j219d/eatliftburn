@@ -275,10 +275,6 @@ const foodOptions = [
   { name: "Protein scoop (2 Promix Vanilla)", cal: 150, prot: 30, fat: 0.5, carbs: 7 },
   { name: "Pumpkin seeds (1 tsp)", cal: 20, prot: 1, fat: 1.5, carbs: 0.7, fiber: 0.4 },
   { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
-  { name: "Ribeye steak (50g)", cal: 144, prot: 12.4, fat: 10, carbs: 0, fiber: 0 },
-  { name: "Ribeye steak (100g)", cal: 288, prot: 24.8, fat: 20, carbs: 0, fiber: 0 },
-  { name: "Ribeye steak (150g)", cal: 432, prot: 37.2, fat: 30, carbs: 0, fiber: 0 },
-  { name: "Ribeye steak (200g)", cal: 576, prot: 49.6, fat: 40, carbs: 0, fiber: 0 },
   { name: "Rice (50g cooked)", cal: 65, prot: 1.3, fat: 0.1, carbs: 14, fiber: 0.2 },
   { name: "Rice (100g cooked)", cal: 130, prot: 2.6, fat: 0.2, carbs: 28, fiber: 0.4 },
   { name: "Rice (150g cooked)", cal: 195, prot: 3.9, fat: 0.3, carbs: 42, fiber: 0.6 },
@@ -588,12 +584,32 @@ const inputStyleThird = {
     const isMet = value >= safeGoal;
 
     let fillStyle;
-    if (dangerWhenOver && isOver) {
-      fillStyle = { background: "#ff4d4f" }; // red
-    } else if (successWhenMet && isMet) {
-      fillStyle = { background: "#22c55e" }; // green
+
+    // Maintenance-only tolerance: Calories bar ONLY
+    if (label === "Calories" && mode === "Maintenance") {
+      const delta = value - safeGoal; // negative when under
+
+      if (delta <= 0 && delta >= -50) {
+        // Within 50 UNDER: normal blue with a *very short* red kiss at the end
+        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 98%, #ff4d4f 100%)" };
+      } else if (delta > 0 && delta <= 50) {
+        // Within 50 OVER: tiny blue lead-in into red
+        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #ff4d4f 3%, #ff4d4f 100%)" };
+      } else if (dangerWhenOver && isOver) {
+        fillStyle = { background: "#ff4d4f" };
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" };
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
     } else {
-      fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
+      if (dangerWhenOver && isOver) {
+        fillStyle = { background: "#ff4d4f" };
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" };
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
     }
 
     return (
