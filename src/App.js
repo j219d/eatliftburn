@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -580,39 +576,44 @@ const inputStyleThird = {
 const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
     const safeGoal = goal > 0 ? goal : 1;
     const pctRaw = (value / safeGoal) * 100;
-    const pct = Math.max(0, Math.min(100, pctRaw));
+    const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
     const isOver = value > safeGoal;
     const isMet = value >= safeGoal;
 
+    // Default style (keeps existing look)
     let fillStyle;
 
+    // ==== Maintenance-only ±50 tolerance — Calories bar ONLY ====
     if (label === "Calories" && mode === "Maintenance") {
-        const delta = value - safeGoal;
-        if (delta <= 0 && delta >= -50) {
-            // Minimal blue -> red at very end
-            fillStyle = {
-                background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 94%, #ff4d4f 100%)"
-            };
-        } else if (delta > 0 && delta <= 50) {
-            // Minimal blue start -> red
-            fillStyle = {
-                background: "linear-gradient(90deg, #6aa7ff 0%, #2b76ff 6%, #ff4d4f 100%)"
-            };
-        } else if (dangerWhenOver && isOver) {
-            fillStyle = { background: "#ff4d4f" };
-        } else if (successWhenMet && isMet) {
-            fillStyle = { background: "#22c55e" };
-        } else {
-            fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
-        }
+      const delta = value - safeGoal; // negative if under goal
+
+      if (delta <= 0 && delta >= -50) {
+        // Within 50 UNDER: mostly blue, tiny red feather at the very end
+        fillStyle = {
+          background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 96%, #ff4d4f 100%)"
+        };
+      } else if (delta > 0 && delta <= 50) {
+        // Within 50 OVER: tiny blue feather at the very start, then red
+        fillStyle = {
+          background: "linear-gradient(90deg, #2b76ff 0%, #ff4d4f 6%, #ff4d4f 100%)"
+        };
+      } else if (dangerWhenOver && isOver) {
+        // More than 50 over = solid red (unchanged)
+        fillStyle = { background: "#ff4d4f" };
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" };
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
     } else {
-        if (dangerWhenOver && isOver) {
-            fillStyle = { background: "#ff4d4f" };
-        } else if (successWhenMet && isMet) {
-            fillStyle = { background: "#22c55e" };
-        } else {
-            fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
-        }
+      // All other bars OR other modes keep original logic
+      if (dangerWhenOver && isOver) {
+        fillStyle = { background: "#ff4d4f" };
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" };
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
     }
 
     return (
