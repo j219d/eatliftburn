@@ -592,13 +592,13 @@ const inputStyleThird = {
       if (delta <= 0 && delta >= -50) {
         // Within 50 UNDER goal: mostly blue with a soft red blend at the end
         fillStyle = {
-          background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, rgba(255,77,79,0.00) 92%, rgba(255,77,79,0.35) 100%)"
+          background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%) 92%, rgba(255,77,79,0.35) 100%)"
         };
       } else if (delta > 0 && delta <= 50) {
         // Within 50 OVER goal: red with a soft blue blend at the very start
         // Note: bar caps at 100% width; blend communicates near-miss
         fillStyle = {
-          background: "linear-gradient(90deg, rgba(106,167,255,0.35) 0%, rgba(106,167,255,0.00) 10%, #ff4d4f 24%, #ff4d4f 100%)"
+          background: "linear-gradient(90deg, #6aa7ff 0%, #2b76ff 8%, #ff4d4f 18%, #ff4d4f 100%)"
         };
       } else if (dangerWhenOver && isOver) {
         // >50 OVER: hard red
@@ -606,7 +606,7 @@ const inputStyleThird = {
       } else if (successWhenMet && isMet) {
         fillStyle = { background: "#22c55e" };
       } else {
-        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%)" };
       }
     } else {
       // Non-Calories bars OR non-Maintenance mode: original behavior
@@ -615,7 +615,7 @@ const inputStyleThird = {
       } else if (successWhenMet && isMet) {
         fillStyle = { background: "#22c55e" };
       } else {
-        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%)" };
       }
     }
 
