@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -271,6 +275,10 @@ const foodOptions = [
   { name: "Protein scoop (2 Promix Vanilla)", cal: 150, prot: 30, fat: 0.5, carbs: 7 },
   { name: "Pumpkin seeds (1 tsp)", cal: 20, prot: 1, fat: 1.5, carbs: 0.7, fiber: 0.4 },
   { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
+  { name: "Ribeye steak (50g)", cal: 144, prot: 12.4, fat: 10, carbs: 0, fiber: 0 },
+  { name: "Ribeye steak (100g)", cal: 288, prot: 24.8, fat: 20, carbs: 0, fiber: 0 },
+  { name: "Ribeye steak (150g)", cal: 432, prot: 37.2, fat: 30, carbs: 0, fiber: 0 },
+  { name: "Ribeye steak (200g)", cal: 576, prot: 49.6, fat: 40, carbs: 0, fiber: 0 },
   { name: "Rice (50g cooked)", cal: 65, prot: 1.3, fat: 0.1, carbs: 14, fiber: 0.2 },
   { name: "Rice (100g cooked)", cal: 130, prot: 2.6, fat: 0.2, carbs: 28, fiber: 0.4 },
   { name: "Rice (150g cooked)", cal: 195, prot: 3.9, fat: 0.3, carbs: 42, fiber: 0.6 },
@@ -572,73 +580,16 @@ const inputStyleThird = {
   // ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
-  
-const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
+  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
     const safeGoal = goal > 0 ? goal : 1;
     const pctRaw = (value / safeGoal) * 100;
     const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
     const isOver = value > safeGoal;
     const isMet = value >= safeGoal;
 
-    // Default style (keeps existing look)
     let fillStyle;
-
-    // ==== Maintenance-only ±50 tolerance — Calories bar ONLY ====
-    if (label === "Calories" && mode === "Maintenance") {
-      const delta = value - safeGoal; // negative if under goal
-
-      if (delta <= 0 && delta >= -50) {
-        // Within 50 UNDER: mostly blue, tiny red feather at the very end
-        fillStyle = {
-          background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 96%, #ff4d4f 100%)"
-        };
-      } else if (delta > 0 && delta <= 50) {
-        // Within 50 OVER: tiny blue feather at the very start, then red
-        fillStyle = {
-          background: "linear-gradient(90deg, #2b76ff 0%, #ff4d4f 6%, #ff4d4f 100%)"
-        };
-      } else if (dangerWhenOver && isOver) {
-        // More than 50 over = solid red (unchanged)
-        fillStyle = { background: "#ff4d4f" };
-      } else if (successWhenMet && isMet) {
-        fillStyle = { background: "#22c55e" };
-      } else {
-        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
-      }
-    } else {
-      // All other bars OR other modes keep original logic
-      if (dangerWhenOver && isOver) {
-        fillStyle = { background: "#ff4d4f" };
-      } else if (successWhenMet && isMet) {
-        fillStyle = { background: "#22c55e" };
-      } else {
-        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
-      }
-    }
-
-    return (
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
-          <span><strong>{label}</strong></span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
-          </span>
-        </div>
-        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
-          <div
-            style={{
-              width: `${pct}%`,
-              height: "100%",
-              borderRadius: 999,
-              transition: "width .25s ease",
-              ...fillStyle
-            }}
-          />
-        </div>
-      </div>
-    );
-};
- // red
+    if (dangerWhenOver && isOver) {
+      fillStyle = { background: "#ff4d4f" }; // red
     } else if (successWhenMet && isMet) {
       fillStyle = { background: "#22c55e" }; // green
     } else {
