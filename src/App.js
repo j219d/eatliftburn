@@ -561,45 +561,106 @@ const inputStyleThird = {
   // ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
-    const safeGoal = goal > 0 ? goal : 1;
-    const pctRaw = (value / safeGoal) * 100;
-    const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
-    const isOver = value > safeGoal;
-    const isMet = value >= safeGoal;
+  // ---------- Progress bar component (with Maintenance tolerance) ----------
+const Progress = ({
+  label,
+  value,
+  goal,
+  suffix = "",
+  dangerWhenOver = false,
+  successWhenMet = false,
+  toleranceKcal = 0,     // ← pass 75 for Maintenance Calories, else 0
+}) => {
+  const safeGoal = goal > 0 ? goal : 1;
+  const pctRaw = (value / safeGoal) * 100;
+  const pctFill = Math.max(0, Math.min(100, pctRaw));         // filled (0–100%)
+  const pctOver = Math.max(0, pctRaw - 100);                   // overflow portion in %
+  const tolPct  = toleranceKcal > 0 ? (toleranceKcal / safeGoal) * 100 : 0;
 
-    let fillStyle;
-    if (dangerWhenOver && isOver) {
-      fillStyle = { background: "#ff4d4f" }; // red
-    } else if (successWhenMet && isMet) {
-      fillStyle = { background: "#22c55e" }; // green
-    } else {
-      fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
+  const isOver  = value > safeGoal;
+  const isMet   = value >= safeGoal;
+
+  // Base fill color (blue / green / red depending on props)
+  let baseFill = "linear-gradient(90deg,#2b76ff,#6aa7ff)";
+  if (dangerWhenOver && isOver) baseFill = "#ff4d4f";
+  else if (successWhenMet && isMet) baseFill = "#22c55e";
+
+  // Soft blend end-cap when UNDER goal but within tolerance
+  // We blend the *tail* of the blue fill toward a soft red tint
+  let underBlendStyle = {};
+  if (!isOver && tolPct > 0) {
+    const deficit = safeGoal - value;           // kcal
+    if (deficit > 0 && deficit <= toleranceKcal && pctFill > 0) {
+      const endCapOnBar = Math.min(pctFill, tolPct);   // % of the whole bar that’s the tolerance slice
+      const r = Math.max(0, Math.min(1, endCapOnBar / pctFill)); // fraction of the fill to blend
+      const stop = (1 - r) * 100;  // where to start the blend inside the fill
+      // Blue → soft red blend at the trailing end
+      underBlendStyle = {
+        background: `linear-gradient(90deg, #2b76ff 0%, #6aa7ff ${stop}%, #ff9aa0 100%)`
+      };
     }
+  }
 
-    return (
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
-          <span><strong>{label}</strong></span>
-          <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
-          </span>
-        </div>
-        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
+  // Overflow visualization: up to tolPct% shows a blue→red gradient,
+  // anything beyond tolPct% is solid red.
+  const showOverflow = isOver && tolPct > 0 && pctOver > 0;
+  const gradOverflowPct = Math.min(pctOver, tolPct);           // % of the whole bar
+  const hardOverflowPct = Math.max(0, pctOver - tolPct);       // remainder beyond tolerance
+
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
+        <span><strong>{label}</strong></span>
+        <span style={{ fontVariantNumeric: "tabular-nums" }}>
+          {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+        </span>
+      </div>
+
+      <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden", position: "relative" }}>
+        {/* Base blue/green/red fill (capped at 100%) */}
+        <div
+          style={{
+            width: `${pctFill}%`,
+            height: "100%",
+            borderRadius: 999,
+            transition: "width .25s ease",
+            background: baseFill,
+            ...(Object.keys(underBlendStyle).length ? underBlendStyle : {})
+          }}
+        />
+
+        {/* Soft-gradient overflow within tolerance (blue→red) */}
+        {showOverflow && gradOverflowPct > 0 && (
           <div
             style={{
-              width: `${pct}%`,
+              position: "absolute",
+              left: "100%",                 // starts right at the goal edge
+              top: 0,
               height: "100%",
-              borderRadius: 999,
-              transition: "width .25s ease",
-              ...fillStyle
+              width: `${gradOverflowPct}%`,
+              background: "linear-gradient(90deg, #6aa7ff 0%, #ff4d4f 100%)"
             }}
           />
-        </div>
+        )}
+
+        {/* Hard red overflow beyond tolerance */}
+        {isOver && hardOverflowPct > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              left: `${100 + gradOverflowPct}%`,
+              top: 0,
+              height: "100%",
+              width: `${hardOverflowPct}%`,
+              background: "#ff4d4f"
+            }}
+          />
+        )}
       </div>
-    );
-  };
-  // --------------------------------------------
+    </div>
+  );
+};
+// --------------------------------------------
 
 
 if (screen === "food") {
@@ -1683,7 +1744,7 @@ marginBottom:    "20px"
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
-      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
+      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver  toleranceKcal={mode === "Maintenance" ? 75 : 0} />
       <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
       <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
