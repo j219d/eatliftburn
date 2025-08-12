@@ -576,47 +576,72 @@ const inputStyleThird = {
   // ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
+  
+const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
     const safeGoal = goal > 0 ? goal : 1;
     const pctRaw = (value / safeGoal) * 100;
-    const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
+    const pct = Math.max(0, Math.min(100, pctRaw));
     const isOver = value > safeGoal;
     const isMet = value >= safeGoal;
 
-    // Default fillStyle (kept as before unless overridden below)
     let fillStyle;
 
-    // === Maintenance-only tolerance for Calories bar (±50) ===
     if (label === "Calories" && mode === "Maintenance") {
-      const delta = value - safeGoal; // negative if under goal
-      if (delta <= 0 && delta >= -50) {
-        // Within 50 UNDER goal: mostly blue with a soft red blend at the end
-        fillStyle = {
-          background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%) 92%, rgba(255,77,79,0.35) 100%)"
-        };
-      } else if (delta > 0 && delta <= 50) {
-        // Within 50 OVER goal: red with a soft blue blend at the very start
-        // Note: bar caps at 100% width; blend communicates near-miss
-        fillStyle = {
-          background: "linear-gradient(90deg, #6aa7ff 0%, #2b76ff 8%, #ff4d4f 18%, #ff4d4f 100%)"
-        };
-      } else if (dangerWhenOver && isOver) {
-        // >50 OVER: hard red
-        fillStyle = { background: "#ff4d4f" };
-      } else if (successWhenMet && isMet) {
-        fillStyle = { background: "#22c55e" };
-      } else {
-        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%)" };
-      }
+        const delta = value - safeGoal;
+        if (delta <= 0 && delta >= -50) {
+            // Minimal blue -> red at very end
+            fillStyle = {
+                background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 94%, #ff4d4f 100%)"
+            };
+        } else if (delta > 0 && delta <= 50) {
+            // Minimal blue start -> red
+            fillStyle = {
+                background: "linear-gradient(90deg, #6aa7ff 0%, #2b76ff 6%, #ff4d4f 100%)"
+            };
+        } else if (dangerWhenOver && isOver) {
+            fillStyle = { background: "#ff4d4f" };
+        } else if (successWhenMet && isMet) {
+            fillStyle = { background: "#22c55e" };
+        } else {
+            fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+        }
     } else {
-      // Non-Calories bars OR non-Maintenance mode: original behavior
-      if (dangerWhenOver && isOver) {
-        fillStyle = { background: "#ff4d4f" };
-      } else if (successWhenMet && isMet) {
-        fillStyle = { background: "#22c55e" };
-      } else {
-        fillStyle = { background: "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 82%, #ff6b6d 92%, #ff4d4f 100%)" };
-      }
+        if (dangerWhenOver && isOver) {
+            fillStyle = { background: "#ff4d4f" };
+        } else if (successWhenMet && isMet) {
+            fillStyle = { background: "#22c55e" };
+        } else {
+            fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+        }
+    }
+
+    return (
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
+          <span><strong>{label}</strong></span>
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>
+            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+          </span>
+        </div>
+        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
+          <div
+            style={{
+              width: `${pct}%`,
+              height: "100%",
+              borderRadius: 999,
+              transition: "width .25s ease",
+              ...fillStyle
+            }}
+          />
+        </div>
+      </div>
+    );
+};
+ // red
+    } else if (successWhenMet && isMet) {
+      fillStyle = { background: "#22c55e" }; // green
+    } else {
+      fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
     }
 
     return (
