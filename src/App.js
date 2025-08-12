@@ -583,9 +583,65 @@ const inputStyleThird = {
     const isOver = value > safeGoal;
     const isMet = value >= safeGoal;
 
+    // Default fillStyle (kept exactly as before unless overridden below)
     let fillStyle;
-    if (dangerWhenOver && isOver) {
-      fillStyle = { background: "#ff4d4f" }; // red
+    // === Maintenance-only tolerance for Calories bar ===
+    // Soft blend when within ±50 of goal. Applies ONLY to the Calories bar in Maintenance mode.
+    if (label === "Calories" && mode === "Maintenance") {
+      const delta = value - safeGoal; // negative if under goal
+      if (delta <= 0 && delta >= -50) {
+        // Within 50 UNDER goal: mostly blue with a soft red kiss at the end
+        fillStyle = {
+          background:
+            "linear-gradient(90deg, #2b76ff 0%, #6aa7ff 80%, rgba(255,77,79,0.0) 92%, rgba(255,77,79,0.35) 100%)"
+        };
+      } else if (delta > 0 && delta <= 50) {
+        // Within 50 OVER goal: red with a soft blue kiss at the start
+        // Note: bar will be at 100% width when over goal; the blend communicates near-miss
+        fillStyle = {
+          background:
+            "linear-gradient(90deg, rgba(106,167,255,0.35) 0%, rgba(106,167,255,0.0) 10%, #ff4d4f 24%, #ff4d4f 100%)"
+        };
+      } else if (dangerWhenOver && isOver) {
+        fillStyle = { background: "#ff4d4f" }; // hard red when >50 over
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" }; // green when meeting non-calorie goals
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // standard blue
+      }
+    } else {
+      // Non-Calories bars OR non-Maintenance mode: keep existing behavior
+      if (dangerWhenOver && isOver) {
+        fillStyle = { background: "#ff4d4f" }; // red
+      } else if (successWhenMet && isMet) {
+        fillStyle = { background: "#22c55e" }; // green
+      } else {
+        fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" }; // blue
+      }
+    }
+
+    return (
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
+          <span><strong>{label}</strong></span>
+          <span style={{ fontVariantNumeric: "tabular-nums" }}>
+            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+          </span>
+        </div>
+        <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
+          <div
+            style={{
+              width: `${pct}%`,
+              height: "100%",
+              borderRadius: 999,
+              transition: "width .25s ease",
+              .....fillStyle
+            }}
+          />
+        </div>
+      </div>
+    );
+}; // red
     } else if (successWhenMet && isMet) {
       fillStyle = { background: "#22c55e" }; // green
     } else {
@@ -607,7 +663,7 @@ const inputStyleThird = {
               height: "100%",
               borderRadius: 999,
               transition: "width .25s ease",
-              ...fillStyle
+              .....fillStyle
             }}
           />
         </div>
