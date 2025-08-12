@@ -285,7 +285,7 @@ const foodOptions = [
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
   { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
-  { name: "Yogurt 2% (Fage)", cal: 100, prot: 215, fat: 3, carbs: 5, fiber: 0 }
+  { name: "Yogurt 2% (Fage)", cal: 100, prot: 15, fat: 3, carbs: 5, fiber: 0 }
 ];
 
 
