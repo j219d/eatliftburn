@@ -61,31 +61,26 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
 
   // Home Page Display toggles (persisted)
   const [displaySettings, setDisplaySettings] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("displaySettings")) || {
-        showProtein: true,
-        showFat: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    } catch {
-      return {
-        showProtein: true,
-        showFat: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
-  }, [displaySettings]);
+  const defaults = {
+    showCalories: true,
+    showProtein: true,
+    showFat: true,
+    showCarbs: true,
+    showFiber: true,
+    showWater: true,
+    showSteps: true,
+    showChecklist: true,
+  };
+  try {
+    const stored = JSON.parse(localStorage.getItem("displaySettings")) || {};
+    return { ...defaults, ...stored };
+  } catch {
+    return defaults;
+  }
+});
+useEffect(() => {
+  try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
+}, [displaySettings]);
 
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
@@ -832,7 +827,7 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginTop:"8px", marginBottom:"12px" }}>
+        <div style={{ background:"#f9f9f9", border:"1px solid #e6e6ec", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", maxWidth:"560px", margin:"6px auto 10px auto" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
