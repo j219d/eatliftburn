@@ -579,7 +579,7 @@ const deleteFood = (index) => {
 
 const navBtnStyle = {
   fontSize: "16px",
-  padding: "8px",
+  padding: "10px",
   margin: "6px 0",
   borderRadius: "10px",
   width: "100%",
@@ -595,7 +595,7 @@ const navBtnStyle = {
 const inputStyleFull = {
   flex: "1 1 100%",
   maxWidth: "100%",
-  padding: "8px",
+  padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
   border: "1px solid #ccc"
@@ -603,7 +603,7 @@ const inputStyleFull = {
 
 const inputStyleThird = {
   flex: "1 1 calc(33.333% - 12px)",
-  padding: "8px",
+  padding: "10px",
   fontSize: "16px",
   borderRadius: "8px",
   border: "1px solid #ccc"
@@ -651,7 +651,7 @@ const inputStyleThird = {
     }
 
     return (
-      <div style={{ minWidth: 0, padding: "4px", fontSize: 12, borderRadius: 8, border: "1px solid #ccc", width: "100%" }}>
+      <div style={{ marginBottom: 12 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
           <span><strong>{label}</strong></span>
           <span style={{ fontVariantNumeric: "tabular-nums" }}>
@@ -977,11 +977,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 50px 50px", gap: "10px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 50px 50px", gap: "8px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "6px", fontSize: "13px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 }}
+            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc" }}
           >
             <option value="">Select food</option>
             {weighedFoods.map(f => (
@@ -994,7 +994,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ minWidth: 0,  padding: "6px", fontSize: "13px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 , padding: "4px", fontSize: 12 }}
+            style={{ minWidth: 0, padding: "4px", fontSize: 12, borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
           />
 
           <button
@@ -1013,7 +1013,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "4px 0", width: "50px", fontSize: 12px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }}
+            style={{ padding: "4px 0", width: "50px", fontSize: 12, background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
@@ -1563,7 +1563,7 @@ setWorkoutLog(prev => ({
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
