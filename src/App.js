@@ -123,6 +123,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [foodSearch,   setFoodSearch]   = useState("");
   const [weighedKey, setWeighedKey] = useState("");
   const [weighedGrams, setWeighedGrams] = useState("");
+const [weighedQuery, setWeighedQuery] = useState("");
 
   const workouts = {
   "Leg Press": 0.4,
@@ -325,51 +326,6 @@ const weighedFoods = [
   { key: "cottage_5pct",          label: "Cottage cheese 5%",           per100: { cal: 95,  prot: 11,  fat: 5,   carbs: 1.5, fiber: 0 } },
   { key: "tuna_canned_water",     label: "Tuna (canned in water, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
   { key: "sweet_potato_cooked",   label: "Sweet potato (cooked)",       per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
-  { key: "gb_90_10_raw", label: "Ground beef 90/10 (raw)", per100: { cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 } },
-  { key: "gb_90_10_cooked", label: "Ground beef 90/10 (cooked)", per100: { cal: 176, prot: 25, fat: 8, carbs: 0, fiber: 0 } },
-  { key: "gb_80_20_raw", label: "Ground beef 80/20 (raw)", per100: { cal: 254, prot: 17, fat: 20, carbs: 0, fiber: 0 } },
-  { key: "gb_80_20_cooked", label: "Ground beef 80/20 (cooked)", per100: { cal: 254, prot: 25.8, fat: 17, carbs: 0, fiber: 0 } },
-  { key: "cottage_nancys_2pct", label: "Cottage cheese 2% (Nancy's)", per100: { cal: 73, prot: 12.7, fat: 1.8, carbs: 3.6, fiber: 0 } },
-  { key: "cottage_goodculture_4pct", label: "Cottage cheese 4% (Good Culture)", per100: { cal: 100, prot: 12.7, fat: 4.1, carbs: 2.7, fiber: 0 } },
-  { key: "strawberries", label: "Strawberries", per100: { cal: 32, prot: 0.7, fat: 0.3, carbs: 7.7, fiber: 2.0 } },
-  { key: "blueberries", label: "Blueberries", per100: { cal: 57, prot: 0.7, fat: 0.3, carbs: 14.5, fiber: 2.4 } },
-  { key: "raspberries", label: "Raspberries", per100: { cal: 52, prot: 1.2, fat: 0.7, carbs: 12, fiber: 6.5 } },
-  { key: "blackberries", label: "Blackberries", per100: { cal: 43, prot: 1.4, fat: 0.5, carbs: 9.6, fiber: 5.3 } },
-  { key: "banana", label: "Banana", per100: { cal: 89, prot: 1.1, fat: 0.3, carbs: 23, fiber: 2.6 } },
-  { key: "apple", label: "Apple", per100: { cal: 52, prot: 0.3, fat: 0.2, carbs: 14, fiber: 2.4 } },
-  { key: "grapes", label: "Grapes", per100: { cal: 69, prot: 0.7, fat: 0.2, carbs: 18.1, fiber: 0.9 } },
-  { key: "mango", label: "Mango", per100: { cal: 60, prot: 0.8, fat: 0.4, carbs: 15, fiber: 1.6 } },
-  { key: "pineapple", label: "Pineapple", per100: { cal: 50, prot: 0.5, fat: 0.1, carbs: 13, fiber: 1.4 } },
-  { key: "watermelon", label: "Watermelon", per100: { cal: 30, prot: 0.6, fat: 0.2, carbs: 8, fiber: 0.4 } },
-  { key: "pumpkin_seeds", label: "Pumpkin seeds", per100: { cal: 559, prot: 30, fat: 49, carbs: 10, fiber: 6.5 } },
-  { key: "walnuts", label: "Walnuts", per100: { cal: 654, prot: 15.2, fat: 65, carbs: 14, fiber: 6.7 } },
-  { key: "cashews", label: "Cashews", per100: { cal: 553, prot: 18, fat: 44, carbs: 30, fiber: 3.3 } },
-  { key: "pistachios", label: "Pistachios", per100: { cal: 562, prot: 20.2, fat: 45.3, carbs: 28.3, fiber: 10.6 } },
-  { key: "almonds", label: "Almonds", per100: { cal: 579, prot: 21.2, fat: 49.9, carbs: 21.6, fiber: 12.5 } },
-  { key: "salmon_cooked", label: "Salmon (cooked)", per100: { cal: 206, prot: 22, fat: 13, carbs: 0, fiber: 0 } },
-  { key: "tuna_fish_cooked", label: "Tuna (cooked, not canned)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
-  { key: "branzino_cooked", label: "Branzino (cooked)", per100: { cal: 151, prot: 24, fat: 5, carbs: 0, fiber: 0 } },
-  { key: "egg_whites", label: "Egg whites", per100: { cal: 52, prot: 11, fat: 0.2, carbs: 0.7, fiber: 0 } },
-  { key: "parmesan", label: "Parmesan cheese", per100: { cal: 431, prot: 38, fat: 29, carbs: 4, fiber: 0 } },
-  { key: "cheddar", label: "Cheddar cheese", per100: { cal: 403, prot: 25, fat: 33, carbs: 1.3, fiber: 0 } },
-  { key: "pecorino_romano", label: "Pecorino Romano cheese", per100: { cal: 387, prot: 28, fat: 26, carbs: 3, fiber: 0 } },
-  { key: "oats_dry", label: "Oats (dry)", per100: { cal: 389, prot: 16.9, fat: 6.9, carbs: 66.3, fiber: 10.6 } },
-  { key: "quinoa_raw", label: "Quinoa (raw)", per100: { cal: 368, prot: 14.1, fat: 6.1, carbs: 64.2, fiber: 7.0 } },
-  { key: "quinoa_cooked", label: "Quinoa (cooked)", per100: { cal: 120, prot: 4.4, fat: 1.9, carbs: 21.3, fiber: 2.8 } },
-  { key: "pasta_raw", label: "Pasta (raw)", per100: { cal: 371, prot: 13, fat: 1.5, carbs: 75, fiber: 3.2 } },
-  { key: "pasta_cooked", label: "Pasta (cooked)", per100: { cal: 158, prot: 5.8, fat: 0.9, carbs: 30.9, fiber: 1.8 } },
-  { key: "lamb_shoulder_cooked", label: "Lamb shoulder (cooked)", per100: { cal: 294, prot: 25.6, fat: 21, carbs: 0, fiber: 0 } },
-  { key: "peanut_butter", label: "Peanut butter", per100: { cal: 588, prot: 25, fat: 50, carbs: 20, fiber: 6 } },
-  { key: "almond_butter", label: "Almond butter", per100: { cal: 614, prot: 21.4, fat: 56, carbs: 18.8, fiber: 10.3 } },
-  { key: "butter", label: "Butter", per100: { cal: 717, prot: 0.9, fat: 81, carbs: 0.1, fiber: 0 } },
-  { key: "cauliflower_cooked", label: "Cauliflower (cooked)", per100: { cal: 25, prot: 1.9, fat: 0.3, carbs: 5, fiber: 2.5 } },
-  { key: "spinach_raw", label: "Spinach (raw)", per100: { cal: 23, prot: 2.9, fat: 0.4, carbs: 3.6, fiber: 2.2 } },
-  { key: "kale_raw", label: "Kale (raw)", per100: { cal: 49, prot: 4.3, fat: 0.9, carbs: 8.8, fiber: 3.6 } },
-  { key: "carrots_raw", label: "Carrots (raw)", per100: { cal: 41, prot: 0.9, fat: 0.2, carbs: 10, fiber: 2.8 } },
-  { key: "cucumber", label: "Cucumber", per100: { cal: 16, prot: 0.7, fat: 0.1, carbs: 3.6, fiber: 0.5 } },
-  { key: "tomato", label: "Tomato", per100: { cal: 18, prot: 0.9, fat: 0.2, carbs: 3.9, fiber: 1.2 } },
-  { key: "avocado", label: "Avocado", per100: { cal: 160, prot: 2, fat: 14.7, carbs: 8.5, fiber: 6.7 } }
-
 ];
 // Helper: compute macros from grams using per-100g profile
 function computeFromGrams(per100, grams) {
@@ -1023,13 +979,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "auto auto auto", gap: "10px", alignItems: "center", justifyContent: "start" }}>
+          <input type="text" placeholder="Search..." value={weighedQuery} onChange={(e)=>setWeighedQuery(e.target.value)} style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%", maxWidth: "260px" }} />
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
             style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc",width: "200px", maxWidth: "200px", minWidth: 0 }}
           >
             <option value="">Select food</option>
-            {weighedFoods.map(f => (
+            {weighedFoods.filter(f => !weighedQuery || f.label.toLowerCase().includes(weighedQuery.toLowerCase())).sort((a,b)=>a.label.localeCompare(b.label)).map(f => (
               <option key={f.key} value={f.key}>{f.label}</option>
             ))}
           </select>
