@@ -291,6 +291,7 @@ const foodOptions = [
   { name: "Salmon (150g)", cal: 309, prot: 33, fat: 19.5, carbs: 0, fiber: 0 },
   { name: "Salmon (200g)", cal: 412, prot: 44, fat: 26, carbs: 0, fiber: 0 },
   { name: "Salmon Jerky", cal: 80, prot: 7, fat: 4, carbs: 5, fiber: 0 },
+  { name: "Soda (Poppi Cola Can)", cal: 25, prot: 0, fat: 0, carbs: 8, fiber: 3 },
   { name: "Spinach (frozen, 100g)", cal: 28, prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 },
   { name: "Spinach (handful)", cal: 15, prot: 1.5, fat: 0.3, carbs: 2, fiber: 1 },
   { name: "Strawberries (½ cup)", cal: 25, prot: 0.5, fat: 0.25, carbs: 5.9, fiber: 1.5 },
