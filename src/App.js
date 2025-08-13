@@ -683,9 +683,10 @@ const inputStyleThird = {
   };
   // --------------------------------------------
 
+  let page;
 
-if (screen === "food") {
-  return (
+  if (screen === "food") {
+  page = (
     <>
       <div style={{
         position:        "fixed",
@@ -1120,8 +1121,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     );
   }
 
-  if (screen === "workouts") {
-  return (
+  else if (screen === "workouts") {
+  page = (
     <>
       <div style={{
         position: "fixed",
@@ -1501,7 +1502,7 @@ setWorkoutLog(prev => ({
     );
   }
 
-  if (screen === "weight") {
+  else if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
@@ -1519,7 +1520,8 @@ setWorkoutLog(prev => ({
     ],
   };
 
-  return (
+  else {
+    page = (
     <>
       <div style={{
         position:        "fixed",
@@ -1639,8 +1641,8 @@ setWorkoutLog(prev => ({
   }
 
 
-  if (screen === "modeSettings") {
-    return (
+  else if (screen === "modeSettings") {
+    page = (
       <>
         <div style={{position:"fixed", top:0, left:0, right:0, height:"56px", backgroundColor:"#fff",
                      borderBottom:"1px solid #ddd", boxShadow:"0 1px 4px rgba(0,0,0,0.1)",
@@ -1968,6 +1970,9 @@ marginBottom:    "20px"
       </div>
     </>
   );
+  }
+
+  return page;
 }
 
 export default App;
