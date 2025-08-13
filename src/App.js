@@ -843,7 +843,7 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"12px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
@@ -876,7 +876,7 @@ if (screen === "settings") {
         </div>
       </div>
       {/* Home Page Display */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
+      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"12px" }}>
         <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
         {[
           ["showProtein","Protein"],
@@ -895,11 +895,21 @@ if (screen === "settings") {
       </div>
 
       {/* Goals */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Goals</h2>
-        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:10 }}>
-          <label style={{ flex:1 }}>
-            <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Water goal (oz)</div>
+<div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"12px" }}>
+  <h2 style={{ marginTop:0, marginBottom:8 }}>Goals</h2>
+  <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:10 }}>
+    <label style={{ flex:1 }}>
+      <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Water goal (oz)</div>
+      <input type="number" min={0} value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+    </label>
+  </div>
+  <div style={{ display:"flex", gap:12, alignItems:"center" }}>
+    <label style={{ flex:1 }}>
+      <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Steps goal</div>
+      <input type="number" min={0} value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+    </label>
+  </div>
+</div>
             <input type="number" min={0} value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
           </label>
           <button onClick={()=>setWaterGoalOz(81)} style={{ width:"140px", padding:"10px", border:"none", borderRadius:"10px", background:"#1976d2", color:"#fff", cursor:"pointer" }}>Reset to 81</button>
@@ -943,7 +953,7 @@ if (screen === "onboarding") {
   return (
     <div style={{ padding:"24px", paddingBottom:"24px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"40px auto" }}>
       <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>Welcome to EatLiftBurn</h1>
-      <p style={{ textAlign:"center", color:"#666", marginTop:0, marginBottom:"16px" }}>
+      <p style={{ textAlign:"center", color:"#666", marginTop:0, marginBottom:"12px" }}>
         Quick setup so your BMR and goals are accurate.
       </p>
 
@@ -1029,7 +1039,7 @@ if (screen === "food") {
           fontSize:    "24px",
           fontWeight:  "bold",
           textAlign:   "center",
-          marginBottom:"16px"
+          marginBottom:"12px"
         }}>
           🍽️ Food Log
         </h1>
@@ -1990,7 +2000,7 @@ setWorkoutLog(prev => ({
         </div>
 
         <div style={{ padding:"24px", paddingTop:"58px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto"}}>
-          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"16px"}}>⚙️ Mode Settings</h1>
+          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"12px"}}>⚙️ Mode Settings</h1>
 
           <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
             <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
@@ -2197,7 +2207,7 @@ marginBottom:    "20px"
     </div>
 
     {/* Checklist Box */}
-    <div style={{
+    <div style={{ display: displaySettings && displaySettings.showChecklist ? "block" : "none", 
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
