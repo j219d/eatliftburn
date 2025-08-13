@@ -56,7 +56,7 @@ const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
 const fiberGoal = 28;
-const waterGoal = 3; // bottles of 27oz (~2.5L)
+const waterGoal = 81; // ounces (default ≈3×27oz)
   const [stepGoal] = useState(10000);
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
@@ -353,7 +353,7 @@ const foodOptions = [
   { name: "Tuna (150g)", cal: 156, prot: 37.2, fat: 0.9, carbs: 0, fiber: 0 },
   { name: "Walnut", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
   { name: "Walnuts (3)", cal: 78, prot: 1.8, fat: 7.8, carbs: 1.8, fiber: 0.9 },
-  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 1 },
+  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 27 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
   { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
@@ -452,7 +452,7 @@ const estimatedDeficit = calorieThreshold + totalBurn - calories;
 // dynamic goals used by progress bars
 const modeCalOffset = mode === "Cut" ? -cutDeficit : (mode === "Bulk" ? bulkSurplus : 0);
 const caloriesBudget = Math.max(0, calorieThreshold + totalBurn + modeCalOffset); // dynamic goal that grows with steps/workouts and shifts by mode (Cut -500, Bulk +100) // grows as you add steps/workouts
-const waterCount = water + (checklist.concentrace ? 1 : 0); // Concentrace counts as 1 bottle
+const waterCount = water + (checklist.concentrace ? 27 : 0); // Concentrace adds 27 oz
 
 useEffect(() => {
     if (mode === "Cut") {
@@ -728,7 +728,7 @@ const inputStyleThird = {
   // ---------- Progress bar component ----------
   
   // ---------- Progress bar component ----------
-  const Progress = ({ label, value, goal, suffix = "", dangerWhenOver = false, successWhenMet = false }) => {
+  const Progress = ({ label, value, goal, suffix = "", goalSuffix = "", dangerWhenOver = false, successWhenMet = false  }) => {
     const safeGoal = goal > 0 ? goal : 1;
     const pctRaw = (value / safeGoal) * 100;
     const pct = Math.max(0, Math.min(100, pctRaw)); // cap at 100%
@@ -769,7 +769,7 @@ const inputStyleThird = {
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 6 }}>
           <span><strong>{label}</strong></span>
           <span style={{ fontVariantNumeric: "tabular-nums" }}>
-            {Math.round(value * 10) / 10}{suffix} / {Math.round(safeGoal * 10) / 10}{suffix}
+            {Math.round(value * 10) / 10} / {Math.round(safeGoal * 10) / 10}{goalSuffix ? goalSuffix : ""}
           </span>
         </div>
         <div style={{ height: 18, background: "#eef1f5", borderRadius: 999, overflow: "hidden" }}>
@@ -2108,11 +2108,11 @@ marginBottom:    "20px"
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />
-      <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
-      <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
-      <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />
-      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet />
+      <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />
       <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
