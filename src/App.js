@@ -1072,45 +1072,48 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   </div>
 
         <button
-          onClick={() => {
+          
+onClick={() => {
   const { name, cal, prot, fat, carbs, fiber } = customFood;
 
-  const parsedCal = parseInt(cal);
-  const parsedProt = parseInt(prot);
-  const parsedFat = fat !== "" && !isNaN(parseFloat(fat)) ? parseFloat(fat) : undefined;
-  const parsedCarbs = carbs !== "" && !isNaN(parseFloat(carbs)) ? parseFloat(carbs) : undefined;
-  const parsedFiber = fiber !== "" && !isNaN(parseFloat(fiber)) ? parseFloat(fiber) : undefined;
-
-  if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
-    setCalories(c => c + parsedCal);
-    setProtein(p => p + parsedProt);
-    if (parsedFat !== undefined) setFat(f => f + parsedFat);
-    if (parsedCarbs !== undefined) setCarbs(c => c + parsedCarbs);
-    if (parsedFiber !== undefined) setFiber(f => f + parsedFiber);
-
-    setFoodLog(f => [
-      ...f,
-      {
-        name,
-        cal: parsedCal,
-        prot: parsedProt,
-        ...(parsedFat !== undefined && { fat: parsedFat }),
-        ...(parsedCarbs !== undefined && { carbs: parsedCarbs }),
-        ...(parsedFiber !== undefined && { fiber: parsedFiber }),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ]);
-
-    setCustomFood({
-      name: "",
-      cal: "",
-      prot: "",
-      fat: "",
-      carbs: "",
-      fiber: ""
-    });
+  const parsedCal = parseInt(cal, 10);
+  if (!name || isNaN(parsedCal)) {
+    console.error("Custom Food needs a name and calories.");
+    return;
   }
-}}
+
+  // Default any blank fields to zero
+  const parsedProt  = prot  === "" || isNaN(parseFloat(prot))  ? 0 : parseFloat(prot);
+  const parsedFat   = fat   === "" || isNaN(parseFloat(fat))   ? 0 : parseFloat(fat);
+  const parsedCarbs = carbs === "" || isNaN(parseFloat(carbs)) ? 0 : parseFloat(carbs);
+  const parsedFiber = fiber === "" || isNaN(parseFloat(fiber)) ? 0 : parseFloat(fiber);
+
+  // Update totals
+  setCalories(c => c + parsedCal);
+  setProtein(p => p + parsedProt);
+  setFat(f => f + parsedFat);
+  setCarbs(c => c + parsedCarbs);
+  setFiber(f => f + parsedFiber);
+
+  // Log entry (always include numeric fields, even if zero)
+  setFoodLog(f => [
+    ...f,
+    {
+      name,
+      cal: parsedCal,
+      prot: parsedProt,
+      fat: parsedFat,
+      carbs: parsedCarbs,
+      fiber: parsedFiber,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    }
+  ]);
+
+  // Reset inputs and toast
+  setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+  setToastMsg("Added custom food");
+  setTimeout(() => setToastMsg(""), 1200);
+}}}}
 
           style={{
             padding: "10px 16px",
