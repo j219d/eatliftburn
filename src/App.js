@@ -963,7 +963,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
 
-      {/* ⚖️ By Weight */}
+      {/* ⚖️ Weigh & Log */}
       <div style={{
         marginTop: "12px",
         marginBottom: "18px",
@@ -974,51 +974,62 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       }}>
         <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: 18 }}>⚖️</span>
-          <h3 style={{ margin: 0, fontSize: 18 }}>By Weight</h3>
+          <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(160px, 1fr) 90px 80px", gap: "8px", alignItems: "center" }}>
-          <select
-            value={weighedKey}
-            onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
-          >
-            <option value="">Select food</option>
-            {weighedFoods.map(f => (
-              <option key={f.key} value={f.key}>{f.label}</option>
-            ))}
-          </select>
+        <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "10px",
+    flexWrap: "nowrap",
+    marginBottom: "6px"
+  }}
+>
+  <select
+    value={weighedKey}
+    onChange={(e) => setWeighedKey(e.target.value)}
+    style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc",
+             flex: "0 1 200px", maxWidth: "220px" }}
+  >
+    <option value="">Select food</option>
+    {weighedFoods.map(f => (
+      <option key={f.key} value={f.key}>{f.label}</option>
+    ))}
+  </select>
 
-          <input
-            type="text" inputMode="decimal"
-            placeholder="Grams"
-            value={weighedGrams}
-            onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 }}
-          />
+  <input
+    type="text" inputMode="decimal"
+    placeholder="Grams"
+    value={weighedGrams}
+    onChange={e => setWeighedGrams(e.target.value)}
+    style={{ padding: "10px", fontSize: "15px", borderRadius: 8, border: "1px solid #ccc",
+             width: "50px", minWidth: 0, textAlign: "center" }}
+  />
 
-          <button
-            onClick={() => {
-              const def = weighedFoods.find(f => f.key === weighedKey);
-              if (!def) return;
-              const calc = computeFromGrams(def.per100, weighedGrams);
-              addFood({
-                name: `${def.label} (${calc.grams}g)`,
-                cal: calc.cal,
-                prot: calc.prot,
-                fat:  calc.fat,
-                carbs: calc.carbs,
-                fiber: calc.fiber,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              });
-              setWeighedGrams("");
-            }}
-            style={{ padding: "10px 0", width: "80px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, fontSize: "14px", justifySelf: "end" }}
-            disabled={!weighedKey || !weighedGrams}
-          >
-            Add
-          </button>
-        </div>
+  <button
+    onClick={() => {
+      const def = weighedFoods.find(f => f.key === weighedKey);
+      if (!def) return;
+      const calc = computeFromGrams(def.per100, weighedGrams);
+      addFood({
+        name: `${def.label} (${calc.grams}g)`,
+        cal: calc.cal,
+        prot: calc.prot,
+        fat:  calc.fat,
+        carbs: calc.carbs,
+        fiber: calc.fiber,
+        time: new Date().toLocaleTimeString([], {{ hour: '2-digit', minute: '2-digit' }})
+      });
+      setWeighedGrams("");
+    }}
+    style={{ padding: "10px 0", width: "56px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8 }}
+    disabled={!weighedKey || !weighedGrams}
+  >
+    Add
+  </button>
+</div>
 
         {/* live preview (safe-guarded) */}
         {weighedKey && weighedGrams && (() => {
