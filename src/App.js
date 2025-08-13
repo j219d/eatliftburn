@@ -1034,7 +1034,26 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             Add
           </button>
         </div>
-live preview (safe-guarded) */}
+
+  {/* live preview */}
+  {weighedKey && weighedGrams && (() => {
+    const def = weighedFoods.find((x) => x.key === weighedKey);
+    if (!def) return null;
+    const g = Math.max(0, parseFloat(weighedGrams) || 0);
+    const s = g / 100;
+    const cal   = Math.round((def.per100?.cal || 0) * s);
+    const prot  = +(((def.per100?.prot ?? 0) * s).toFixed(1));
+    const fat   = +(((def.per100?.fat  ?? 0) * s).toFixed(1));
+    const carbs = +(((def.per100?.carbs?? 0) * s).toFixed(1));
+    const fiber = +(((def.per100?.fiber?? 0) * s).toFixed(1));
+    return (
+      <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
+        Preview: <strong>{def.label} ({g}g)</strong> — {cal} cal, {prot}g protein
+        {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
+      </div>
+    );
+  })()}
+}
         {weighedKey && weighedGrams && (() => {
           const def = weighedFoods.find(x => x.key === weighedKey);
           if (!def) return null;
