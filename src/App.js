@@ -930,11 +930,11 @@ if (screen === "settings") {
             <div style={{ fontWeight:600, marginBottom:"6px" }}>Goals</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
               <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-                <span>Water goal (oz)</span>
+                <span>Water (oz)</span>
                 <input type="number" inputMode="decimal" value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(1, parseFloat(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
               </label>
               <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-                <span>Steps goal</span>
+                <span>Steps</span>
                 <input type="number" inputMode="numeric" value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(1, parseInt(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
               </label>
             </div>
@@ -952,10 +952,10 @@ if (screen === "settings") {
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
               <input
                 type="text"
-                 style={{width: "50%"}} placeholder="Add new checklist item"
+                placeholder="Add new checklist item"
                 value={newChecklistName}
                 onChange={e=>setNewChecklistName(e.target.value)}
-                style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                style={{ width:"50%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
               />
               <button
                 onClick={()=>{
@@ -1538,9 +1538,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
-          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+          <button onClick={() => setScreen("food")}     style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
     );
@@ -1919,9 +1919,9 @@ setWorkoutLog(prev => ({
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
-          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+          <button onClick={() => setScreen("food")}     style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
     );
@@ -2056,9 +2056,9 @@ setWorkoutLog(prev => ({
           borderTop:    "1px solid #ddd",
           boxShadow:    "0 -1px 4px rgba(0,0,0,0.1)"
         }}>
-          <button onClick={() => setScreen("food")}     style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+          <button onClick={() => setScreen("food")}     style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")}   style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
     );
@@ -2121,13 +2121,13 @@ setWorkoutLog(prev => ({
                   else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); }
                   setScreen("home");
                 }}
-                style={{ flex:1, padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
+                style={{ width:"50%", padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
               >
                 Save
               </button>
               <button
                 onClick={() => { setCutDeficit(500); setBulkSurplus(100); setCutProtein(140); setCutFat(50); setCutCarb(120); setMaintProtein(140); setMaintFat(55); setMaintCarb(160); setBulkProtein(150); setBulkFat(60); setBulkCarb(200); if (mode === "Cut") { setProteinGoal(140); setFatGoal(50); setCarbGoal(120); } else if (mode === "Maintenance") { setProteinGoal(140); setFatGoal(55); setCarbGoal(160); } else { setProteinGoal(150); setFatGoal(60); setCarbGoal(200); } } }
-                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
+                style={{ width:"50%", padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
               >
                 Reset to defaults
               </button>
@@ -2159,9 +2159,9 @@ setWorkoutLog(prev => ({
         {/* — Fixed Bottom Tab Bar — */}
         <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
                       borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
-          <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
+          <button onClick={() => setScreen("food")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
+          <button onClick={() => setScreen("workouts")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
+          <button onClick={() => setScreen("weight")} style={{ width:"50%",border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
       </>
     );
@@ -2367,8 +2367,7 @@ marginBottom:    "20px"
       }}>
         <button
           onClick={() => setScreen("food")}
-          style={{
-            flex:1,
+          style={{ width:"50%",
             border:"none",
             background:"transparent",
             fontSize:"16px",
@@ -2379,8 +2378,7 @@ marginBottom:    "20px"
         </button>
         <button
           onClick={() => setScreen("workouts")}
-          style={{
-            flex:1,
+          style={{ width:"50%",
             border:"none",
             background:"transparent",
             fontSize:"16px",
@@ -2391,8 +2389,7 @@ marginBottom:    "20px"
         </button>
         <button
           onClick={() => setScreen("weight")}
-          style={{
-            flex:1,
+          style={{ width:"50%",
             border:"none",
             background:"transparent",
             fontSize:"16px",
