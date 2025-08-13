@@ -832,7 +832,7 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"6px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
@@ -846,12 +846,12 @@ if (screen === "settings") {
 
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
-            <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+            <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"25%", width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
           </label>
 
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
-            <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+            <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"25%", width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
             </label>
 
           <label style={{ display:"block", marginBottom:"10px" }}>
@@ -864,7 +864,7 @@ if (screen === "settings") {
           </button>
         </div>
       </div>
-      {/* Home Page Display */}<div style={{ background:"#f7f7f9", border:"1px solid #e6e6ec", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 3px rgba(0,0,0,0.03)", marginTop:"6px", marginBottom:"10px" }}>
+      {/* Home Page Display */}<div style={{ background:"#f7f7f9", border:"1px solid #e6e6ec", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 3px rgba(0,0,0,0.03)", margin:"6px auto 10px auto", maxWidth:"560px" }}>
         <h2 style={{ marginTop:0, marginBottom:6, fontSize:"16px", fontWeight:600 }}>Home Page Display</h2>
         {[
           ["showProtein","Protein"],
