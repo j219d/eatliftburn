@@ -64,7 +64,7 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
     try {
       return JSON.parse(localStorage.getItem("displaySettings")) || {
         showProtein: true,
-        showFats: true,
+        showFat: true,
         showCarbs: true,
         showFiber: true,
         showWater: true,
@@ -74,7 +74,7 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
     } catch {
       return {
         showProtein: true,
-        showFats: true,
+        showFat: true,
         showCarbs: true,
         showFiber: true,
         showWater: true,
@@ -869,7 +869,7 @@ if (screen === "settings") {
         <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
         {[
           ["showProtein","Protein"],
-          ["showFats","Fats"],
+          ["showFat","Fats"],
           ["showCarbs","Carbs"],
           ["showFiber","Fiber"],
           ["showWater","Water"],
@@ -2156,18 +2156,18 @@ marginBottom:    "20px"
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      {displaySettings.showProtein && <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showFats && <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showCarbs && <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showFiber && <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showWater && <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />}
-      {displaySettings.showSteps && <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />}
+      <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />
+      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
     </div>
 
     {/* Checklist Box */}
-    {displaySettings.showChecklist && <div style={{
+    <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
