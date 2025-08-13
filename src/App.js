@@ -313,33 +313,22 @@ const foodOptions = [
   { name: "Yogurt 2% (Fage)", cal: 100, prot: 15, fat: 3, carbs: 5, fiber: 0 }
 ];
 
-// ⚖️ Per-100g macro table for weighed logging (cooked/no-oil where applicable)
+// ⚖️ Per-100g macro table for weighed logging
 const weighedFoods = [
-  { key: "chicken_breast_cooked", label: "Chicken breast (cooked)",     per100: { cal: 165, prot: 31,  fat: 3.6, carbs: 0,   fiber: 0 } },
-  { key: "chicken_thigh_bbq_ns",  label: "Chicken thigh (BBQ, no skin)",per100: { cal: 200, prot: 26,  fat: 8,   carbs: 0,   fiber: 0 } },
-  { key: "broccoli_cooked",       label: "Broccoli (cooked, no oil)",   per100: { cal: 35,  prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
-  { key: "carrot_cooked",         label: "Carrot (cooked)",             per100: { cal: 41,  prot: 0.9, fat: 0.2, carbs: 10,  fiber: 2.8 } },
-  { key: "green_beans_roasted",   label: "Green beans (roasted, no oil)",per100:{ cal: 38,  prot: 2.2, fat: 0.4, carbs: 8,   fiber: 3.6 } },
-  { key: "rice_cooked",           label: "Rice (cooked)",               per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28,  fiber: 0.4 } },
-  { key: "ribeye_cooked",         label: "Ribeye steak (cooked)",       per100: { cal: 288, prot: 24.8,fat: 20,  carbs: 0,   fiber: 0 } },
-  { key: "cottage_5pct",          label: "Cottage cheese 5%",           per100: { cal: 95,  prot: 11,  fat: 5,   carbs: 1.5, fiber: 0 } },
-  { key: "tuna_canned_water",     label: "Tuna (canned in water, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
-  { key: "sweet_potato_cooked",   label: "Sweet potato (cooked)",       per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
+  { key: "chicken_breast_cooked", label: "Chicken breast (cooked)", per100: { cal: 165, prot: 31, fat: 3.6, carbs: 0,   fiber: 0 } },
+  { key: "chicken_thigh_bbq_noskin", label: "Chicken thigh (BBQ, no skin)", per100: { cal: 200, prot: 26, fat: 8,   carbs: 0,   fiber: 0 } },
+  { key: "broccoli_cooked",         label: "Broccoli (cooked, no oil)",     per100: { cal: 35,  prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
+  { key: "carrot_cooked",           label: "Carrot (cooked)",               per100: { cal: 41,  prot: 0.9, fat: 0.2, carbs: 10,  fiber: 2.8 } },
+  { key: "green_beans_roasted",     label: "Green beans (roasted, no oil)", per100: { cal: 38,  prot: 2.2, fat: 0.4, carbs: 8,   fiber: 3.6 } },
+  { key: "rice_cooked",             label: "Rice (cooked)",                  per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28,  fiber: 0.4 } },
+  { key: "gb_90_10_cooked",         label: "Ground beef 90/10 (cooked)",    per100: { cal: 176, prot: 25,  fat: 8,   carbs: 0,   fiber: 0 } },
+  { key: "gb_80_20_cooked",         label: "Ground beef 80/20 (cooked)",    per100: { cal: 254, prot: 25.8,fat: 17,  carbs: 0,   fiber: 0 } },
+  { key: "salmon_cooked",           label: "Salmon (cooked)",               per100: { cal: 206, prot: 22,  fat: 13,  carbs: 0,   fiber: 0 } },
+  { key: "sweet_potato_cooked",     label: "Sweet potato (cooked)",         per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
+  { key: "spinach_frozen",          label: "Spinach (frozen, cooked)",      per100: { cal: 28,  prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 } },
+  { key: "peas_frozen",             label: "Peas (frozen, cooked)",         per100: { cal: 73,  prot: 6.9, fat: 1.5, carbs: 10.5,fiber: 5.1 } },
 ];
-// Helper: compute macros from grams using per-100g profile
-function computeFromGrams(per100, grams) {
-  if (!per100) return { cal:0, prot:0, fat:0, carbs:0, fiber:0, grams:0 };
-  const g = Math.max(0, parseFloat(grams) || 0);
-  const s = g / 100;
-  return {
-    cal:   Math.round((per100.cal   || 0) * s),
-    prot:  Math.round((per100.prot  || 0) * s), // whole grams to match existing addFood()
-    fat: +((per100.fat   || 0) * s).toFixed(1),
-    carbs:+((per100.carbs || 0) * s).toFixed(1),
-    fiber:+((per100.fiber || 0) * s).toFixed(1),
-    grams: g
-  };
-}
+
 
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
@@ -525,6 +514,19 @@ if (type === "Run") {
     water: parseInt(food.water) || 0, // 👈 Add this line
     time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
+
+// Helper: compute macros from grams using per-100g profile
+const computeFromGrams = (per100, grams) => {
+  const g = Math.max(0, parseFloat(grams) || 0);
+  const scale = g / 100;
+  const cal   = Math.round(per100.cal   * scale);
+  const prot  = Math.round(per100.prot  * scale);   // keep whole numbers to match addFood parsing
+  const fat   = +(per100.fat   * scale).toFixed(1);
+  const carbs = +(per100.carbs * scale).toFixed(1);
+  const fiber = +(per100.fiber * scale).toFixed(1);
+  return { cal, prot, fat, carbs, fiber, grams: g };
+};
+
 
   if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
     console.error("Invalid food entry:", food);
@@ -962,125 +964,125 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-
       {/* ⚖️ Weigh & Log */}
-      <div style={{
-        marginTop: "12px",
-        marginBottom: "18px",
-        padding: "12px",
-        border: "1px solid #e5e7eb",
-        borderRadius: "10px",
-        background: "#fafafa"
-      }}>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
-          <span style={{ fontSize: 18 }}>⚖️</span>
-          <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
-        </div>
+<div
+  style={{
+    marginTop: "12px",
+    marginBottom: "18px",
+    padding: "12px",
+    border: "1px solid #e5e7eb",
+    borderRadius: "10px",
+    background: "#fafafa",
+  }}
+>
+  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+    <span style={{ fontSize: 18 }}>⚖️</span>
+    <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
+  </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "auto auto auto", gap: "10px", alignItems: "center", justifyContent: "start" }}>
-          <select
-            value={weighedKey}
-            onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc",width: "200px", maxWidth: "200px", minWidth: 0 }}
-          >
-            <option value="">Select food</option>
-            {weighedFoods.map(f => (
-              <option key={f.key} value={f.key}>{f.label}</option>
-            ))}
-          </select>
+  {/* Row — fixed, aligned, no overlap */}
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+    }}
+  >
+    {/* Select food — ~30% narrower */}
+    <select
+      value={weighedKey}
+      onChange={(e) => setWeighedKey(e.target.value)}
+      style={{
+        flex: "0 0 180px",         // fixed width (narrower)
+        minWidth: 0,               // iOS: allow shrink
+        padding: "10px",
+        borderRadius: 8,
+        border: "1px solid #ccc",
+      }}
+    >
+      <option value="">Select food</option>
+      {weighedFoods.map((f) => (
+        <option key={f.key} value={f.key}>
+          {f.label}
+        </option>
+      ))}
+    </select>
 
-          <input
-            type="text" inputMode="decimal"
-            placeholder="Grams"
-            value={weighedGrams}
-            onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "50px", minWidth: 0, textAlign: "center" }}
-          />
+    {/* Grams — half width, fits 3 digits */}
+    <input
+      type="text"
+      inputMode="decimal"
+      placeholder="Grams"
+      value={weighedGrams}
+      onChange={(e) => setWeighedGrams(e.target.value)}
+      style={{
+        flex: "0 0 50px",          // fixed 50px width
+        minWidth: 0,               // iOS: allow shrink
+        textAlign: "center",
+        padding: "10px",
+        borderRadius: 8,
+        border: "1px solid #ccc",
+      }}
+    />
 
-          <button
-            onClick={() => {
-              const def = weighedFoods.find(f => f.key === weighedKey);
-              if (!def) return;
-              const calc = computeFromGrams(def.per100, weighedGrams);
-              addFood({
-                name: `${def.label} (${calc.grams}g)`,
-                cal: calc.cal,
-                prot: calc.prot,
-                fat:  calc.fat,
-                carbs: calc.carbs,
-                fiber: calc.fiber,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              });
-              setWeighedGrams("");
-            }}
-            style={{ padding: "10px 0", width: "56px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }} disabled={!weighedKey || !weighedGrams}
-          >
-            Add
-          </button>
-        </div>
+    {/* Add — ~30% narrower, stays at the end */}
+    <button
+      onClick={() => {
+        const def = weighedFoods.find((f) => f.key === weighedKey);
+        if (!def) return;
+        // inline safe calc
+        const g = Math.max(0, parseFloat(weighedGrams) || 0);
+        const s = g / 100;
+        const cal = Math.round((def.per100?.cal || 0) * s);
+        const prot = +(((def.per100?.prot ?? 0) * s).toFixed(1));
+        const fat = +(((def.per100?.fat ?? 0) * s).toFixed(1));
+        const carbs = +(((def.per100?.carbs ?? 0) * s).toFixed(1));
+        const fiber = +(((def.per100?.fiber ?? 0) * s).toFixed(1));
 
-        {/* live preview (safe-guarded) */}
-        {weighedKey && weighedGrams && (() => {
-          const def = weighedFoods.find(x => x.key === weighedKey);
-          if (!def) return null;
-          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(def.per100, weighedGrams);
-          return (
-            <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
-              Preview: <strong>{def.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
-              {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
-            </div>
-          );
-        })()}
+        addFood({{
+          name: `${def.label} (${g}g)`,
+          cal,
+          prot,
+          fat,
+          carbs,
+          fiber,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }});
+        setWeighedGrams("");
+      }}}
+      style={{
+        flex: "0 0 70px",          // fixed ~30% narrower
+        padding: "10px 0",
+        background: "#0070f3",
+        color: "#fff",
+        border: "none",
+        borderRadius: 8,
+        textAlign: "center",
+      }}
+      disabled={!weighedKey || !weighedGrams}
+    >
+      Add
+    </button>
+  </div>
+
+  {/* Live preview (guarded) */}
+  {weighedKey && weighedGrams && (() => {{
+    const def = weighedFoods.find((x) => x.key === weighedKey);
+    if (!def) return null;
+    const g = Math.max(0, parseFloat(weighedGrams) || 0);
+    const s = g / 100;
+    const cal = Math.round((def.per100?.cal || 0) * s);
+    const prot = +(((def.per100?.prot ?? 0) * s).toFixed(1));
+    const fat = +(((def.per100?.fat ?? 0) * s).toFixed(1));
+    const carbs = +(((def.per100?.carbs ?? 0) * s).toFixed(1));
+    const fiber = +(((def.per100?.fiber ?? 0) * s).toFixed(1));
+    return (
+      <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
+        Preview: <strong>{def.label} ({g}g)</strong> — {cal} cal, {prot}g protein
+        {fat ? `, ${fat}g fat` : ''}{carbs ? `, ${carbs}g carbs` : ''}{fiber ? `, ${fiber}g fiber` : ''}
       </div>
-      <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-  {foodLog.map((f, i) => (
-    <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
-      {f.time && <strong style={{ marginRight: "6px", color: "#888" }}>{f.time}</strong>}
-      {f.name} — {f.cal} cal, {f.prot}g protein
-      {f.fat ? `, ${f.fat}g fat` : ""}
-      {f.carbs ? `, ${f.carbs}g carbs` : ""}
-      {f.fiber ? `, ${f.fiber}g fiber` : ""}
-      <button onClick={() => deleteFood(i)} style={{ marginLeft: "8px" }}>❌</button>
-    </li>
-  ))}
-</ul>
-    
-<div style={{
-  marginTop:     "24px",
-  backgroundColor:"#f1f1f1",
-  padding:       "12px 16px",
-  borderRadius:  "10px",
-  display:       "flex",
-  flexDirection: "column",
-  gap:           "8px",
-  fontSize:      "16px",
-  fontWeight:    "600",
-  color:         "#333"
-}}>
-  <div style={{
-    textAlign: "center",
-    fontSize:  "20px",
-    fontWeight:"700"
-  }}>
-    Calories: {calories} cal
-  </div>
-
-  <div style={{
-    display:        "flex",
-    justifyContent: "space-between"
-  }}>
-    <div>Protein: {Math.round(protein * 10) / 10} g</div>
-    <div>Carbs:   {Math.round(carbs   * 10) / 10} g</div>
-  </div>
-
-  <div style={{
-    display:        "flex",
-    justifyContent: "space-between"
-  }}>
-    <div>Fat:   {Math.round(fat   * 10) / 10} g</div>
-    <div>Fiber: {Math.round(fiber * 10) / 10} g</div>
-  </div>
+    );
+  }})()}
 </div>
       
 </div>
