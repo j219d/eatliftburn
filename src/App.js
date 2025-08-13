@@ -952,7 +952,7 @@ if (screen === "settings") {
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
               <input
                 type="text"
-                placeholder="Add new checklist item"
+                 style={{width: "50%"}} placeholder="Add new checklist item"
                 value={newChecklistName}
                 onChange={e=>setNewChecklistName(e.target.value)}
                 style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
