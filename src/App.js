@@ -2066,7 +2066,7 @@ marginBottom:    "20px"
     }}
   >
     Reset
-  </button></div>
+  </button>
 </div>
 
     {showModes && (
