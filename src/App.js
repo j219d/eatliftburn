@@ -81,6 +81,7 @@ const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(() => {
     return localStorage.getItem("isChecklistCollapsed") === "true";
   } catch {
     return false;
+  }
 });
 
 useEffect(() => {
@@ -315,56 +316,64 @@ const foodOptions = [
 
 // ⚖️ Per-100g macro table for weighed logging (cooked/no-oil where applicable)
 const weighedFoods = [
-  { key: "beef_90_10_raw", label: "Beef, ground 90/10 (raw)", per100: { cal: 176, prot: 20.0, fat: 10.0, carbs: 0, fiber: 0 } },
-  { key: "beef_90_10_cooked", label: "Beef, ground 90/10 (cooked)", per100: { cal: 250, prot: 26.0, fat: 15.0, carbs: 0, fiber: 0 } },
-  { key: "beef_80_20_raw", label: "Beef, ground 80/20 (raw)", per100: { cal: 254, prot: 17.2, fat: 20.0, carbs: 0, fiber: 0 } },
-  { key: "beef_80_20_cooked", label: "Beef, ground 80/20 (cooked)", per100: { cal: 294, prot: 25.0, fat: 22.0, carbs: 0, fiber: 0 } },
-  { key: "lamb_shoulder_cooked", label: "Lamb shoulder (cooked)", per100: { cal: 294, prot: 25.0, fat: 21.0, carbs: 0, fiber: 0 } },
-  { key: "salmon_cooked", label: "Salmon (cooked)", per100: { cal: 206, prot: 22.0, fat: 13.0, carbs: 0, fiber: 0 } },
-  { key: "tuna_cooked", label: "Tuna (cooked)", per100: { cal: 184, prot: 29.0, fat: 6.0, carbs: 0, fiber: 0 } },
-  { key: "branzino_cooked", label: "Branzino (cooked)", per100: { cal: 124, prot: 24.0, fat: 3.0, carbs: 0, fiber: 0 } },
-  { key: "egg_whites", label: "Egg whites", per100: { cal: 52, prot: 11.0, fat: 0.2, carbs: 1.0, fiber: 0 } },
-  { key: "cottage_cheese_nancys_2pct", label: "Cottage cheese (Nancy’s 2%)", per100: { cal: 73, prot: 12.7, fat: 1.8, carbs: 3.6, fiber: 0 } },
-  { key: "cottage_cheese_good_culture_4pct", label: "Cottage cheese (Good Culture 4%)", per100: { cal: 100, prot: 12.7, fat: 4.1, carbs: 2.7, fiber: 0 } },
-  { key: "cheese_parmesan", label: "Parmesan cheese", per100: { cal: 431, prot: 38.0, fat: 29.0, carbs: 4.1, fiber: 0 } },
-  { key: "cheese_pecorino", label: "Pecorino Romano", per100: { cal: 387, prot: 28.0, fat: 32.0, carbs: 3.6, fiber: 0 } },
-  { key: "cheese_cheddar", label: "Cheddar cheese", per100: { cal: 403, prot: 25.0, fat: 33.0, carbs: 1.3, fiber: 0 } },
+  { key: "chicken_breast_cooked", label: "Chicken breast (cooked)", per100: { cal: 165, prot: 31, fat: 3.6, carbs: 0, fiber: 0 } },
+  { key: "chicken_thigh_bbq_ns", label: "Chicken thigh (BBQ, no skin)", per100: { cal: 200, prot: 26, fat: 8, carbs: 0, fiber: 0 } },
+  { key: "broccoli_cooked", label: "Broccoli (cooked, no oil)", per100: { cal: 35, prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
+  { key: "carrot_cooked", label: "Carrot (cooked)", per100: { cal: 41, prot: 0.9, fat: 0.2, carbs: 10, fiber: 2.8 } },
+  { key: "green_beans_roasted", label: "Green beans (roasted, no oil)", per100: { cal: 38, prot: 2.2, fat: 0.4, carbs: 8, fiber: 3.6 } },
+  { key: "rice_cooked", label: "Rice (cooked)", per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28, fiber: 0.4 } },
+  { key: "ribeye_cooked", label: "Ribeye steak (cooked)", per100: { cal: 288, prot: 24.8, fat: 20, carbs: 0, fiber: 0 } },
+  { key: "cottage_5pct", label: "Cottage cheese 5%", per100: { cal: 95, prot: 11, fat: 5, carbs: 1.5, fiber: 0 } },
+  { key: "tuna_canned_water", label: "Tuna (canned in water, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
+  { key: "sweet_potato_cooked", label: "Sweet potato (cooked)", per100: { cal: 86, prot: 2, fat: 0.1, carbs: 20, fiber: 3 } },
+  { key: "ground_beef_90_10_raw", label: "Ground beef 90/10 (raw)", per100: { cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 } },
+  { key: "ground_beef_90_10_cooked", label: "Ground beef 90/10 (cooked)", per100: { cal: 176, prot: 25, fat: 8, carbs: 0, fiber: 0 } },
+  { key: "ground_beef_80_20_raw", label: "Ground beef 80/20 (raw)", per100: { cal: 254, prot: 17, fat: 20, carbs: 0, fiber: 0 } },
+  { key: "ground_beef_80_20_cooked", label: "Ground beef 80/20 (cooked)", per100: { cal: 254, prot: 25.8, fat: 17, carbs: 0, fiber: 0 } },
+  { key: "cottage_nancys_2pct", label: "Cottage cheese Nancy’s 2%", per100: { cal: 88, prot: 11, fat: 2, carbs: 3, fiber: 0 } },
+  { key: "cottage_goodculture_4pct", label: "Cottage cheese Good Culture 4%", per100: { cal: 98, prot: 12, fat: 4, carbs: 3, fiber: 0 } },
+  { key: "salmon_cooked", label: "Salmon (cooked)", per100: { cal: 206, prot: 22, fat: 13, carbs: 0, fiber: 0 } },
+  { key: "tuna_cooked", label: "Tuna (cooked, not canned)", per100: { cal: 156, prot: 37.2, fat: 0.9, carbs: 0, fiber: 0 } },
+  { key: "branzino_cooked", label: "Branzino (cooked)", per100: { cal: 143, prot: 20.5, fat: 6.8, carbs: 0, fiber: 0 } },
+  { key: "egg_whites", label: "Egg whites", per100: { cal: 52, prot: 11, fat: 0.2, carbs: 0.7, fiber: 0 } },
+  { key: "parmesan", label: "Parmesan", per100: { cal: 431, prot: 38, fat: 29, carbs: 4, fiber: 0 } },
+  { key: "cheddar", label: "Cheddar", per100: { cal: 402, prot: 25, fat: 33, carbs: 1.3, fiber: 0 } },
+  { key: "pecorino_romano", label: "Pecorino Romano", per100: { cal: 387, prot: 32, fat: 26, carbs: 3, fiber: 0 } },
   { key: "oats_dry", label: "Oats (dry)", per100: { cal: 389, prot: 16.9, fat: 6.9, carbs: 66.3, fiber: 10.6 } },
-  { key: "quinoa_raw", label: "Quinoa (raw)", per100: { cal: 368, prot: 14.1, fat: 6.1, carbs: 64.2, fiber: 7.0 } },
-  { key: "quinoa_cooked", label: "Quinoa (cooked)", per100: { cal: 120, prot: 4.4, fat: 1.9, carbs: 21.3, fiber: 2.8 } },
-  { key: "pasta_raw", label: "Pasta (raw)", per100: { cal: 371, prot: 13.0, fat: 1.5, carbs: 75.0, fiber: 3.2 } },
-  { key: "pasta_cooked", label: "Pasta (cooked)", per100: { cal: 131, prot: 5.0, fat: 1.1, carbs: 25.0, fiber: 1.4 } },
-  { key: "pumpkin_seeds", label: "Pumpkin seeds", per100: { cal: 559, prot: 30.2, fat: 49.1, carbs: 10.7, fiber: 6.0 } },
-  { key: "walnuts", label: "Walnuts", per100: { cal: 654, prot: 15.2, fat: 65.2, carbs: 13.7, fiber: 6.7 } },
-  { key: "cashews", label: "Cashews", per100: { cal: 553, prot: 18.2, fat: 43.9, carbs: 30.2, fiber: 3.3 } },
-  { key: "pistachios", label: "Pistachios", per100: { cal: 562, prot: 20.2, fat: 45.4, carbs: 27.2, fiber: 10.6 } },
-  { key: "almonds", label: "Almonds", per100: { cal: 579, prot: 21.2, fat: 49.9, carbs: 21.6, fiber: 12.5 } },
-  { key: "peanut_butter", label: "Peanut butter", per100: { cal: 588, prot: 25.0, fat: 50.0, carbs: 20.0, fiber: 6.0 } },
-  { key: "almond_butter", label: "Almond butter", per100: { cal: 614, prot: 21.0, fat: 56.0, carbs: 19.0, fiber: 10.0 } },
-  { key: "butter", label: "Butter", per100: { cal: 717, prot: 0.9, fat: 81.0, carbs: 0.1, fiber: 0 } },
+  { key: "quinoa_raw", label: "Quinoa (raw)", per100: { cal: 368, prot: 14.1, fat: 6.1, carbs: 64.2, fiber: 7 } },
+  { key: "quinoa_cooked", label: "Quinoa (cooked)", per100: { cal: 120, prot: 4.1, fat: 1.9, carbs: 21.3, fiber: 2.8 } },
+  { key: "pasta_raw", label: "Pasta (raw)", per100: { cal: 371, prot: 13, fat: 1.5, carbs: 75, fiber: 3.2 } },
+  { key: "pasta_cooked", label: "Pasta (cooked)", per100: { cal: 131, prot: 5, fat: 1.1, carbs: 25, fiber: 1.4 } },
+  { key: "pumpkin_seeds", label: "Pumpkin seeds", per100: { cal: 559, prot: 30, fat: 49, carbs: 11, fiber: 6 } },
+  { key: "walnuts", label: "Walnuts", per100: { cal: 654, prot: 15, fat: 65, carbs: 14, fiber: 7 } },
+  { key: "cashews", label: "Cashews", per100: { cal: 553, prot: 18, fat: 44, carbs: 30, fiber: 3.3 } },
+  { key: "pistachios", label: "Pistachios", per100: { cal: 560, prot: 20, fat: 45, carbs: 28, fiber: 10 } },
+  { key: "almonds", label: "Almonds", per100: { cal: 579, prot: 21, fat: 50, carbs: 22, fiber: 12 } },
+  { key: "peanut_butter", label: "Peanut butter", per100: { cal: 588, prot: 25, fat: 50, carbs: 20, fiber: 6 } },
+  { key: "almond_butter", label: "Almond butter", per100: { cal: 614, prot: 21, fat: 56, carbs: 19, fiber: 7 } },
+  { key: "butter", label: "Butter", per100: { cal: 717, prot: 0.9, fat: 81, carbs: 0.1, fiber: 0 } },
   { key: "broccoli_raw", label: "Broccoli (raw)", per100: { cal: 34, prot: 2.8, fat: 0.4, carbs: 6.6, fiber: 2.6 } },
-  { key: "broccoli_cooked", label: "Broccoli (cooked)", per100: { cal: 35, prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
-  { key: "cauliflower_raw", label: "Cauliflower (raw)", per100: { cal: 25, prot: 1.9, fat: 0.3, carbs: 5.0, fiber: 2.0 } },
-  { key: "cauliflower_cooked", label: "Cauliflower (cooked)", per100: { cal: 23, prot: 1.8, fat: 0.3, carbs: 4.1, fiber: 2.3 } },
-  { key: "green_beans", label: "Green beans", per100: { cal: 31, prot: 1.8, fat: 0.2, carbs: 7.0, fiber: 3.4 } },
+  { key: "cauliflower_cooked", label: "Cauliflower (cooked)", per100: { cal: 23, prot: 1.8, fat: 0.5, carbs: 4.1, fiber: 2.3 } },
+  { key: "cauliflower_raw", label: "Cauliflower (raw)", per100: { cal: 25, prot: 1.9, fat: 0.3, carbs: 4.9, fiber: 2 } },
+  { key: "green_beans_raw", label: "Green beans (raw)", per100: { cal: 31, prot: 1.8, fat: 0.1, carbs: 7, fiber: 3.4 } },
+  { key: "spinach_cooked", label: "Spinach (cooked)", per100: { cal: 23, prot: 3, fat: 0.3, carbs: 3.8, fiber: 2.4 } },
   { key: "spinach_raw", label: "Spinach (raw)", per100: { cal: 23, prot: 2.9, fat: 0.4, carbs: 3.6, fiber: 2.2 } },
-  { key: "spinach_cooked", label: "Spinach (cooked)", per100: { cal: 28, prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 } },
   { key: "kale", label: "Kale", per100: { cal: 49, prot: 4.3, fat: 0.9, carbs: 8.8, fiber: 3.6 } },
-  { key: "carrots_raw", label: "Carrots (raw)", per100: { cal: 41, prot: 0.9, fat: 0.2, carbs: 10.0, fiber: 2.8 } },
-  { key: "carrots_cooked", label: "Carrots (cooked)", per100: { cal: 35, prot: 0.8, fat: 0.2, carbs: 8.2, fiber: 2.5 } },
-  { key: "cucumber", label: "Cucumber", per100: { cal: 15, prot: 0.7, fat: 0.1, carbs: 3.6, fiber: 0.5 } },
-  { key: "tomato_raw", label: "Tomato (raw)", per100: { cal: 18, prot: 0.9, fat: 0.2, carbs: 3.9, fiber: 1.2 } },
-  { key: "tomato_cooked", label: "Tomato (cooked)", per100: { cal: 29, prot: 1.4, fat: 0.3, carbs: 7.0, fiber: 2.5 } },
-  { key: "strawberries", label: "Strawberries", per100: { cal: 32, prot: 0.7, fat: 0.3, carbs: 7.7, fiber: 2.0 } },
+  { key: "carrot_raw", label: "Carrot (raw)", per100: { cal: 41, prot: 0.9, fat: 0.2, carbs: 10, fiber: 2.8 } },
+  { key: "cucumber", label: "Cucumber", per100: { cal: 16, prot: 0.7, fat: 0.1, carbs: 3.6, fiber: 0.5 } },
+  { key: "tomato_cooked", label: "Tomato (cooked)", per100: { cal: 18, prot: 0.9, fat: 0.2, carbs: 4, fiber: 1.2 } },
+  { key: "tomato_raw", label: "Tomato (raw)", per100: { cal: 20, prot: 1, fat: 0.2, carbs: 4, fiber: 1.5 } },
+  { key: "strawberries", label: "Strawberries", per100: { cal: 32, prot: 0.7, fat: 0.3, carbs: 7.7, fiber: 2 } },
   { key: "blueberries", label: "Blueberries", per100: { cal: 57, prot: 0.7, fat: 0.3, carbs: 14.5, fiber: 2.4 } },
-  { key: "raspberries", label: "Raspberries", per100: { cal: 52, prot: 1.2, fat: 0.7, carbs: 12.0, fiber: 6.5 } },
-  { key: "blackberries", label: "Blackberries", per100: { cal: 43, prot: 1.4, fat: 0.5, carbs: 10.2, fiber: 5.3 } },
-  { key: "banana", label: "Banana", per100: { cal: 89, prot: 1.1, fat: 0.3, carbs: 22.8, fiber: 2.6 } },
-  { key: "apple", label: "Apple", per100: { cal: 52, prot: 0.3, fat: 0.2, carbs: 14.0, fiber: 2.4 } },
-  { key: "grapes", label: "Grapes", per100: { cal: 69, prot: 0.7, fat: 0.2, carbs: 18.1, fiber: 0.9 } },
-  { key: "mango", label: "Mango", per100: { cal: 60, prot: 0.8, fat: 0.4, carbs: 15.0, fiber: 1.6 } },
-  { key: "pineapple", label: "Pineapple", per100: { cal: 50, prot: 0.5, fat: 0.1, carbs: 13.1, fiber: 1.4 } },
-  { key: "watermelon", label: "Watermelon", per100: { cal: 30, prot: 0.6, fat: 0.2, carbs: 7.6, fiber: 0.4 } },
+  { key: "raspberries", label: "Raspberries", per100: { cal: 52, prot: 1.2, fat: 0.7, carbs: 11.9, fiber: 6.5 } },
+  { key: "blackberries", label: "Blackberries", per100: { cal: 43, prot: 1.4, fat: 0.5, carbs: 9.6, fiber: 5.3 } },
+  { key: "banana", label: "Banana", per100: { cal: 89, prot: 1.1, fat: 0.3, carbs: 23, fiber: 2.6 } },
+  { key: "apple", label: "Apple", per100: { cal: 52, prot: 0.3, fat: 0.2, carbs: 14, fiber: 2.4 } },
+  { key: "grapes", label: "Grapes", per100: { cal: 69, prot: 0.7, fat: 0.2, carbs: 18, fiber: 0.9 } },
+  { key: "mango", label: "Mango", per100: { cal: 60, prot: 0.8, fat: 0.4, carbs: 15, fiber: 1.6 } },
+  { key: "pineapple", label: "Pineapple", per100: { cal: 50, prot: 0.5, fat: 0.1, carbs: 13, fiber: 1.4 } },
+  { key: "watermelon", label: "Watermelon", per100: { cal: 30, prot: 0.6, fat: 0.2, carbs: 8, fiber: 0.4 } },
+  { key: "lamb_shoulder_cooked", label: "Lamb shoulder (cooked)", per100: { cal: 276, prot: 25, fat: 20, carbs: 0, fiber: 0 } }
 ];
 // Helper: compute macros from grams using per-100g profile
 function computeFromGrams(per100, grams) {
@@ -379,9 +388,13 @@ function computeFromGrams(per100, grams) {
     fiber:+((per100.fiber || 0) * s).toFixed(1),
     grams: g
   };
+}
+
+
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
   if (typeof value === "object" && value !== null && typeof value.cal === "number") {
     return sum + value.cal;
+  }
   if (type === "Swim") return sum + Math.round(value * 7);
   if (type === "Plank") return sum + Math.round(value * 0.04);
   if (workouts[type]) return sum + Math.round(value * workouts[type]);
@@ -408,6 +421,8 @@ useEffect(() => {
       setProteinGoal(bulkProtein);
       setFatGoal(bulkFat);
       setCarbGoal(bulkCarb);
+    }
+
   localStorage.setItem("calories", calories);
   localStorage.setItem("protein", protein);
   localStorage.setItem("fat", fat);
@@ -452,6 +467,8 @@ useEffect(() => {
       setProteinGoal(bulkProtein);
       setFatGoal(bulkFat);
       setCarbGoal(bulkCarb);
+    }
+
     /* numeric defaults removed; user settings apply */
   }, [mode]);
 
@@ -491,6 +508,8 @@ const logWorkout = (type, reps) => {
     burn = Math.round(reps * 0.04); // ~2.4 cal/min
   } else {
     burn = Math.round(workouts[type] * reps);
+  }
+
   setWorkoutLog(prev => {
     const updated = { ...prev };
     updated[type] = (updated[type] || 0) + reps;
@@ -499,9 +518,12 @@ const logWorkout = (type, reps) => {
 
   if (type === "Steps") {
   setSteps(prev => prev + reps);
+}
+
   if (type === "Run") {
     const runSteps = Math.round(reps * 1100);
     setSteps(prev => prev + runSteps);
+  }
 };
 
 
@@ -522,11 +544,17 @@ const logWorkout = (type, reps) => {
   if (type === "Steps") {
   const stepCount = workoutLog["Steps"]?.reps || 0;
   setSteps(prev => Math.max(0, prev - stepCount));
+}
+
 if (type === "Run") {
   const stepCount = workoutLog["Run"]?.stepsAdded || 0;
   setSteps(prev => Math.max(0, prev - stepCount));
+}
+
   if (type === "Treadmill" && reps?.steps) {
   setSteps(prev => Math.max(0, prev - reps.steps));
+}
+
   setWorkoutLog((prev) => {
     const updated = { ...prev };
     delete updated[type];
@@ -550,6 +578,8 @@ if (type === "Run") {
   if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
     console.error("Invalid food entry:", food);
     return;
+  }
+
   setFoodLog(prev => [...prev, completeFood]);
   setCalories(prev => prev + completeFood.cal);
   setProtein(prev => prev + completeFood.prot);
@@ -558,6 +588,7 @@ if (type === "Run") {
   setFiber(prev => prev + completeFood.fiber);
   if (completeFood.water > 0) {
     setWater(prev => prev + completeFood.water); // ✅ This syncs water log to homepage
+  }
 };
   
 const deleteFood = (index) => {
@@ -578,6 +609,7 @@ const deleteFood = (index) => {
     if (!isNaN(weight)) {
       setWeightLog([...weightLog, { date: new Date().toLocaleDateString(), weight }]);
       setNewWeight("");
+    }
   };
 
   const deleteWeight = (i) => {
@@ -656,6 +688,7 @@ const inputStyleThird = {
         fillStyle = { background: "#22c55e" };
       } else {
         fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
     } else {
       if (dangerWhenOver && isOver) {
         fillStyle = { background: "#ff4d4f" };
@@ -663,6 +696,8 @@ const inputStyleThird = {
         fillStyle = { background: "#22c55e" };
       } else {
         fillStyle = { background: "linear-gradient(90deg,#2b76ff,#6aa7ff)" };
+      }
+    }
 
     return (
       <div style={{ marginBottom: 12 }}>
@@ -833,6 +868,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 {f.name}
 </option>
 ))
+}
         </select>
       </div>
 
@@ -947,6 +983,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         ...(parsedCarbs !== undefined && { carbs: parsedCarbs }),
         ...(parsedFiber !== undefined && { fiber: parsedFiber }),
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
     ]);
 
     setCustomFood({
@@ -957,6 +994,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       carbs: "",
       fiber: ""
     });
+  }
 }}
 
           style={{
@@ -1046,23 +1084,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </div>
 
   {/* live preview */}
-  {weighedKey && weighedGrams && (() => {
-    const def = weighedFoods.find((x) => x.key === weighedKey);
-    if (!def) return null;
-    const g = Math.max(0, parseFloat(weighedGrams) || 0);
-    const s = g / 100;
-    const cal   = Math.round((def.per100?.cal || 0) * s);
-    const prot  = +(((def.per100?.prot ?? 0) * s).toFixed(1));
-    const fat   = +(((def.per100?.fat  ?? 0) * s).toFixed(1));
-    const carbs = +(((def.per100?.carbs?? 0) * s).toFixed(1));
-    const fiber = +(((def.per100?.fiber?? 0) * s).toFixed(1));
-    return (
-      <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
-        Preview: <strong>{def.label} ({g}g)</strong> — {cal} cal, {prot}g protein
-        {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
-      </div>
-    );
-  })()}
+  
         {weighedKey && weighedGrams && (() => {
           const def = weighedFoods.find(x => x.key === weighedKey);
           if (!def) return null;
@@ -1145,6 +1167,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </div>
       </>
     );
+  }
+
   if (screen === "workouts") {
   return (
     <>
@@ -1209,6 +1233,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   value={customWorkout[type] || ""}
   onChange={(e) =>
     setCustomWorkout({ ...customWorkout, [type]: e.target.value })
+  }
   style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
 />
           <button
@@ -1224,6 +1249,7 @@ setWorkoutLog(prev => ({
 }));
 setCustomWorkout({ ...customWorkout, [type]: "" });
 return;
+}
 // existing Run handling
 if (type === "Run") {
   const cal = Math.round(input * 60);
@@ -1242,17 +1268,21 @@ setWorkoutLog(prev => {
       reps: prevReps + input,
       cal: prevCal + cal,
       stepsAdded: prevSteps + runSteps
+    }
   };
 });
 
   setCustomWorkout({ ...customWorkout, [type]: "" });
   return; // Exit early
+}
+
     // fallback for other reps-based workouts
 setWorkoutLog(prev => ({
 ...prev,
 [type]: (prev[type] || 0) + input
 }));
     setCustomWorkout({ ...customWorkout, [type]: "" });
+  }
 }}
             style={{
               padding: "8px 12px",
@@ -1277,6 +1307,7 @@ setWorkoutLog(prev => ({
           value={customWorkout["Steps"] || ""}
           onChange={(e) =>
             setCustomWorkout({ ...customWorkout, Steps: e.target.value })
+          }
           style={{ width: "100px", padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
@@ -1295,8 +1326,10 @@ setWorkoutLog(prev => ({
   Steps: {
     reps: (prev["Steps"]?.reps || 0) + steps,
     cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.035)
+  }
 }));
               setCustomWorkout({ ...customWorkout, Steps: "" });
+            }
           }}
           style={{
             padding: "8px 12px",
@@ -1362,8 +1395,10 @@ setWorkoutLog(prev => ({
   Treadmill: {
     cal: (prev.Treadmill?.cal || 0) + cal,
     steps: (prev.Treadmill?.steps || 0) + estimatedSteps
+  }
 }));
         setCustomWorkout({ ...customWorkout, treadCal: "", treadKm: "" });
+      }
     }}
     style={{
       padding: "8px 12px",
@@ -1406,6 +1441,7 @@ setWorkoutLog(prev => ({
           Swim: (prev.Swim || 0) + laps
         }));
         setCustomWorkout({ ...customWorkout, Swim: "" });
+      }
     }}
     style={{
       padding: "8px 12px",
@@ -1444,6 +1480,8 @@ setWorkoutLog(prev => ({
                   display = `${reps} km – ${cal} cal`;
                 } else {
                   display = `${reps} reps – ${cal} cal`;
+                }
+
               // Number-type entries (Swim, Plank, or other reps)
               } else if (type === "Swim") {
                 const laps = value;
@@ -1457,6 +1495,8 @@ setWorkoutLog(prev => ({
                 display = `${value} reps – ${cal} cal`;
               } else {
                 display = `${value} reps – ${Math.round(value * (workouts[type] || 1))} cal`;
+              }
+
               return (
                 <li key={i} style={{ fontSize: "16px", marginBottom: "6px" }}>
                   {type}: {display}
@@ -1479,6 +1519,7 @@ setWorkoutLog(prev => ({
               Object.entries(workoutLog).reduce((sum, [type, value]) => {
                 if (typeof value === "object" && value !== null && typeof value.cal === "number") {
                   return sum + value.cal;
+                }
                 if (type === "Swim") return sum + Math.round(value * 7);
                 if (type === "Plank") return sum + Math.round(value * 0.04);
                 if (workouts[type]) return sum + Math.round(value * workouts[type]);
@@ -1507,6 +1548,8 @@ setWorkoutLog(prev => ({
         </div>
       </>
     );
+  }
+
   if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
@@ -1642,6 +1685,9 @@ setWorkoutLog(prev => ({
         </div>
       </>
     );
+  }
+
+
   if (screen === "modeSettings") {
     return (
       <>
@@ -1742,6 +1788,8 @@ setWorkoutLog(prev => ({
         </div>
       </>
     );
+  }
+
    return (
     <>
       <div style={{
@@ -1899,6 +1947,7 @@ marginBottom:    "20px"
         checked={checklist[key]}
         onChange={() =>
           setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+        }
         style={{ marginRight: "10px" }}
       />
       {key === "concentrace"
@@ -1968,4 +2017,6 @@ marginBottom:    "20px"
       </div>
     </>
   );
+}
+
 export default App;
