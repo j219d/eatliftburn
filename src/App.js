@@ -29,11 +29,6 @@ function App() {
       return (up && up.sex && up.heightCm && up.birthDate) ? "home" : "onboarding";
     } catch { return "onboarding"; }
   });
-  const [customChecklistItems, setCustomChecklistItems] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("customChecklistItems")) || []; } catch { return []; }
-  });
-  useEffect(() => { try { localStorage.setItem("customChecklistItems", JSON.stringify(customChecklistItems)); } catch {} }, [customChecklistItems]);
-  const [newChecklistLabel, setNewChecklistLabel] = useState("");
   const [toastMsg, setToastMsg] = useState("");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
@@ -62,14 +57,6 @@ const [carbGoal, setCarbGoal] = useState(
 );
 const fiberGoal = 28;
 const waterGoal = 81; // ounces (default ≈3×27oz)
-  const [waterGoalOz, setWaterGoalOz] = useState(() => {
-    try { const v = parseInt(localStorage.getItem("waterGoalOz"), 10); return !isNaN(v) ? v : 81; } catch { return 81; }
-  });
-  useEffect(() => { try { localStorage.setItem("waterGoalOz", String(waterGoalOz)); } catch {} }, [waterGoalOz]);
-  const [stepsGoalCustom, setStepsGoalCustom] = useState(() => {
-    try { const v = parseInt(localStorage.getItem("stepsGoalCustom"), 10); return !isNaN(v) ? v : 10000; } catch { return 10000; }
-  });
-  useEffect(() => { try { localStorage.setItem("stepsGoalCustom", String(stepsGoalCustom)); } catch {} }, [stepsGoalCustom]);
   const [stepGoal] = useState(10000);
 
   // Home Page Display toggles (persisted)
@@ -84,7 +71,8 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
         showSteps: true,
         showChecklist: true,
       };
-    } catch { return {
+    } catch {
+      return {
         showProtein: true,
         showFats: true,
         showCarbs: true,
@@ -92,9 +80,12 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
         showWater: true,
         showSteps: true,
         showChecklist: true,
-    }; }
+      };
+    }
   });
-  useEffect(() => { try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {} }, [displaySettings]);
+  useEffect(() => {
+    try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
+  }, [displaySettings]);
 
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
@@ -115,7 +106,9 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
 
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
-  sunlight: false
+  sunlight: false,
+  concentrace: false,
+  teffilin: false
 });
 // collapsed/expanded state for the Checklist (persisted)
 const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(() => {
@@ -888,23 +881,6 @@ if (screen === "settings") {
             {label}
           </label>
         ))}
-      </div>
-
-      {/* Goals */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Goals</h2>
-        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:10 }}>
-          <label style={{ flex:1 }}>
-            <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Water goal (oz)</div>
-            <input type="number" min={0} value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid "#ccc" }} />
-          </label>
-        </div>
-        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-          <label style={{ flex:1 }}>
-            <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Steps goal</div>
-            <input type="number" min={0} value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
-        </div>
       </div>
 
     </>
@@ -2184,13 +2160,14 @@ marginBottom:    "20px"
       {displaySettings.showFats && <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />}
       {displaySettings.showCarbs && <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />}
       {displaySettings.showFiber && <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showWater && <Progress label="Water" value={water} goal={waterGoalOz} goalSuffix="oz" successWhenMet />}
-      {displaySettings.showSteps && <Progress label="Steps" value={steps} goal={stepsGoalCustom} successWhenMet />}
+      {displaySettings.showWater && <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />}
+      {displaySettings.showSteps && <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />}
 
 
     </div>
 
-    {/* Checklist Box */}{displaySettings.showChecklist && <div style={{
+    {/* Checklist Box */}
+    {displaySettings.showChecklist && <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
@@ -2248,7 +2225,7 @@ marginBottom:    "20px"
         : key}
     </label>
   ))}
-</div>)}}
+</div>)}
     </div>
     
 
