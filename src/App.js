@@ -333,7 +333,7 @@ const weighedFoods = [
   { key: "cottage_nancys_2pct", label: "Cottage cheese Nancy’s 2%", per100: { cal: 88, prot: 11, fat: 2, carbs: 3, fiber: 0 } },
   { key: "cottage_goodculture_4pct", label: "Cottage cheese Good Culture 4%", per100: { cal: 98, prot: 12, fat: 4, carbs: 3, fiber: 0 } },
   { key: "salmon_cooked", label: "Salmon (cooked)", per100: { cal: 206, prot: 22, fat: 13, carbs: 0, fiber: 0 } },
-  { key: "tuna_cooked", label: "Tuna (cooked, not canned)", per100: { cal: 156, prot: 37.2, fat: 0.9, carbs: 0, fiber: 0 } },
+  { key: "tuna_cooked", label: "Tuna (cooked, not canned)", per100: { cal: 184, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
   { key: "branzino_cooked", label: "Branzino (cooked)", per100: { cal: 143, prot: 20.5, fat: 6.8, carbs: 0, fiber: 0 } },
   { key: "egg_whites", label: "Egg whites", per100: { cal: 52, prot: 11, fat: 0.2, carbs: 0.7, fiber: 0 } },
   { key: "parmesan", label: "Parmesan", per100: { cal: 431, prot: 38, fat: 29, carbs: 4, fiber: 0 } },
