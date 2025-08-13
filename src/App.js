@@ -25,7 +25,7 @@ function App() {
   const [screen, setScreen] = useState("home");
   const [toastMsg, setToastMsg] = useState("");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
-  const [protein, setProtein] = useState(() => parseFloat(localStorage.getItem("protein")) || 0);
+  const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
 const [deficitGoal, setDeficitGoal] = useState(() => {
@@ -327,13 +327,20 @@ const weighedFoods = [
   { key: "sweet_potato_cooked",     label: "Sweet potato (cooked)",         per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
   { key: "spinach_frozen",          label: "Spinach (frozen, cooked)",      per100: { cal: 28,  prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 } },
   { key: "peas_frozen",             label: "Peas (frozen, cooked)",         per100: { cal: 73,  prot: 6.9, fat: 1.5, carbs: 10.5,fiber: 5.1 } },
-
-  { key: "ribeye_steak_cooked",     label: "Ribeye steak (cooked)",          per100: { cal: 291, prot: 25.0, fat: 21.0, carbs: 0,   fiber: 0 } },
-  { key: "cottage_cheese_1pct",     label: "Cottage cheese (1%)",            per100: { cal: 72,  prot: 12.4, fat: 1.0,  carbs: 3.4, fiber: 0 } },
-  { key: "cottage_cheese_2pct",     label: "Cottage cheese (2%)",            per100: { cal: 82,  prot: 11.0, fat: 2.3,  carbs: 3.4, fiber: 0 } },
-  { key: "tuna_canned_water",       label: "Tuna (canned in water, drained)",per100: { cal: 132, prot: 29.0, fat: 1.0,  carbs: 0,   fiber: 0 } },
-
 ];
+// Helper: compute macros from grams using per-100g profile (global, safe)
+const computeFromGrams = (per100, grams) => {
+  if (!per100) return { cal:0, prot:0, fat:0, carbs:0, fiber:0, grams:0 };
+  const g = Math.max(0, parseFloat(grams) || 0);
+  const scale = g / 100;
+  const cal   = Math.round((per100.cal   || 0) * scale);
+  const prot  = Math.round((per100.prot  || 0) * scale);
+  const fat   = +(((per100.fat   || 0) * scale).toFixed(1));
+  const carbs = +(((per100.carbs || 0) * scale).toFixed(1));
+  const fiber = +(((per100.fiber || 0) * scale).toFixed(1));
+  return { cal, prot, fat, carbs, fiber, grams: g };
+};
+
 
 
 
@@ -513,7 +520,7 @@ if (type === "Run") {
   const completeFood = {
     name: food.name || "Unnamed",
     cal: parseInt(food.cal) || 0,
-    prot: parseFloat(food.prot) || 0,
+    prot: parseInt(food.prot) || 0,
     fat: parseFloat(food.fat) || 0,
     carbs: parseFloat(food.carbs) || 0,
     fiber: parseFloat(food.fiber) || 0,
@@ -521,17 +528,6 @@ if (type === "Run") {
     time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
-// Helper: compute macros from grams using per-100g profile
-const computeFromGrams = (per100, grams) => {
-  const g = Math.max(0, parseFloat(grams) || 0);
-  const scale = g / 100;
-  const cal   = Math.round(per100.cal   * scale);
-  const prot  = +(per100.prot  * scale).toFixed(1);
-  const fat   = +(per100.fat   * scale).toFixed(1);
-  const carbs = +(per100.carbs * scale).toFixed(1);
-  const fiber = +(per100.fiber * scale).toFixed(1);
-  return { cal, prot, fat, carbs, fiber, grams: g };
-};
 };
 
 
@@ -683,10 +679,9 @@ const inputStyleThird = {
   };
   // --------------------------------------------
 
-  let page;
 
-  if (screen === "food") {
-  page = (
+if (screen === "food") {
+  return (
     <>
       <div style={{
         position:        "fixed",
@@ -922,7 +917,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   const { name, cal, prot, fat, carbs, fiber } = customFood;
 
   const parsedCal = parseInt(cal);
-  const parsedProt = parseFloat(prot);
+  const parsedProt = parseInt(prot);
   const parsedFat = fat !== "" && !isNaN(parseFloat(fat)) ? parseFloat(fat) : undefined;
   const parsedCarbs = carbs !== "" && !isNaN(parseFloat(carbs)) ? parseFloat(carbs) : undefined;
   const parsedFiber = fiber !== "" && !isNaN(parseFloat(fiber)) ? parseFloat(fiber) : undefined;
@@ -986,7 +981,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr auto", gap: "8px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 110px auto", gap: "8px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
@@ -1003,7 +998,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc" }}
+            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
           />
 
           <button
@@ -1031,22 +1026,16 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
         {/* live preview */}
         {weighedKey && weighedGrams && (() => {
-  const def = weighedFoods.find(x => x.key === weighedKey);
-  if (!def) return null;
-  const g = Math.max(0, parseFloat(weighedGrams) || 0);
-  const s = g / 100;
-  const cal   = Math.round((def.per100?.cal || 0) * s);
-  const prot  = +(((def.per100?.prot ?? 0) * s).toFixed(1));
-  const fat   = +(((def.per100?.fat  ?? 0) * s).toFixed(1));
-  const carbs = +(((def.per100?.carbs?? 0) * s).toFixed(1));
-  const fiber = +(((def.per100?.fiber?? 0) * s).toFixed(1));
-  return (
-    <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
-      Preview: <strong>{def.label} ({g}g)</strong> — {cal} cal, {prot}g protein
-      {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
-    </div>
-  );
-})()}
+          const f = weighedFoods.find(x => x.key === weighedKey);
+          if (!f) return null;
+          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(f.per100, weighedGrams);
+          return (
+            <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
+              Preview: <strong>{f.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
+              {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
+            </div>
+          );
+        })()}
       </div>
 
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
@@ -1121,8 +1110,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     );
   }
 
-  else if (screen === "workouts") {
-  page = (
+  if (screen === "workouts") {
+  return (
     <>
       <div style={{
         position: "fixed",
@@ -1502,7 +1491,7 @@ setWorkoutLog(prev => ({
     );
   }
 
-  else if (screen === "weight") {
+  if (screen === "weight") {
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : "—";
   const latestDate = weightLog.length > 0 ? weightLog[weightLog.length - 1].date : "";
 
@@ -1520,8 +1509,7 @@ setWorkoutLog(prev => ({
     ],
   };
 
-  else {
-    page = (
+  return (
     <>
       <div style={{
         position:        "fixed",
@@ -1641,8 +1629,8 @@ setWorkoutLog(prev => ({
   }
 
 
-  else if (screen === "modeSettings") {
-    page = (
+  if (screen === "modeSettings") {
+    return (
       <>
         <div style={{position:"fixed", top:0, left:0, right:0, height:"56px", backgroundColor:"#fff",
                      borderBottom:"1px solid #ddd", boxShadow:"0 1px 4px rgba(0,0,0,0.1)",
@@ -1970,9 +1958,6 @@ marginBottom:    "20px"
       </div>
     </>
   );
-  }
-
-  return page;
 }
 
 export default App;
