@@ -56,8 +56,12 @@ const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
 const fiberGoal = 28;
-const waterGoal = 3; // bottles of 27oz (~2.5L)
-  const [stepGoal] = useState(10000);
+const [waterGoal, setWaterGoal] = useState(() => {
+  try { return parseFloat(localStorage.getItem("waterGoal")) || 3; } catch { return 3; }
+});
+const [stepGoal, setStepGoal] = useState(() => {
+  try { return parseInt(localStorage.getItem("stepGoal")) || 10000; } catch { return 10000; }
+});
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
   const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 100);
@@ -75,10 +79,19 @@ const waterGoal = 3; // bottles of 27oz (~2.5L)
   const [bulkCarb, setBulkCarb] = useState(() => parseFloat(localStorage.getItem('bulkCarb')) || 200);
 
 
-  const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
-  supplements: false,
-  sunlight: false
+  const [checklistItems, setChecklistItems] = useState(() => {
+  try { return JSON.parse(localStorage.getItem("checklistItems")) || ["supplements","sunlight"]; } catch { return ["supplements","sunlight"]; }
 });
+const [checklist, setChecklist] = useState(() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem("checklist"));
+    if (saved && typeof saved === "object") return saved;
+  } catch {}
+  const obj = {};
+  (JSON.parse(localStorage.getItem("checklistItems")) || ["supplements","sunlight"]).forEach(k => obj[k] = false);
+  return obj;
+});
+
 // collapsed/expanded state for the Checklist (persisted)
 const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(() => {
   try {
@@ -93,7 +106,21 @@ useEffect(() => {
     localStorage.setItem("isChecklistCollapsed", String(isChecklistCollapsed));
   } catch {}
 }, [isChecklistCollapsed]);
-const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
+const allChecklistItemsComplete = checklistItems.length > 0 && checklistItems.every(k => !!checklist[k]);
+
+const [homeVisibility, setHomeVisibility] = useState(() => {
+  try {
+    return JSON.parse(localStorage.getItem("homeVisibility")) || {
+      showCalories:true, showProtein:true, showFat:true, showCarbs:true, showFiber:true, showWater:true, showSteps:true, showChecklist:true
+    };
+  } catch {
+    return { showCalories:true, showProtein:true, showFat:true, showCarbs:true, showFiber:true, showWater:true, showSteps:true, showChecklist:true };
+  }
+});
+
+useEffect(() => {
+  try { localStorage.setItem("homeVisibility", JSON.stringify(homeVisibility)); } catch {}
+}, [homeVisibility]);
   const [foodLog, setFoodLog] = useState(() => JSON.parse(localStorage.getItem("foodLog")) || []);
   const [workoutLog, setWorkoutLog] = useState(() => JSON.parse(localStorage.getItem("workoutLog")) || {});
   const [weightLog, setWeightLog] = useState(() => JSON.parse(localStorage.getItem("weightLog")) || []);
@@ -110,52 +137,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   }, [userProfile]);
 
   // Settings form state (prefilled when opening settings)
-  
-  // Display settings & goals (persisted)
-  const [displaySettings, setDisplaySettings] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("displaySettings")) || {
-        showProtein: true,
-        showFat: true,
-        showCarbs: true,
-        showFiber: true,
-        showSteps: true,
-        showWater: true,
-        showChecklist: true
-      };
-    } catch { return {
-      showProtein: true,
-      showFat: true,
-      showCarbs: true,
-      showFiber: true,
-      showSteps: true,
-      showWater: true,
-      showChecklist: true
-    };}
-  });
-  const [waterGoalOz, setWaterGoalOz] = useState(() => {
-    const v = parseFloat(localStorage.getItem("waterGoalOz"));
-    return !isNaN(v) && v > 0 ? v : 27 * (parseFloat(localStorage.getItem("waterGoal")) || 3);
-  });
-  const [stepsGoalCustom, setStepsGoalCustom] = useState(() => {
-    const v = parseInt(localStorage.getItem("stepsGoalCustom"), 10);
-    return !isNaN(v) && v > 0 ? v : 10000;
-  });
-
-  useEffect(() => {
-    try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
-  }, [displaySettings]);
-  useEffect(() => {
-    try { localStorage.setItem("waterGoalOz", String(waterGoalOz)); } catch {}
-  }, [waterGoalOz]);
-  useEffect(() => {
-    try { localStorage.setItem("stepsGoalCustom", String(stepsGoalCustom)); } catch {}
-  }, [stepsGoalCustom]);
-
-  // Effective goals used on Home
-  const waterGoalEff = Math.max(1, Math.round((waterGoalOz || 81) / 27)); // convert oz to 27oz bottles
-  const stepGoalEff = stepsGoalCustom || stepGoal;
-const [settingsSex, setSettingsSex] = useState("male");
+  const [settingsSex, setSettingsSex] = useState("male");
   const [settingsHeight, setSettingsHeight] = useState("");
   const [settingsBirth, setSettingsBirth] = useState("");
   const [settingsWeight, setSettingsWeight] = useState("");
@@ -495,7 +477,7 @@ const estimatedDeficit = calorieThreshold + totalBurn - calories;
 // dynamic goals used by progress bars
 const modeCalOffset = mode === "Cut" ? -cutDeficit : (mode === "Bulk" ? bulkSurplus : 0);
 const caloriesBudget = Math.max(0, calorieThreshold + totalBurn + modeCalOffset); // dynamic goal that grows with steps/workouts and shifts by mode (Cut -500, Bulk +100) // grows as you add steps/workouts
-const waterCount = water + (checklist.concentrace ? 1 : 0); // Concentrace counts as 1 bottle
+const waterCount = water; // Concentrace counts as 1 bottle
 
 useEffect(() => {
     if (mode === "Cut") {
@@ -538,7 +520,9 @@ useEffect(() => {
     localStorage.setItem("maintCarb", String(maintCarb));
     localStorage.setItem("bulkProtein", String(bulkProtein));
     localStorage.setItem("bulkFat", String(bulkFat));
-    localStorage.setItem("bulkCarb", String(bulkCarb));
+    localStorage.setItem("waterGoal", String(waterGoal));
+  localStorage.setItem("stepGoal", String(stepGoal));
+localStorage.setItem("bulkCarb", String(bulkCarb));
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
@@ -574,7 +558,7 @@ useEffect(() => {
   setSteps(0);
   setFoodLog([]);
   setWorkoutLog({});
-  setChecklist({ supplements: false, sunlight: false, , });
+  setChecklist({ supplements: false, sunlight: false, concentrace: false, teffilin: false});
 
   // Optional: clear localStorage for those too
   localStorage.removeItem("calories");
@@ -822,15 +806,31 @@ const inputStyleThird = {
               height: "100%",
               borderRadius: 999,
               transition: "width .25s ease",
-              ...fillStyle
+              .....fillStyle
             }}
           />
         </div>
       </div>
     );
   };
-  // --------------------------------------------
+  
+  const [newChecklistItem, setNewChecklistItem] = useState("");
+useEffect(() => {
+  try { localStorage.setItem("checklistItems", JSON.stringify(checklistItems)); } catch {}
+}, [checklistItems]);
 
+useEffect(() => {
+  try { localStorage.setItem("checklist", JSON.stringify(checklist)); } catch {}
+}, [checklist]);
+useEffect(() => {
+  try { localStorage.setItem("waterGoal", String(waterGoal)); } catch {}
+}, [waterGoal]);
+
+useEffect(() => {
+  try { localStorage.setItem("stepGoal", String(stepGoal)); } catch {}
+}, [stepGoal]);
+
+// --------------------------------------------
 
 // ===================== SETTINGS SCREEN =====================
 if (screen === "settings") {
@@ -857,64 +857,6 @@ if (screen === "settings") {
               Female
             </label>
           </div>
-        {/* Home Page Display toggles */}
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-          <h3 style={{ marginTop: 0, marginBottom: "10px" }}>Home Page Display</h3>
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px" }}>
-            <label><input type="checkbox" checked={displaySettings.showProtein} onChange={e=>setDisplaySettings(s=>({...s, showProtein: e.target.checked}))}/> Protein</label>
-            <label><input type="checkbox" checked={displaySettings.showFat} onChange={e=>setDisplaySettings(s=>({...s, showFat: e.target.checked}))}/> Fats</label>
-            <label><input type="checkbox" checked={displaySettings.showCarbs} onChange={e=>setDisplaySettings(s=>({...s, showCarbs: e.target.checked}))}/> Carbs</label>
-            <label><input type="checkbox" checked={displaySettings.showFiber} onChange={e=>setDisplaySettings(s=>({...s, showFiber: e.target.checked}))}/> Fiber</label>
-            <label><input type="checkbox" checked={displaySettings.showWater} onChange={e=>setDisplaySettings(s=>({...s, showWater: e.target.checked}))}/> Water</label>
-            <label><input type="checkbox" checked={displaySettings.showSteps} onChange={e=>setDisplaySettings(s=>({...s, showSteps: e.target.checked}))}/> Steps</label>
-            <label style={{ gridColumn:"1 / span 2" }}><input type="checkbox" checked={displaySettings.showChecklist} onChange={e=>setDisplaySettings(s=>({...s, showChecklist: e.target.checked}))}/> Show checklist on Home</label>
-          </div>
-        </div>
-
-        {/* Goals */}
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-          <h3 style={{ marginTop: 0, marginBottom: "10px" }}>Goals</h3>
-          <label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Water goal (oz)</div>
-            <input type="number" inputMode="decimal" value={waterGoalOz} onChange={e=>setWaterGoalOz(parseFloat(e.target.value)||0)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-            <div style={{ fontSize:"12px", color:"#777", marginTop:"6px" }}>({Math.max(1, Math.round((waterGoalOz||81)/27))} x 27oz bottles)</div>
-          </label>
-          <label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Steps goal</div>
-            <input type="number" inputMode="numeric" value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(parseInt(e.target.value||"0",10)||0)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
-        </div>
-
-        {/* Checklist customization */}
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-          <h3 style={{ marginTop: 0, marginBottom: "10px" }}>Checklist</h3>
-          <div style={{ fontSize:"13px", color:"#555", marginBottom:"8px" }}>Choose the items you want. Defaults are Supplements and Sunlight.</div>
-          <div style={{ display:"flex", gap:"8px", marginBottom:"10px" }}>
-            <input id="newChecklistItem" placeholder="Add item..." style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-            <button onClick={()=>{
-              const el = document.getElementById("newChecklistItem");
-              const name = (el?.value || "").trim();
-              if(!name) return;
-              const key = name.toLowerCase().replace(/[^a-z0-9]+/g, "_");
-              setChecklist(prev => ({ ...prev, [key]: false }));
-              try { localStorage.setItem("checklist", JSON.stringify({ ...checklist, [key]: false })); } catch {}
-              if(el) el.value = "";
-            }} style={{ padding:"8px 12px", border:"none", borderRadius:"8px", background:"#1976d2", color:"#fff", cursor:"pointer" }}>Add</button>
-          </div>
-          <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-            {Object.keys(checklist).map(k => (
-              <div key={k} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-                <span style={{ flex:1, textTransform:"capitalize" }}>{k.replace(/_/g," ")}</span>
-                <button onClick={()=>{
-                  const { [k]:_, ...rest } = checklist;
-                  setChecklist(rest);
-                  try { localStorage.setItem("checklist", JSON.stringify(rest)); } catch {}
-                }} style={{ border:"none", background:"#eee", borderRadius:"8px", padding:"4px 8px", cursor:"pointer" }}>Delete</button>
-              </div>
-            ))}
-          </div>
-        </div>
-
 
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
@@ -930,6 +872,114 @@ if (screen === "settings") {
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
             <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
             </label>
+          {/* ---------- Home Display Toggles ---------- */}
+          <div style={{ marginTop:"4px", marginBottom:"12px", padding:"12px", background:"#fff", borderRadius:"10px", border:"1px solid #eee" }}>
+            <div style={{ fontWeight:600, marginBottom:"8px" }}>Home display</div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px" }}>
+              {["Calories","Protein","Fat","Carbs","Fiber","Water","Steps","Checklist"].map(lbl => {
+                const key = "show"+lbl;
+                return (
+                  <label key={lbl} style={{ display:"flex", alignItems:"center", gap:"8px", fontSize:"14px" }}>
+                    <input
+                      type="checkbox"
+                      checked={homeVisibility[key]}
+                      onChange={(e) => setHomeVisibility((prev) => ({ ...prev, [key]: e.target.checked }))}
+                    />
+                    {lbl}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ---------- Goals ---------- */}
+          <div style={{ marginBottom:"12px", padding:"12px", background:"#fff", borderRadius:"10px", border:"1px solid #eee" }}>
+            <div style={{ fontWeight:600, marginBottom:"8px" }}>Goals</div>
+            <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
+              <label style={{ display:"flex", flexDirection:"column", fontSize:"14px" }}>
+                <span>Water goal (bottles)</span>
+                <input type="number" inputMode="numeric" min="1"
+                  value={waterGoal}
+                  onChange={(e)=> setWaterGoal(Math.max(1, parseFloat(e.target.value || "1")))}
+                  style={{ width:"120px", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                />
+              </label>
+              <label style={{ display:"flex", flexDirection:"column", fontSize:"14px" }}>
+                <span>Steps goal</span>
+                <input type="number" inputMode="numeric" min="0"
+                  value={stepGoal}
+                  onChange={(e)=> setStepGoal(Math.max(0, parseInt(e.target.value || "0")))}
+                  style={{ width:"140px", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* ---------- Checklist manager ---------- */}
+          <div style={{ marginBottom:"12px", padding:"12px", background:"#fff", borderRadius:"10px", border:"1px solid #eee" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"8px" }}>
+              <div style={{ fontWeight:600 }}>Checklist</div>
+              <label style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"6px" }}>
+                <input
+                  type="checkbox"
+                  checked={homeVisibility.showChecklist}
+                  onChange={(e)=> setHomeVisibility(prev => ({ ...prev, showChecklist: e.target.checked }))}
+                />
+                Show on home
+              </label>
+            </div>
+
+            <div style={{ fontSize:"14px", color:"#666", marginBottom:"6px" }}>
+              Defaults are <em>supplements</em> and <em>sunlight</em>. Add or remove anything you like.
+            </div>
+
+            <div>
+              {checklistItems.length === 0 && <div style={{ fontSize:"14px", color:"#999", marginBottom:"8px" }}>No items yet.</div>}
+              {checklistItems.map((k) => (
+                <div key={k} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 0", borderBottom:"1px solid #eee" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                    <span style={{ fontSize:"14px" }}>{k}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setChecklistItems(prev => prev.filter(x => x !== k));
+                      setChecklist(prev => {
+                        const copy = { ...prev };
+                        delete copy[k];
+                        return copy;
+                      });
+                    }}
+                    style={{ border:"none", background:"#f44336", color:"#fff", borderRadius:"6px", padding:"4px 8px", cursor:"pointer" }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display:"flex", gap:"8px", marginTop:"8px" }}>
+              <input
+                placeholder="Add checklist item"
+                value={newChecklistItem}
+                onChange={(e)=> setNewChecklistItem(e.target.value)}
+                style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+              />
+              <button
+                onClick={() => {
+                  const name = (newChecklistItem || "").trim();
+                  if (!name) return;
+                  if (!checklistItems.includes(name)) {
+                    setChecklistItems(prev => [...prev, name]);
+                    setChecklist(prev => ({ ...prev, [name]: false }));
+                  }
+                  setNewChecklistItem("");
+                }}
+                style={{ padding:"10px 12px", fontSize:"16px", borderRadius:"8px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer" }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
 
           <button onClick={saveSettings} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer" }}>
             Save
@@ -2208,26 +2258,25 @@ marginBottom:    "20px"
       
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
-      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      {displaySettings.showProtein && <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />}
-      {displaySettings.showFat && <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />}
-      {displaySettings.showCarbs && <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />}
-      {displaySettings.showFiber && <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />}
-      {displaySettings.showWater && <Progress label="Water"    value={waterCount} goal={waterGoalEff} successWhenMet />}
-      {displaySettings.showSteps && <Progress label="Steps"    value={steps}    goal={stepGoalEff} successWhenMet />}
+{homeVisibility.showCalories && (      <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />)}
+{homeVisibility.showProtein && (      <Progress label="Protein"  value={protein}  goal={proteinGoal} suffix="g" successWhenMet />)}
+{homeVisibility.showFat && (      <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />)}
+{homeVisibility.showCarbs && (      <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />)}
+{homeVisibility.showFiber && (      <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />)}
+{homeVisibility.showWater && (      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet />)}
+{homeVisibility.showSteps && (      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
-
+)}
     </div>
 
     {/* Checklist Box */}
-    {displaySettings.showChecklist && (
-    <div style={{
+    <div style={{ 
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
       boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
       marginBottom: "12px"
-    }}>
+    , display: homeVisibility.showChecklist ? "block" : "none" }}>
 <div style={{
   display: "flex",
   alignItems: "center",
@@ -2258,11 +2307,11 @@ marginBottom:    "20px"
 </div>
 
 {!isChecklistCollapsed && (<div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
-  {["concentrace", "teffilin", "sunlight", "supplements"].map((key) => (
+  {checklistItems.map((key) => (
     <label key={key} style={{ fontSize: "16px" }}>
       <input
         type="checkbox"
-        checked={checklist[key]}
+        checked={!!checklist[key]}
         onChange={() =>
           setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
         }
