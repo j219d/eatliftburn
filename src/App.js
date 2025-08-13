@@ -43,45 +43,11 @@ const [deficitGoal, setDeficitGoal] = useState(() => {
 const [fat, setFat] = useState(() => parseFloat(localStorage.getItem("fat")) || 0);
 const [carbs, setCarbs] = useState(() => parseFloat(localStorage.getItem("carbs")) || 0);
 const [fiber, setFiber] = useState(() => parseFloat(localStorage.getItem("fiber")) || 0);
-const [waterOz, setWaterOz] = useState(() => {
-  try {
-    const oz = parseInt(localStorage.getItem("waterOz"), 10);
-    if (!isNaN(oz)) return oz;
-    const legacyBottles = parseInt(localStorage.getItem("waterOz"), 10);
-    return isNaN(legacyBottles) ? 0 : legacyBottles * 27; // migrate bottles→oz
-  } catch { return 0; }
-});
-// 🧠 Daily macro/waterOz goals
+const [water, setWater] = useState(() => parseInt(localStorage.getItem("water")) || 0);
+
+// 🧠 Daily macro/water goals
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
 const [showModes, setShowModes] = useState(false);
-  // ---- Home Page Display toggles (persist) ----
-  const [displaySettings, setDisplaySettings] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("displaySettings")) || {
-        showProtein: true,
-        showFats: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    } catch { 
-      return {
-        showProtein: true,
-        showFats: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
-  }, [displaySettings]);
-
 
 const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
@@ -90,20 +56,8 @@ const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
 const fiberGoal = 28;
-const waterGoal = 3; // legacy (bottles) — retained for reference only
-const [waterGoalOz, setWaterGoalOz] = useState(() => {
-  try { const v = parseInt(localStorage.getItem("waterGoalOz"), 10); return !isNaN(v) ? v : 81; } catch { return 81; }
-});
-useEffect(() => { try { localStorage.setItem("waterGoalOz", String(waterGoalOz)); } catch {} }, [waterGoalOz]);
-} catch { return (waterGoal*27); }
-});
-useEffect(() => { try { localStorage.setItem("waterGoalOz", String(waterGoalOz)); } catch {} }, [waterGoalOz]);
-// compute waterOz in ounces from legacy bottle counter
-const waterOz = (waterOz * 27);
-  const [stepsGoalCustom, setStepsGoalCustom] = useState(() => {
-  try { return parseInt(localStorage.getItem("stepsGoalCustom")) || 10000; } catch { return 10000; }
-});
-useEffect(() => { try { localStorage.setItem("stepsGoalCustom", String(stepsGoalCustom)); } catch {} }, [stepsGoalCustom]);
+const waterGoal = 81; // ounces (default ≈3×27oz)
+  const [stepGoal] = useState(10000);
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
   const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 100);
@@ -123,13 +77,10 @@ useEffect(() => { try { localStorage.setItem("stepsGoalCustom", String(stepsGoal
 
   const [checklist, setChecklist] = useState(() => JSON.parse(localStorage.getItem("checklist")) || {
   supplements: false,
-  sunlight: false
+  sunlight: false,
+  concentrace: false,
+  teffilin: false
 });
-const [customChecklistItems, setCustomChecklistItems] = useState(() => {
-  try { return JSON.parse(localStorage.getItem("customChecklistItems")) || []; } catch { return []; }
-});
-useEffect(()=>{ try { localStorage.setItem("customChecklistItems", JSON.stringify(customChecklistItems)); } catch {} }, [customChecklistItems]);
-const [newChecklistLabel, setNewChecklistLabel] = useState("");
 // collapsed/expanded state for the Checklist (persisted)
 const [isChecklistCollapsed, setIsChecklistCollapsed] = useState(() => {
   try {
@@ -402,7 +353,7 @@ const foodOptions = [
   { name: "Tuna (150g)", cal: 156, prot: 37.2, fat: 0.9, carbs: 0, fiber: 0 },
   { name: "Walnut", cal: 26, prot: 0.6, fat: 2.6, carbs: 0.6, fiber: 0.3 },
   { name: "Walnuts (3)", cal: 78, prot: 1.8, fat: 7.8, carbs: 1.8, fiber: 0.9 },
-  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, waterOz: 1 },
+  { name: "Water (27oz)", cal: 0, prot: 0, fat: 0, carbs: 0, fiber: 0, water: 27 },
   { name: "Watermelon triangle", cal: 50, prot: 1, fat: 0.2, carbs: 12, fiber: 0.6 },
   { name: "Yogurt 0% (Pro)", cal: 117, prot: 20, fat: 0.3, carbs: 6, fiber: 0 },
   { name: "Yogurt 0% (Fage)", cal: 80, prot: 16, fat: 0, carbs: 5, fiber: 0 },
@@ -419,7 +370,7 @@ const weighedFoods = [
   { key: "rice_cooked", label: "Rice (cooked)", per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28, fiber: 0.4 } },
   { key: "ribeye_cooked", label: "Ribeye steak (cooked)", per100: { cal: 288, prot: 24.8, fat: 20, carbs: 0, fiber: 0 } },
   { key: "cottage_5pct", label: "Cottage cheese 5%", per100: { cal: 95, prot: 11, fat: 5, carbs: 1.5, fiber: 0 } },
-  { key: "tuna_canned_water", label: "Tuna (canned in waterOz, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
+  { key: "tuna_canned_water", label: "Tuna (canned in water, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
   { key: "sweet_potato_cooked", label: "Sweet potato (cooked)", per100: { cal: 86, prot: 2, fat: 0.1, carbs: 20, fiber: 3 } },
   { key: "ground_beef_90_10_raw", label: "Ground beef 90/10 (raw)", per100: { cal: 145, prot: 18.6, fat: 8, carbs: 0, fiber: 0 } },
   { key: "ground_beef_90_10_cooked", label: "Ground beef 90/10 (cooked)", per100: { cal: 176, prot: 25, fat: 8, carbs: 0, fiber: 0 } },
@@ -501,7 +452,7 @@ const estimatedDeficit = calorieThreshold + totalBurn - calories;
 // dynamic goals used by progress bars
 const modeCalOffset = mode === "Cut" ? -cutDeficit : (mode === "Bulk" ? bulkSurplus : 0);
 const caloriesBudget = Math.max(0, calorieThreshold + totalBurn + modeCalOffset); // dynamic goal that grows with steps/workouts and shifts by mode (Cut -500, Bulk +100) // grows as you add steps/workouts
-const waterCountOz = waterOz + (checklist.concentrace ? 27 : 0);
+const waterCount = water + (checklist.concentrace ? 27 : 0); // Concentrace adds 27 oz
 
 useEffect(() => {
     if (mode === "Cut") {
@@ -523,7 +474,7 @@ useEffect(() => {
   localStorage.setItem("fat", fat);
   localStorage.setItem("carbs", carbs);
   localStorage.setItem("fiber", fiber);
-  localStorage.setItem("waterOz", waterOz);
+  localStorage.setItem("water", water);
   localStorage.setItem("steps", steps);
   localStorage.setItem("deficitGoal", deficitGoal);
   localStorage.setItem("proteinGoal", proteinGoal);
@@ -545,7 +496,7 @@ useEffect(() => {
     localStorage.setItem("bulkProtein", String(bulkProtein));
     localStorage.setItem("bulkFat", String(bulkFat));
     localStorage.setItem("bulkCarb", String(bulkCarb));
-}, [calories, protein, fat, carbs, fiber, waterOz, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
+}, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
   // 🛠️ Whenever mode changes, override the home-page goals
@@ -576,7 +527,7 @@ useEffect(() => {
   setFat(0);
   setCarbs(0);
   setFiber(0);
-  setWaterOz(0);
+  setWater(0);
   setSteps(0);
   setFoodLog([]);
   setWorkoutLog({});
@@ -589,7 +540,7 @@ useEffect(() => {
   localStorage.removeItem("fat");
   localStorage.removeItem("carbs");
   localStorage.removeItem("fiber");
-  localStorage.removeItem("waterOz");
+  localStorage.removeItem("water");
   localStorage.removeItem("foodLog");
   localStorage.removeItem("workoutLog");
   localStorage.removeItem("checklist");
@@ -666,7 +617,7 @@ if (type === "Run") {
     fat: parseFloat(food.fat) || 0,
     carbs: parseFloat(food.carbs) || 0,
     fiber: parseFloat(food.fiber) || 0,
-    waterOz: parseInt(food.waterOz) || 0, // 👈 Add this line
+    water: parseInt(food.water) || 0, // 👈 Add this line
     time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
 
@@ -681,8 +632,8 @@ if (type === "Run") {
   setFat(prev => prev + completeFood.fat);
   setCarbs(prev => prev + completeFood.carbs);
   setFiber(prev => prev + completeFood.fiber);
-  if (completeFood.waterOz > 0) {
-    setWaterOz(prev => prev + completeFood.waterOz); // ✅ This syncs waterOz log to homepage
+  if (completeFood.water > 0) {
+    setWater(prev => prev + completeFood.water); // ✅ This syncs water log to homepage
   }
 };
   
@@ -696,7 +647,7 @@ const deleteFood = (index) => {
   setFat(prev => prev - (item.fat || 0));
   setCarbs(prev => prev - (item.carbs || 0));
   setFiber(prev => prev - (item.fiber || 0));
-  setWaterOz(prev => prev - (item.waterOz || 0)); // ✅ ADDED
+  setWater(prev => prev - (item.water || 0)); // ✅ ADDED
 };
 
   const addWeight = () => {
@@ -884,44 +835,6 @@ if (screen === "settings") {
           </button>
         </div>
       </div>
-      {/* Home Page Display */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
-        {[
-          ["showProtein","Protein"],
-          ["showFats","Fats"],
-          ["showCarbs","Carbs"],
-          ["showFiber","Fiber"],
-          ["showWater","Water"],
-          ["showSteps","Steps"],
-          ["showChecklist","Entire Checklist"],
-        ].map(([key,label]) => (
-          <label key={key} style={{ display:"flex", alignItems:"center", gap:8, margin:"6px 0" }}>
-            <input type="checkbox" checked={!!displaySettings[key]} onChange={()=>setDisplaySettings(ds=>({ ...ds, [key]: !ds[key] }))} />
-            {label}
-          </label>
-        ))}
-      </div>
-
-      {/* Goals */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Goals</h2>
-        <div style={{ display:"flex", gap:12, alignItems:"center", marginBottom:10 }}>
-          <label style={{ flex:1 }}>
-            <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Water goal (oz)</div>
-            <input type="number" min={0} value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
-          <button onClick={()=>setWaterGoalOz(81)} style={{ width:"140px", padding:"10px", border:"none", borderRadius:"10px", background:"#1976d2", color:"#fff", cursor:"pointer" }}>Reset to 81</button>
-        </div>
-        <div style={{ display:"flex", gap:12, alignItems:"center" }}>
-          <label style={{ flex:1 }}>
-            <div style={{ fontSize:14, color:"#555", marginBottom:4 }}>Steps goal</div>
-            <input type="number" min={0} value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(0, parseInt(e.target.value||"0")))} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
-          <button onClick={()=>setStepsGoalCustom(10000)} style={{ width:"140px", padding:"10px", border:"none", borderRadius:"10px", background:"#1976d2", color:"#fff", cursor:"pointer" }}>Reset to 10,000</button>
-        </div>
-      </div>
-
     </>
   );
 }
@@ -2199,8 +2112,8 @@ marginBottom:    "20px"
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
       <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
       <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />
-      <Progress label="Water" value={waterOz} goal={waterGoalOz} suffix=" oz" successWhenMet />
-      <Progress label="Steps"    value={steps}    goal={stepsGoalCustom} successWhenMet />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet />
+      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
     </div>
