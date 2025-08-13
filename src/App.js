@@ -978,25 +978,38 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "auto auto auto", gap: "10px", alignItems: "center", justifyContent: "start" }}>
-          <input type="text" placeholder="Search..." value={weighedQuery} onChange={(e)=>setWeighedQuery(e.target.value)} style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%", maxWidth: "260px" }} />
+        
+        <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "8px" }}>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={weighedQuery}
+            onChange={(e) => setWeighedQuery(e.target.value)}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 160px", minWidth: 0 }}
+          />
+
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc",width: "200px", maxWidth: "200px", minWidth: 0 }}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 200px", maxWidth: "220px", minWidth: 0 }}
           >
             <option value="">Select food</option>
-            {weighedFoods.filter(f => !weighedQuery || f.label.toLowerCase().includes(weighedQuery.toLowerCase())).sort((a,b)=>a.label.localeCompare(b.label)).map(f => (
-              <option key={f.key} value={f.key}>{f.label}</option>
+            {weighedFoods
+              .filter(f => !weighedQuery || f.label.toLowerCase().includes(weighedQuery.toLowerCase()))
+              .sort((a,b) => a.label.localeCompare(b.label))
+              .map(f => (
+                <option key={f.key} value={f.key}>{f.label}</option>
             ))}
           </select>
+        </div>
 
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <input
             type="text" inputMode="decimal"
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "50px", minWidth: 0, textAlign: "center" }}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", width: "60px", minWidth: 0, textAlign: "center" }}
           />
 
           <button
@@ -1015,13 +1028,13 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "10px 0", width: "56px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }} disabled={!weighedKey || !weighedGrams}
+            style={{ padding: "10px 14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            disabled={!weighedKey || !weighedGrams}
           >
             Add
           </button>
         </div>
-
-        {/* live preview (safe-guarded) */}
+live preview (safe-guarded) */}
         {weighedKey && weighedGrams && (() => {
           const def = weighedFoods.find(x => x.key === weighedKey);
           if (!def) return null;
