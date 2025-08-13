@@ -832,7 +832,7 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginTop:"8px", marginBottom:"12px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
@@ -866,7 +866,7 @@ if (screen === "settings") {
       </div>
       {/* Home Page Display */}
       <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
+        <h2 style={{ marginTop:0, marginBottom:6, fontSize:"16px", fontWeight:600 }}>Home Page Display</h2>
         {[
           ["showProtein","Protein"],
           ["showFat","Fats"],
@@ -874,7 +874,7 @@ if (screen === "settings") {
           ["showFiber","Fiber"],
           ["showWater","Water"],
           ["showSteps","Steps"],
-          ["showChecklist","Entire Checklist"],
+          ["showChecklist","Checklist"],
         ].map(([key,label]) => (
           <label key={key} style={{ display:"flex", alignItems:"center", gap:8, margin:"6px 0" }}>
             <input type="checkbox" checked={!!displaySettings[key]} onChange={()=>setDisplaySettings(ds=>({ ...ds, [key]: !ds[key] }))} />
