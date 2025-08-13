@@ -579,7 +579,7 @@ const deleteFood = (index) => {
 
 const navBtnStyle = {
   fontSize: "16px",
-  padding: "10px",
+  padding: "8px",
   margin: "6px 0",
   borderRadius: "10px",
   width: "100%",
@@ -595,7 +595,7 @@ const navBtnStyle = {
 const inputStyleFull = {
   flex: "1 1 100%",
   maxWidth: "100%",
-  padding: "10px",
+  padding: "8px",
   fontSize: "16px",
   borderRadius: "8px",
   border: "1px solid #ccc"
@@ -603,7 +603,7 @@ const inputStyleFull = {
 
 const inputStyleThird = {
   flex: "1 1 calc(33.333% - 12px)",
-  padding: "10px",
+  padding: "8px",
   fontSize: "16px",
   borderRadius: "8px",
   border: "1px solid #ccc"
@@ -977,7 +977,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 90px 72px", gap: "8px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 70px 72px", gap: "8px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
@@ -994,7 +994,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
+            style={{ padding: "8px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
           />
 
           <button
@@ -1563,7 +1563,7 @@ setWorkoutLog(prev => ({
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ flex: 1, padding: "8px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
