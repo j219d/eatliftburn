@@ -25,7 +25,7 @@ function App() {
   const [screen, setScreen] = useState("home");
   const [toastMsg, setToastMsg] = useState("");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
-  const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
+  const [protein, setProtein] = useState(() => parseFloat(localStorage.getItem("protein")) || 0);
   const [steps, setSteps] = useState(() => parseInt(localStorage.getItem("steps")) || 0);
   // ▶ default deficit goal to saved override or personal threshold
 const [deficitGoal, setDeficitGoal] = useState(() => {
@@ -327,6 +327,12 @@ const weighedFoods = [
   { key: "sweet_potato_cooked",     label: "Sweet potato (cooked)",         per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
   { key: "spinach_frozen",          label: "Spinach (frozen, cooked)",      per100: { cal: 28,  prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 } },
   { key: "peas_frozen",             label: "Peas (frozen, cooked)",         per100: { cal: 73,  prot: 6.9, fat: 1.5, carbs: 10.5,fiber: 5.1 } },
+
+  { key: "ribeye_steak_cooked",     label: "Ribeye steak (cooked)",          per100: { cal: 291, prot: 25.0, fat: 21.0, carbs: 0,   fiber: 0 } },
+  { key: "cottage_cheese_1pct",     label: "Cottage cheese (1%)",            per100: { cal: 72,  prot: 12.4, fat: 1.0,  carbs: 3.4, fiber: 0 } },
+  { key: "cottage_cheese_2pct",     label: "Cottage cheese (2%)",            per100: { cal: 82,  prot: 11.0, fat: 2.3,  carbs: 3.4, fiber: 0 } },
+  { key: "tuna_canned_water",       label: "Tuna (canned in water, drained)",per100: { cal: 132, prot: 29.0, fat: 1.0,  carbs: 0,   fiber: 0 } },
+
 ];
 
 
@@ -507,7 +513,7 @@ if (type === "Run") {
   const completeFood = {
     name: food.name || "Unnamed",
     cal: parseInt(food.cal) || 0,
-    prot: parseInt(food.prot) || 0,
+    prot: parseFloat(food.prot) || 0,
     fat: parseFloat(food.fat) || 0,
     carbs: parseFloat(food.carbs) || 0,
     fiber: parseFloat(food.fiber) || 0,
@@ -520,11 +526,12 @@ const computeFromGrams = (per100, grams) => {
   const g = Math.max(0, parseFloat(grams) || 0);
   const scale = g / 100;
   const cal   = Math.round(per100.cal   * scale);
-  const prot  = Math.round(per100.prot  * scale);   // keep whole numbers to match addFood parsing
+  const prot  = +(per100.prot  * scale).toFixed(1);
   const fat   = +(per100.fat   * scale).toFixed(1);
   const carbs = +(per100.carbs * scale).toFixed(1);
   const fiber = +(per100.fiber * scale).toFixed(1);
   return { cal, prot, fat, carbs, fiber, grams: g };
+};
 };
 
 
@@ -914,7 +921,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   const { name, cal, prot, fat, carbs, fiber } = customFood;
 
   const parsedCal = parseInt(cal);
-  const parsedProt = parseInt(prot);
+  const parsedProt = parseFloat(prot);
   const parsedFat = fat !== "" && !isNaN(parseFloat(fat)) ? parseFloat(fat) : undefined;
   const parsedCarbs = carbs !== "" && !isNaN(parseFloat(carbs)) ? parseFloat(carbs) : undefined;
   const parsedFiber = fiber !== "" && !isNaN(parseFloat(fiber)) ? parseFloat(fiber) : undefined;
