@@ -832,7 +832,7 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <div style={{ background:"#f9f9f9", border:"1px solid #e6e6ec", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 3px rgba(0,0,0,0.03)", maxWidth:"560px", margin:"6px auto 10px auto" }}>
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
               <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
@@ -846,18 +846,18 @@ if (screen === "settings") {
 
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
-            <input style={{ width:"50%" }} type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label><label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
-            <input style={{ width:"50%" }} type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-            </label>
+            <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
 
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
             <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
           </label>
 
-          
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
+            <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+            </label>
 
           <button onClick={saveSettings} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer" }}>
             Save
@@ -865,8 +865,8 @@ if (screen === "settings") {
         </div>
       </div>
       {/* Home Page Display */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"6px" }}>
-        <h2 style={{ marginTop:0, marginBottom:6, fontSize:"16px", fontWeight:600 }}>Home Page Display</h2>
+      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
+        <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
         {[
           ["showProtein","Protein"],
           ["showFat","Fats"],
@@ -874,7 +874,7 @@ if (screen === "settings") {
           ["showFiber","Fiber"],
           ["showWater","Water"],
           ["showSteps","Steps"],
-          ["showChecklist","Checklist"],
+          ["showChecklist","Entire Checklist"],
         ].map(([key,label]) => (
           <label key={key} style={{ display:"flex", alignItems:"center", gap:8, margin:"6px 0" }}>
             <input type="checkbox" checked={!!displaySettings[key]} onChange={()=>setDisplaySettings(ds=>({ ...ds, [key]: !ds[key] }))} />
@@ -2156,18 +2156,18 @@ marginBottom:    "20px"
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />
-      <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />
-      <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />
-      <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />
-      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />
-      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
+      {displaySettings.showProtein && <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />}
+      {displaySettings.showFat && <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />}
+      {displaySettings.showCarbs && <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />}
+      {displaySettings.showFiber && <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />}
+      {displaySettings.showWater && <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />}
+      {displaySettings.showSteps && <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />}
 
 
     </div>
 
     {/* Checklist Box */}
-    <div style={{
+    {displaySettings.showChecklist && <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
