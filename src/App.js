@@ -888,7 +888,92 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
       </div>
 
-{/* 🧪 Custom Food (Card) */}
+{/* ⚖️ Weigh & Log */}
+      <div style={{
+        marginTop: "12px",
+        marginBottom: "18px",
+        padding: "12px",
+        border: "1px solid #e5e7eb",
+        borderRadius: "10px",
+        background: "#fafafa"
+      }}>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
+          <span style={{ fontSize: 18 }}>⚖️</span>
+          <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
+        </div>
+
+        
+        <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "8px" }}>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={weighedQuery}
+            onChange={(e) => setWeighedQuery(e.target.value)}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 160px", minWidth: 0 }}
+          />
+
+          <select
+            value={weighedKey}
+            onChange={(e) => setWeighedKey(e.target.value)}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 200px", maxWidth: "220px", minWidth: 0 }}
+          >
+            <option value="">Select food</option>
+            {weighedFoods
+              .filter(f => !weighedQuery || f.label.toLowerCase().includes(weighedQuery.toLowerCase()))
+              .sort((a,b) => a.label.localeCompare(b.label))
+              .map(f => (
+                <option key={f.key} value={f.key}>{f.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <input
+            type="text" inputMode="decimal"
+            placeholder="Grams"
+            value={weighedGrams}
+            onChange={e => setWeighedGrams(e.target.value)}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", width: "60px", minWidth: 0, textAlign: "center" }}
+          />
+
+          <button
+            onClick={() => {
+              const def = weighedFoods.find(f => f.key === weighedKey);
+              if (!def) return;
+              const calc = computeFromGrams(def.per100, weighedGrams);
+              addFood({
+                name: `${def.label} (${calc.grams}g)`,
+                cal: calc.cal,
+                prot: calc.prot,
+                fat:  calc.fat,
+                carbs: calc.carbs,
+                fiber: calc.fiber,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              });
+              setWeighedGrams("");
+            }}
+            style={{ padding: "10px 14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            disabled={!weighedKey || !weighedGrams}
+          >
+            Add
+          </button>
+        </div>
+
+  {/* live preview */}
+  
+        {weighedKey && weighedGrams && (() => {
+          const def = weighedFoods.find(x => x.key === weighedKey);
+          if (!def) return null;
+          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(def.per100, weighedGrams);
+          return (
+            <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
+              Preview: <strong>{def.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
+              {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
+            </div>
+          );
+        })()}
+      </div>
+      {/* 🧪 Custom Food (Card) */}
 <div style={{
   marginTop: "12px",
   marginBottom: "18px",
@@ -1044,91 +1129,6 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
 
 
-      {/* ⚖️ Weigh & Log */}
-      <div style={{
-        marginTop: "12px",
-        marginBottom: "18px",
-        padding: "12px",
-        border: "1px solid #e5e7eb",
-        borderRadius: "10px",
-        background: "#fafafa"
-      }}>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
-          <span style={{ fontSize: 18 }}>⚖️</span>
-          <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log</h3>
-        </div>
-
-        
-        <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "8px" }}>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={weighedQuery}
-            onChange={(e) => setWeighedQuery(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 160px", minWidth: 0 }}
-          />
-
-          <select
-            value={weighedKey}
-            onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", flex: "1 1 200px", maxWidth: "220px", minWidth: 0 }}
-          >
-            <option value="">Select food</option>
-            {weighedFoods
-              .filter(f => !weighedQuery || f.label.toLowerCase().includes(weighedQuery.toLowerCase()))
-              .sort((a,b) => a.label.localeCompare(b.label))
-              .map(f => (
-                <option key={f.key} value={f.key}>{f.label}</option>
-            ))}
-          </select>
-        </div>
-
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <input
-            type="text" inputMode="decimal"
-            placeholder="Grams"
-            value={weighedGrams}
-            onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", width: "60px", minWidth: 0, textAlign: "center" }}
-          />
-
-          <button
-            onClick={() => {
-              const def = weighedFoods.find(f => f.key === weighedKey);
-              if (!def) return;
-              const calc = computeFromGrams(def.per100, weighedGrams);
-              addFood({
-                name: `${def.label} (${calc.grams}g)`,
-                cal: calc.cal,
-                prot: calc.prot,
-                fat:  calc.fat,
-                carbs: calc.carbs,
-                fiber: calc.fiber,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              });
-              setWeighedGrams("");
-            }}
-            style={{ padding: "10px 14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
-            disabled={!weighedKey || !weighedGrams}
-          >
-            Add
-          </button>
-        </div>
-
-  {/* live preview */}
-  
-        {weighedKey && weighedGrams && (() => {
-          const def = weighedFoods.find(x => x.key === weighedKey);
-          if (!def) return null;
-          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(def.per100, weighedGrams);
-          return (
-            <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
-              Preview: <strong>{def.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
-              {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
-            </div>
-          );
-        })()}
-      </div>
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
   {foodLog.map((f, i) => (
