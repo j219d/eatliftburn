@@ -58,35 +58,6 @@ const [carbGoal, setCarbGoal] = useState(
 const fiberGoal = 28;
 const waterGoal = 81; // ounces (default ≈3×27oz)
   const [stepGoal] = useState(10000);
-
-  // Home Page Display toggles (persisted)
-  const [displaySettings, setDisplaySettings] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("displaySettings")) || {
-        showProtein: true,
-        showFat: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    } catch {
-      return {
-        showProtein: true,
-        showFat: true,
-        showCarbs: true,
-        showFiber: true,
-        showWater: true,
-        showSteps: true,
-        showChecklist: true,
-      };
-    }
-  });
-  useEffect(() => {
-    try { localStorage.setItem("displaySettings", JSON.stringify(displaySettings)); } catch {}
-  }, [displaySettings]);
-
   // ▶ Mode offsets (editable in Mode Settings)
   const [cutDeficit, setCutDeficit] = useState(() => parseInt(localStorage.getItem("cutDeficit")) || 500);
   const [bulkSurplus, setBulkSurplus] = useState(() => parseInt(localStorage.getItem("bulkSurplus")) || 100);
@@ -864,25 +835,6 @@ if (screen === "settings") {
           </button>
         </div>
       </div>
-      {/* Home Page Display */}
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
-        <h2 style={{ marginTop:0, marginBottom:8 }}>Home Page Display</h2>
-        {[
-          ["showProtein","Protein"],
-          ["showFat","Fats"],
-          ["showCarbs","Carbs"],
-          ["showFiber","Fiber"],
-          ["showWater","Water"],
-          ["showSteps","Steps"],
-          ["showChecklist","Entire Checklist"],
-        ].map(([key,label]) => (
-          <label key={key} style={{ display:"flex", alignItems:"center", gap:8, margin:"6px 0" }}>
-            <input type="checkbox" checked={!!displaySettings[key]} onChange={()=>setDisplaySettings(ds=>({ ...ds, [key]: !ds[key] }))} />
-            {label}
-          </label>
-        ))}
-      </div>
-
     </>
   );
 }
@@ -2156,18 +2108,18 @@ marginBottom:    "20px"
       {/* === Progress bars (temp shown above numbers for verification) === */}
       <div style={{ height: "6px" }} />
       <Progress label="Calories" value={calories} goal={caloriesBudget} dangerWhenOver />
-      {displaySettings.showProtein && <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showFat && <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showCarbs && <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showFiber && <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />}
-      {displaySettings.showWater && <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />}
-      {displaySettings.showSteps && <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />}
+      <Progress label="Protein"  value={protein}  goal={proteinGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fat"      value={fat}      goal={fatGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Carbs"    value={carbs}    goal={carbGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Fiber"    value={fiber}    goal={fiberGoal} successWhenMet goalSuffix="g" />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet goalSuffix="oz" />
+      <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
     </div>
 
     {/* Checklist Box */}
-    {displaySettings.showChecklist && <div style={{
+    <div style={{
       backgroundColor: "#f9f9f9",
       borderRadius: "12px",
       padding: "16px",
