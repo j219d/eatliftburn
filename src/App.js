@@ -2112,7 +2112,7 @@ marginBottom:    "20px"
       <Progress label="Fat"      value={fat}      goal={fatGoal}     suffix="g" successWhenMet />
       <Progress label="Carbs"    value={carbs}    goal={carbGoal}    suffix="g" successWhenMet />
       <Progress label="Fiber"    value={fiber}    goal={fiberGoal}   suffix="g" successWhenMet />
-      <Progress label="Water"    value={waterCount} goal={waterGoal} successWhenMet  suffix=" oz" />
+      <Progress label="Water"    value={waterCount} goal={waterGoal} goalSuffix="oz" successWhenMet  />
       <Progress label="Steps"    value={steps}    goal={stepGoal} successWhenMet />
 
 
