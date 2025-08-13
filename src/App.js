@@ -963,7 +963,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       </div>
 
 
-      {/* ⚖️ Weigh & Log (by grams) */}
+      {/* ⚖️ By Weight */}
       <div style={{
         marginTop: "12px",
         marginBottom: "18px",
@@ -974,14 +974,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       }}>
         <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
           <span style={{ fontSize: 18 }}>⚖️</span>
-          <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
+          <h3 style={{ margin: 0, fontSize: 18 }}>By Weight</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 50px auto", gap: "8px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(160px, 1fr) 90px 80px", gap: "8px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc" }}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
           >
             <option value="">Select food</option>
             {weighedFoods.map(f => (
@@ -994,7 +994,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ minWidth: 0, padding: "4px", fontSize: 12, borderRadius: 8, border: "1px solid #ccc", width: "100%" , minWidth: 0, width: "100%"}}
+            style={{ padding: "10px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 }}
           />
 
           <button
@@ -1013,7 +1013,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "4px 0", fontSize: 12, background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }}
+            style={{ padding: "10px 0", width: "80px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, fontSize: "14px", justifySelf: "end" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
