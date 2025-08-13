@@ -803,8 +803,6 @@ if (screen === "settings") {
 
       <div style={{ padding:"24px", paddingTop:"70px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
-        <p style={{ textAlign:"center", color:"#666", marginTop:0 }}>Update your profile so BMR is accurate for you.</p>
-
         <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
             <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
@@ -830,8 +828,7 @@ if (screen === "settings") {
           <label style={{ display:"block", marginBottom:"10px" }}>
             <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
             <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-            <div style={{ fontSize:"12px", color:"#777", marginTop:"6px" }}>Changing this will add a new entry to your Weight Log.</div>
-          </label>
+            </label>
 
           <button onClick={saveSettings} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer" }}>
             Save
@@ -2036,21 +2033,7 @@ marginBottom:    "20px"
       title="Settings"
     >⚙️</button>
 
-    {/* Inline Mode button */}
-    <button
-      onClick={() => setShowModes(!showModes)}
-      style={{
-        backgroundColor: "#1976d2",
-        color:           "white",
-        padding:         "4px 10px",
-        fontSize:        "13px",
-        border:          "none",
-        borderRadius:    "999px",
-        cursor:          "pointer"
-      }}
-    >
-      Mode
-    </button>
+    
   </div>
 
 
