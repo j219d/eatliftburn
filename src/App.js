@@ -22,7 +22,14 @@ const heightCm = 170;
 const birthDate = new Date(1990, 8, 21);  // Sep 21, 1990
 const isMale = true;
 function App() {
-  const [screen, setScreen] = useState("home");
+  const [screen, setScreen] = useState(() => {
+    try {
+      const raw = localStorage.getItem("userProfile");
+      if (!raw) return "onboarding";
+      const up = JSON.parse(raw);
+      return (up && up.sex && up.heightCm && up.birthDate) ? "home" : "onboarding";
+    } catch { return "onboarding"; }
+  });
   const [toastMsg, setToastMsg] = useState("");
   const [calories, setCalories] = useState(() => parseInt(localStorage.getItem("calories")) || 0);
   const [protein, setProtein] = useState(() => parseInt(localStorage.getItem("protein")) || 0);
@@ -96,21 +103,23 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [newWeight, setNewWeight] = useState("");
 
   // ▶ compute age
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  const birthDateEff = (userProfile && userProfile.birthDate) ? new Date(userProfile.birthDate) : birthDate;
+  const isMaleEff = (userProfile && typeof userProfile.sex === "string") ? (userProfile.sex === "male") : isMale;
+  const heightCmEff = (userProfile && userProfile.heightCm) ? Number(userProfile.heightCm) : heightCm;
 
-  // ▶ latest weight (lbs)
+  const today = new Date();
+  let age = today.getFullYear() - birthDateEff.getFullYear();
+  const m = today.getMonth() - birthDateEff.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDateEff.getDate())) age--;// ▶ latest weight (lbs)
   const latestWeight = weightLog.length > 0 ? weightLog[weightLog.length - 1].weight : null;
 
   // ▶ true BMR via Mifflin–St Jeor
   const bmr = latestWeight
     ? Math.round(
         10 * (latestWeight / 2.20462) +  // lbs → kg
-        6.25 * heightCm -
+        6.25 * heightCmEff -
         5 * age +
-        (isMale ? 5 : -161)
+        (isMaleEff ? 5 : -161)
       )
     : null;
 
@@ -616,6 +625,22 @@ const deleteFood = (index) => {
     setWeightLog(weightLog.filter((_, idx) => idx !== i));
   };
 
+  // Save profile from Settings / Onboarding and sync Weight Log
+  const saveProfile = (profile, weightLbs) => {
+    setUserProfile(profile);
+    const w = parseFloat(weightLbs);
+    if (!isNaN(w) && w > 0) {
+      setWeightLog(prev => {
+        const latest = prev.length ? prev[prev.length - 1].weight : null;
+        if (latest === null || Math.abs(latest - w) > 0.0001) {
+          return [...prev, { date: new Date().toLocaleDateString(), weight: w }];
+        }
+        return prev;
+      });
+    }
+    setScreen("home");
+  };
+
   const avgWeight =
     weightLog.length === 0
       ? 0
@@ -723,8 +748,100 @@ const inputStyleThird = {
   };
   // --------------------------------------------
 
+  if (screen === "settings") {
+    const latest = weightLog.length ? String(weightLog[weightLog.length - 1].weight) : "";
+    const [sex, setSex] = useState((userProfile && userProfile.sex) || "male");
+    const [height, setHeight] = useState(userProfile && userProfile.heightCm ? String(userProfile.heightCm) : "");
+    const [birth, setBirth] = useState((userProfile && userProfile.birthDate) || "");
+    const [weight, setWeight] = useState(latest);
 
-if (screen === "food") {
+    const onSave = () => {
+      const h = parseFloat(height);
+      if (!birth || isNaN(h) || h <= 0) { alert("Enter valid birthday and height (cm)."); return; }
+      saveProfile({ sex, heightCm: Math.round(h), birthDate: birth }, weight);
+    };
+
+    return (
+      <div style={{ padding:"24px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
+          <button onClick={() => setScreen("home")} style={{ border:"none", background:"transparent", fontSize:"18px", cursor:"pointer" }}>← Back</button>
+          <h1 style={{ fontSize:"22px", margin:0 }}>Settings</h1>
+        </div>
+
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
+          <div style={{ display:"flex", gap:"16px", marginBottom:"12px" }}>
+            <label style={{ display:"flex", gap:"6px" }}><input type="radio" name="sex" value="male" checked={sex==="male"} onChange={()=>setSex("male")} />Male</label>
+            <label style={{ display:"flex", gap:"6px" }}><input type="radio" name="sex" value="female" checked={sex==="female"} onChange={()=>setSex("female")} />Female</label>
+          </div>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
+            <input type="number" value={height} onChange={e=>setHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
+            <input type="date" value={birth} onChange={e=>setBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
+            <input type="number" value={weight} onChange={e=>setWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <button onClick={onSave} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer" }}>Save</button>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "onboarding") {
+    const [sex, setSex] = useState("male");
+    const [height, setHeight] = useState("");
+    const [birth, setBirth] = useState("");
+    const [weight, setWeight] = useState("");
+
+    const onStart = () => {
+      const h = parseFloat(height);
+      const w = parseFloat(weight);
+      if (!birth || isNaN(h) || h <= 0 || isNaN(w) || w <= 0) { alert("Please fill all fields."); return; }
+      saveProfile({ sex, heightCm: Math.round(h), birthDate: birth }, w);
+    };
+
+    return (
+      <div style={{ padding:"24px", paddingBottom:"24px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"40px auto" }}>
+        <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>Welcome to EatLiftBurn</h1>
+        <p style={{ textAlign:"center", color:"#666", marginTop:0, marginBottom:"16px" }}>Quick setup so your BMR is accurate.</p>
+
+        <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
+          <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
+            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}><input type="radio" name="sex" value="male" checked={sex==="male"} onChange={()=>setSex("male")} />Male</label>
+            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}><input type="radio" name="sex" value="female" checked={sex==="female"} onChange={()=>setSex("female")} />Female</label>
+          </div>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
+            <input type="number" value={height} onChange={e=>setHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
+            <input type="date" value={birth} onChange={e=>setBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
+            <input type="number" value={weight} onChange={e=>setWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <button onClick={onStart} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer", marginTop:"8px" }}>Save & Continue</button>
+        </div>
+      </div>
+    );
+  }
+
+
+  if (screen === "food") {
   return (
     <>
       <div style={{
@@ -1845,16 +1962,14 @@ marginBottom:    "20px"
   alignItems:   "center",
   marginBottom: "14px"
 }}>
-  <h2 style={{
-    flex:       1,
-    fontSize:   "17px",
-    fontWeight: "600",
-    margin:     0
-  }}>
-    📊 Today
-  </h2>
-
-  {/* Inline Mode button */}
+  
+  <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"8px" }}>
+    <button
+      onClick={() => setScreen("settings")}
+      style={{ background:"transparent", border:"1px solid #ddd", borderRadius:"999px", padding:"6px 10px", cursor:"pointer", fontSize:"16px" }}
+      title="Settings"
+    >⚙️</button>
+{/* Inline Mode button */}
   <button
     onClick={() => setShowModes(!showModes)}
     style={{
