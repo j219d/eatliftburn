@@ -977,7 +977,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 70px 72px", gap: "8px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 70px 72px", gap: "10px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
@@ -994,7 +994,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "8px", borderRadius: 8, border: "1px solid #ccc", width: "100%" }}
+            style={{ padding: "8px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 }}
           />
 
           <button
@@ -1013,7 +1013,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "10px 0", width: "72px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }}
+            style={{ padding: "10px 0", width: "72px", background: "#0070f3", color: "#ffff", border: "none", borderRadius: 8, justifySelf: "end" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
