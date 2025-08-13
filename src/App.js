@@ -778,7 +778,21 @@ if (screen === "food") {
 
         {/* ← the rest of your Food UI goes here unchanged */}
 
-      <div style={{ marginBottom: "20px" }}>
+      
+{/* 🔎 Search & Select (Card) */}
+<div style={{
+  marginTop: "12px",
+  marginBottom: "18px",
+  padding: "12px",
+  border: "1px solid #e5e7eb",
+  borderRadius: "10px",
+  background: "#fafafa"
+}}>
+  <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
+    <span style={{ fontSize: 18 }}>🔎</span>
+    <h3 style={{ margin: 0, fontSize: 18 }}>Search & Select</h3>
+  </div>
+<div style={{ marginBottom: "20px" }}>
 {/* 👇 search filter input */}
 <div
   style={{
@@ -871,6 +885,22 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 }
         </select>
       </div>
+
+      </div>
+
+{/* 🧪 Custom Food (Card) */}
+<div style={{
+  marginTop: "12px",
+  marginBottom: "18px",
+  padding: "12px",
+  border: "1px solid #e5e7eb",
+  borderRadius: "10px",
+  background: "#fafafa"
+}}>
+  <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px" }}>
+    <span style={{ fontSize: 18 }}>🧪</span>
+    <h3 style={{ margin: 0, fontSize: 18 }}>Custom Food</h3>
+  </div>
 
      <div style={{ marginBottom: "24px" }}>
     {/* six inputs in a 3×2 grid, each 80% wide */}
@@ -1010,6 +1040,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           Add Custom Food
         </button>
       </div>
+      </div>
+
 
 
       {/* ⚖️ Weigh & Log */}
