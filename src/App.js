@@ -313,35 +313,33 @@ const foodOptions = [
   { name: "Yogurt 2% (Fage)", cal: 100, prot: 15, fat: 3, carbs: 5, fiber: 0 }
 ];
 
-// ⚖️ Per-100g macro table for weighed logging
+// ⚖️ Per-100g macro table for weighed logging (cooked/no-oil where applicable)
 const weighedFoods = [
-  { key: "chicken_breast_cooked", label: "Chicken breast (cooked)", per100: { cal: 165, prot: 31, fat: 3.6, carbs: 0,   fiber: 0 } },
-  { key: "chicken_thigh_bbq_noskin", label: "Chicken thigh (BBQ, no skin)", per100: { cal: 200, prot: 26, fat: 8,   carbs: 0,   fiber: 0 } },
-  { key: "broccoli_cooked",         label: "Broccoli (cooked, no oil)",     per100: { cal: 35,  prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
-  { key: "carrot_cooked",           label: "Carrot (cooked)",               per100: { cal: 41,  prot: 0.9, fat: 0.2, carbs: 10,  fiber: 2.8 } },
-  { key: "green_beans_roasted",     label: "Green beans (roasted, no oil)", per100: { cal: 38,  prot: 2.2, fat: 0.4, carbs: 8,   fiber: 3.6 } },
-  { key: "rice_cooked",             label: "Rice (cooked)",                  per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28,  fiber: 0.4 } },
-  { key: "gb_90_10_cooked",         label: "Ground beef 90/10 (cooked)",    per100: { cal: 176, prot: 25,  fat: 8,   carbs: 0,   fiber: 0 } },
-  { key: "gb_80_20_cooked",         label: "Ground beef 80/20 (cooked)",    per100: { cal: 254, prot: 25.8,fat: 17,  carbs: 0,   fiber: 0 } },
-  { key: "salmon_cooked",           label: "Salmon (cooked)",               per100: { cal: 206, prot: 22,  fat: 13,  carbs: 0,   fiber: 0 } },
-  { key: "sweet_potato_cooked",     label: "Sweet potato (cooked)",         per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
-  { key: "spinach_frozen",          label: "Spinach (frozen, cooked)",      per100: { cal: 28,  prot: 3.2, fat: 0.5, carbs: 3.2, fiber: 3.0 } },
-  { key: "peas_frozen",             label: "Peas (frozen, cooked)",         per100: { cal: 73,  prot: 6.9, fat: 1.5, carbs: 10.5,fiber: 5.1 } },
+  { key: "chicken_breast_cooked", label: "Chicken breast (cooked)",     per100: { cal: 165, prot: 31,  fat: 3.6, carbs: 0,   fiber: 0 } },
+  { key: "chicken_thigh_bbq_ns",  label: "Chicken thigh (BBQ, no skin)",per100: { cal: 200, prot: 26,  fat: 8,   carbs: 0,   fiber: 0 } },
+  { key: "broccoli_cooked",       label: "Broccoli (cooked, no oil)",   per100: { cal: 35,  prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
+  { key: "carrot_cooked",         label: "Carrot (cooked)",             per100: { cal: 41,  prot: 0.9, fat: 0.2, carbs: 10,  fiber: 2.8 } },
+  { key: "green_beans_roasted",   label: "Green beans (roasted, no oil)",per100:{ cal: 38,  prot: 2.2, fat: 0.4, carbs: 8,   fiber: 3.6 } },
+  { key: "rice_cooked",           label: "Rice (cooked)",               per100: { cal: 130, prot: 2.6, fat: 0.2, carbs: 28,  fiber: 0.4 } },
+  { key: "ribeye_cooked",         label: "Ribeye steak (cooked)",       per100: { cal: 288, prot: 24.8,fat: 20,  carbs: 0,   fiber: 0 } },
+  { key: "cottage_5pct",          label: "Cottage cheese 5%",           per100: { cal: 95,  prot: 11,  fat: 5,   carbs: 1.5, fiber: 0 } },
+  { key: "tuna_canned_water",     label: "Tuna (canned in water, drained)", per100: { cal: 132, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
+  { key: "sweet_potato_cooked",   label: "Sweet potato (cooked)",       per100: { cal: 86,  prot: 2,   fat: 0.1, carbs: 20,  fiber: 3 } },
 ];
-// Helper: compute macros from grams using per-100g profile (global, safe)
-const computeFromGrams = (per100, grams) => {
+// Helper: compute macros from grams using per-100g profile
+function computeFromGrams(per100, grams) {
   if (!per100) return { cal:0, prot:0, fat:0, carbs:0, fiber:0, grams:0 };
   const g = Math.max(0, parseFloat(grams) || 0);
-  const scale = g / 100;
-  const cal   = Math.round((per100.cal   || 0) * scale);
-  const prot  = Math.round((per100.prot  || 0) * scale);
-  const fat   = +(((per100.fat   || 0) * scale).toFixed(1));
-  const carbs = +(((per100.carbs || 0) * scale).toFixed(1));
-  const fiber = +(((per100.fiber || 0) * scale).toFixed(1));
-  return { cal, prot, fat, carbs, fiber, grams: g };
-};
-
-
+  const s = g / 100;
+  return {
+    cal:   Math.round((per100.cal   || 0) * s),
+    prot:  Math.round((per100.prot  || 0) * s), // whole grams to match existing addFood()
+    fat: +((per100.fat   || 0) * s).toFixed(1),
+    carbs:+((per100.carbs || 0) * s).toFixed(1),
+    fiber:+((per100.fiber || 0) * s).toFixed(1),
+    grams: g
+  };
+}
 
 
   const totalBurn = Object.entries(workoutLog).reduce((sum, [type, value]) => {
@@ -527,9 +525,6 @@ if (type === "Run") {
     water: parseInt(food.water) || 0, // 👈 Add this line
     time: food.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   };
-
-};
-
 
   if (!completeFood.name || isNaN(completeFood.cal) || isNaN(completeFood.prot)) {
     console.error("Invalid food entry:", food);
@@ -967,6 +962,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
+
       {/* ⚖️ Weigh & Log (by grams) */}
       <div style={{
         marginTop: "12px",
@@ -1024,20 +1020,19 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           </button>
         </div>
 
-        {/* live preview */}
+        {/* live preview (safe-guarded) */}
         {weighedKey && weighedGrams && (() => {
-          const f = weighedFoods.find(x => x.key === weighedKey);
-          if (!f) return null;
-          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(f.per100, weighedGrams);
+          const def = weighedFoods.find(x => x.key === weighedKey);
+          if (!def) return null;
+          const { cal, prot, fat, carbs, fiber, grams } = computeFromGrams(def.per100, weighedGrams);
           return (
             <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
-              Preview: <strong>{f.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
+              Preview: <strong>{def.label} ({grams}g)</strong> — {cal} cal, {prot}g protein
               {fat ? `, ${fat}g fat` : ""}{carbs ? `, ${carbs}g carbs` : ""}{fiber ? `, ${fiber}g fiber` : ""}
             </div>
           );
         })()}
       </div>
-
       <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "12px" }}>Logged Foods</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
   {foodLog.map((f, i) => (
