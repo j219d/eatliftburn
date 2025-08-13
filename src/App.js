@@ -2047,6 +2047,7 @@ marginBottom:    "20px"
       fontSize:        "13px",
       border:          "none",
       borderRadius:    "6px",
+      marginLeft:      "auto",
       marginRight:     "8px"
     }}
   >
