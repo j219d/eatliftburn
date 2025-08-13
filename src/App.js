@@ -977,11 +977,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           <h3 style={{ margin: 0, fontSize: 18 }}>Weigh & Log (by grams)</h3>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 110px auto", gap: "8px", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 90px 72px", gap: "8px", alignItems: "center" }}>
           <select
             value={weighedKey}
             onChange={(e) => setWeighedKey(e.target.value)}
-            style={{ padding: "10px", borderRadius: 8, border: "1px solid #ccc" }}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: 8, border: "1px solid #ccc", width: "100%", minWidth: 0 }}
           >
             <option value="">Select food</option>
             {weighedFoods.map(f => (
@@ -1013,7 +1013,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "10px 14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8 }}
+            style={{ padding: "10px 0", width: "72px", background: "#0070f3", color: "#fff", border: "none", borderRadius: 8, justifySelf: "end" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
