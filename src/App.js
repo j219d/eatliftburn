@@ -1427,7 +1427,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            padding: "10px 14px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            style={{ padding: "10px 14px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
