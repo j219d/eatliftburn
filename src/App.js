@@ -2131,32 +2131,32 @@ setWorkoutLog(prev => ({
         </div>
 
         <div style={{ padding:"24px", paddingTop:"58px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto"}}>
-          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"16px"}}>⚙️ Mode Settings</h1>
+          <h1 style={{ fontSize:"18px", fontWeight:700, textAlign:"center", marginBottom:"12px"}}>⚙️ Mode Settings</h1>
 
           <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
-            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+            <label style={{ display:"grid", gap:"6px", fontSize:"16px", alignItems:"center", gridTemplateColumns:"1fr" }}>
               Cut deficit (calories):
               <input
                 type="number" inputMode="numeric" min="0"
                 min="0"
                 value={cutDeficit}
                 onChange={(e) => setCutDeficit(Math.max(0, parseInt(e.target.value || "0")))}
-                style={{ width:"12ch", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px", textAlign:"center" }}
+                style={{ width:"10ch", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px", textAlign:"center" }}
               />
             </label>
 
-            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
+            <label style={{ display:"grid", gap:"6px", fontSize:"16px", alignItems:"center", gridTemplateColumns:"1fr" }}>
               Bulk surplus (calories):
               <input
                 type="number" inputMode="numeric" min="0"
                 min="0"
                 value={bulkSurplus}
                 onChange={(e) => setBulkSurplus(Math.max(0, parseInt(e.target.value || "0")))}
-                style={{ width:"12ch", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px", textAlign:"center" }}
+                style={{ width:"10ch", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px", textAlign:"center" }}
               />
             </label>
 
-            <div style={{ display:"flex", gap:"8px" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px", marginTop:"8px" }}>
               <button
                 onClick={() => { 
                   localStorage.setItem("cutDeficit", String(cutDeficit));
@@ -2181,29 +2181,29 @@ setWorkoutLog(prev => ({
               </button>
               <button
                 onClick={() => { setCutDeficit(500); setBulkSurplus(100); setCutProtein(140); setCutFat(50); setCutCarb(120); setMaintProtein(140); setMaintFat(55); setMaintCarb(160); setBulkProtein(150); setBulkFat(60); setBulkCarb(200); if (mode === "Cut") { setProteinGoal(140); setFatGoal(50); setCarbGoal(120); } else if (mode === "Maintenance") { setProteinGoal(140); setFatGoal(55); setCarbGoal(160); } else { setProteinGoal(150); setFatGoal(60); setCarbGoal(200); } } }
-                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
+                style={{ width:"100%", padding:"8px 12px", fontSize:"14px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
               >
                 Reset to defaults
               </button>
             </div>
           </div>
         
-          <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px" }}>
+          <h3 style={{ marginTop:"16px", marginBottom:"6px", fontSize:"16px" }}>✂️ Cut Macros</h3>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px", gap:"16px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           </div>
 
-          <h2>🧰 Maintenance Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px" }}>
+          <h3 style={{ marginTop:"16px", marginBottom:"6px", fontSize:"16px" }}>🧰 Maintenance Macros</h3>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px", gap:"16px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           </div>
 
-          <h2>🍚 Bulk Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px" }}>
+          <h3 style={{ marginTop:"16px", marginBottom:"6px", fontSize:"16px" }}>🍚 Bulk Macros</h3>
+          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", justifyContent:"center", marginTop:"8px", gap:"16px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
           <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"10ch", textAlign:"center" }} /></label>
