@@ -879,30 +879,26 @@ if (screen === "settings") {
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
         <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
-            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
-              <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
-              Male
-            </label>
-            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
-              <input type="radio" name="sex" value="female" checked={settingsSex==="female"} onChange={()=>setSettingsSex("female")} />
-              Female
-            </label>
-          </div>
+            {/* Profile: Weight & Height on one line, Birthday underneath (Settings only) */}
+<div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"10px" }}>
+  <label style={{ display:"block", marginBottom:"10px" }}>
+    <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
+    <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} size={5}
+      style={{ width:"8ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+  </label>
 
-          <label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
-            <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
+  <label style={{ display:"block", marginBottom:"10px" }}>
+    <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
+    <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} size={5}
+      style={{ width:"8ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+  </label>
+</div>
 
-          <label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
-            <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-          </label>
-
-          <label style={{ display:"block", marginBottom:"10px" }}>
-            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
-            <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-            </label>
+<label style={{ display:"block", marginBottom:"10px" }}>
+  <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
+  <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)}
+    style={{ width:"100%", maxWidth:"320px", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+</label>
 
 
           {/* Home Page Display toggles */}
@@ -944,9 +940,7 @@ if (screen === "settings") {
           <div style={{ background:"#fff", border:"1px solid #eee", borderRadius:"12px", padding:"12px", margin:"12px 0" }}>
             <div style={{ display:"flex", alignItems:"center" }}>
               <div style={{ fontWeight:600 }}>Checklist</div>
-              <label style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"6px" }}>
-                <input type="checkbox" checked={displaySettings.showChecklist} onChange={e=>setDisplaySettings(s=>({...s, showChecklist:e.target.checked}))}/> Show on Home
-              </label>
+              
             </div>
 
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
