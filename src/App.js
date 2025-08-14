@@ -2205,12 +2205,12 @@ setWorkoutLog(prev => ({
         </div>
 
       {/* Input */}
-      <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "24px", justifyContent: "center" }}>
         <input type="text" inputMode="decimal"
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ width: "25%", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: "30%", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
