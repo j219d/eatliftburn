@@ -310,6 +310,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
     const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
     const prettyName = def.name + " (" + liquidQty + "× " + liquidUnit + ")";
     addFood({ name: prettyName, cal: t.cal, prot: t.prot, fat: t.fat, carbs: t.carbs, fiber: t.fiber, water: t.water });
+    setLiquidQty("");
     // toast now handled in addFood
   }
 
@@ -1428,6 +1429,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
               });
               setWeighedGrams("");
+              setWeighedQuery("");
             }}
             style={{ padding: "8px 12px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
             disabled={!weighedKey || !weighedGrams}
