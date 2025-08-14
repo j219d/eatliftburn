@@ -238,6 +238,80 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const calorieThreshold = bmr || 1600;
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
+  // === Liquids logger state & defs ===
+  const [liquidKey, setLiquidKey] = useState("olive_oil");
+  const [liquidUnit, setLiquidUnit] = useState("tsp");
+  const [liquidQty, setLiquidQty] = useState("1");
+
+  const liquidDefs = {
+    olive_oil:     { name: "Olive oil",     perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
+    avocado_oil:   { name: "Avocado oil",   perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
+    peanut_butter: { name: "Peanut butter", perTsp: { cal: 94/3, prot: 4/3, fat: 8/3, carbs: 3/3, fiber: 1/3 }, note: "" },
+    maple_syrup:   { name: "Maple syrup",   perTsp: { cal: 17, prot: 0,  fat: 0,   carbs: 4.5, fiber: 0 }, note: "" },
+    silan:         { name: "Silan (date syrup)", perTsp: { cal: 20, prot: 0, fat: 0, carbs: 5, fiber: 0 }, note: "" },
+    honey:         { name: "Honey",         perTsp: { cal: 15, prot: 0,  fat: 0,   carbs: 4,   fiber: 0 }, note: "" },
+    water:         { name: "Water",         perFlOz: { water: 1 }, note: "" }
+  };
+
+  // Volume conversion maps
+  const tspUnits = {
+    "1/2 tsp": 0.5,
+    "tsp": 1,
+    "1/2 tbsp": 1.5,  // 0.5 tbsp = 1.5 tsp
+    "tbsp": 3,
+    "1/4 cup": 12,    // 1/4 cup = 4 tbsp = 12 tsp
+    "1/2 cup": 24,
+    "3/4 cup": 36,
+    "1 cup": 48
+  };
+
+  const flOzUnits = {
+    "tsp": 1/6,       // 1 tsp = 0.1667 fl oz
+    "1/2 tsp": 1/12,
+    "1/2 tbsp": 0.25, // 0.5 tbsp = 0.25 fl oz
+    "tbsp": 0.5,
+    "1/4 cup": 2,
+    "1/2 cup": 4,
+    "3/4 cup": 6,
+    "1 cup": 8
+  };
+
+  function computeLiquidTotals(key, unit, qtyStr) {
+    const qty = Math.max(0, parseFloat(qtyStr || "0"));
+    const def = liquidDefs[key];
+    if (!def || qty === 0) return { cal:0, prot:0, fat:0, carbs:0, fiber:0, water:0, labelAddon:"" };
+
+    // Water uses fl oz; others use tsp-based mapping
+    if (key === "water") {
+      const ozEach = flOzUnits[unit] ?? 0;
+      const totalOz = ozEach * qty;
+      return { cal:0, prot:0, fat:0, carbs:0, fiber:0, water: totalOz, labelAddon: `${totalOz} oz` };
+    }
+
+    const tspEach = tspUnits[unit] ?? 0;
+    const tspTotal = tspEach * qty;
+    const perTsp = def.perTsp;
+    return {
+      cal:   Math.round((perTsp.cal   || 0) * tspTotal),
+      prot:  Math.round((perTsp.prot  || 0) * tspTotal),
+      fat: +((perTsp.fat   || 0) * tspTotal).toFixed(1),
+      carbs:+((perTsp.carbs || 0) * tspTotal).toFixed(1),
+      fiber:+((perTsp.fiber || 0) * tspTotal).toFixed(1),
+      water: 0,
+      labelAddon: `${tspTotal} tsp`
+    };
+  }
+
+  function addLiquid() {
+    const def = liquidDefs[liquidKey];
+    if (!def) return;
+    const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
+    const prettyName = def.name + " (" + liquidQty + "× " + liquidUnit + ")";
+    addFood({ name: prettyName, cal: t.cal, prot: t.prot, fat: t.fat, carbs: t.carbs, fiber: t.fiber, water: t.water });
+    setToastMsg(prettyName + " added");
+    setTimeout(() => setToastMsg(""), 1200);
+  }
+
   const [customWorkout, setCustomWorkout] = useState({});
   const [customSteps, setCustomSteps] = useState("");
   const [foodSearch,   setFoodSearch]   = useState("");
@@ -743,7 +817,7 @@ const deleteFood = (index) => {
       alert("Please enter a valid birthday and height (cm).");
       return;
     }
-    const nextProfile = { sex: settingsSex, heightCm: Math.round(h), birthDate: settingsBirth };
+    const nextProfile = { sex: settingsSex, heightCm: h, birthDate: settingsBirth };
     setUserProfile(nextProfile);
 
     const w = parseFloat(settingsWeight);
@@ -1034,7 +1108,7 @@ if (screen === "onboarding") {
       alert("Please fill in sex, height (cm), birthday, and weight (lbs).");
       return;
     }
-    const nextProfile = { sex: onbSex, heightCm: Math.round(h), birthDate: onbBirth };
+    const nextProfile = { sex: onbSex, heightCm: h, birthDate: onbBirth };
     setUserProfile(nextProfile);
     // seed weight log
     if (weightLog.length === 0) {
@@ -1372,7 +1446,88 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           );
         })()}
       </div>
-      {/* 🧪 Custom Food (Card) */}
+      
+      {/* 🧴 Liquids (Card) */}
+      <div style={{
+        marginTop: "12px",
+        marginBottom: "18px",
+        padding: "12px",
+        border: "1px solid #e5e7eb",
+        borderRadius: "10px",
+        background: "#fafafa"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+          <span style={{ fontSize: 18 }}>🧴</span>
+          <div style={{ fontWeight: 600 }}>Liquids</div>
+          <div style={{ fontSize: 12, color: "#6b7280" }}>(oil, syrups, water)</div>
+        </div>
+
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+          <select
+            value={liquidKey}
+            onChange={(e) => setLiquidKey(e.target.value)}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", minWidth: "180px" }}
+          >
+            <option value="olive_oil">Olive oil</option>
+            <option value="avocado_oil">Avocado oil</option>
+            <option value="peanut_butter">Peanut butter</option>
+            <option value="maple_syrup">Maple syrup</option>
+            <option value="silan">Silan (date syrup)</option>
+            <option value="honey">Honey</option>
+            <option value="water">Water</option>
+          </select>
+
+          <select
+            value={liquidUnit}
+            onChange={(e) => setLiquidUnit(e.target.value)}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+          >
+            <option>1/2 tsp</option>
+            <option>tsp</option>
+            <option>1/2 tbsp</option>
+            <option>tbsp</option>
+            <option>1/4 cup</option>
+            <option>1/2 cup</option>
+            <option>3/4 cup</option>
+            <option>1 cup</option>
+          </select>
+
+          <input
+            type="number"
+            min="0"
+            step="0.25"
+            value={liquidQty}
+            onChange={(e) => setLiquidQty(e.target.value)}
+            placeholder="Qty"
+            style={{ width: "90px", padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+
+          <button
+            onClick={addLiquid}
+            style={{ padding: "8px 12px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", background: "#f9fafb" }}
+          >
+            Add
+          </button>
+        </div>
+
+        {/* live preview */}
+        {(() => {
+          const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
+          if (!t) return null;
+          const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan (date syrup)", honey:"Honey", water:"Water" }[liquidKey];
+          const unitLabel = liquidUnit;
+          return (
+            <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
+              Preview: <strong>{n} ({liquidQty}× {unitLabel})</strong>
+              {liquidKey === "water"
+                ? <> — adds {Math.round((flOzUnits[unitLabel] || 0) * parseFloat(liquidQty || "0") * 10)/10} oz water</>
+                : <> — {t.cal} cal, {t.prot}g protein{t.fat ? `, ${t.fat}g fat` : ""}{t.carbs ? `, ${t.carbs}g carbs` : ""}{t.fiber ? `, ${t.fiber}g fiber` : ""}</>
+              }
+            </div>
+          );
+        })()}
+      </div>
+{/* 🧪 Custom Food (Card) */}
 <div style={{
   marginTop: "12px",
   marginBottom: "18px",
