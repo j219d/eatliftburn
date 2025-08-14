@@ -890,8 +890,8 @@ if (screen === "settings") {
           </div>
 
           {/* Settings profile row: Weight & Height side-by-side; Birthday below */}
-{/* Profile: one clean symmetric row */}
-<div style={{ display:"grid", gridTemplateColumns:"auto auto auto", gap:"16px", justifyContent:"center", alignItems:"end", margin:"6px 0 10px" }}>
+{/* Profile: Weight & Height on one line; Birthday below inline */}
+<div style={{ display:"grid", gridTemplateColumns:"auto auto", gap:"16px", justifyContent:"center", alignItems:"end", marginBottom:"10px" }}>
   <label style={{ display:"grid", gap:"6px", justifyItems:"center" }}>
     <div style={{ fontSize:"14px", color:"#555" }}>Weight (lbs)</div>
     <input
@@ -915,16 +915,16 @@ if (screen === "settings") {
       style={{ width:"12ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
     />
   </label>
+</div>
 
-  <label style={{ display:"grid", gap:"6px", justifyItems:"center" }}>
-    <div style={{ fontSize:"14px", color:"#555" }}>Birthday</div>
-    <input
-      type="date"
-      value={settingsBirth}
-      onChange={e=>setSettingsBirth(e.target.value)}
-      style={{ width:"12ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
-    />
-  </label>
+<div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:"10px", marginBottom:"10px" }}>
+  <div style={{ fontSize:"14px", color:"#555" }}>Birthday</div>
+  <input
+    type="date"
+    value={settingsBirth}
+    onChange={e=>setSettingsBirth(e.target.value)}
+    style={{ width:"16ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
+  />
 </div>
 
 
