@@ -930,12 +930,12 @@ if (screen === "settings") {
             <div style={{ fontWeight:600, marginBottom:"6px" }}>Goals</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
               <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-                <span>Water goal (oz)</span>
-                <input type="number" inputMode="decimal" value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(1, parseFloat(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+                <span>Water (oz)</span>
+                <input type="number" inputMode="decimal" value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(1, parseFloat(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", width:"8ch" }} />
               </label>
               <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-                <span>Steps goal</span>
-                <input type="number" inputMode="numeric" value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(1, parseInt(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+                <span>Steps</span>
+                <input type="number" inputMode="numeric" value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(1, parseInt(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", width:"8ch" }} />
               </label>
             </div>
           </div>
@@ -944,7 +944,10 @@ if (screen === "settings") {
           <div style={{ background:"#fff", border:"1px solid #eee", borderRadius:"12px", padding:"12px", margin:"12px 0" }}>
             <div style={{ display:"flex", alignItems:"center" }}>
               <div style={{ fontWeight:600 }}>Checklist</div>
-              </div>
+              <label style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"6px" }}>
+                <input type="checkbox" checked={displaySettings.showChecklist} onChange={e=>setDisplaySettings(s=>({...s, showChecklist:e.target.checked}))}/> Show on Home
+              </label>
+            </div>
 
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
               <input
@@ -952,7 +955,7 @@ if (screen === "settings") {
                 placeholder="Add new checklist item"
                 value={newChecklistName}
                 onChange={e=>setNewChecklistName(e.target.value)}
-                style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                style={{ flex:"0 0 50%", maxWidth:"50%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
               />
               <button
                 onClick={()=>{
