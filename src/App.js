@@ -890,23 +890,42 @@ if (screen === "settings") {
           </div>
 
           {/* Settings profile row: Weight & Height side-by-side; Birthday below */}
-<div style={{ display:"grid", gridTemplateColumns:"auto auto", gap:"12px", marginBottom:"10px", justifyContent:"center", placeItems:"center" }}>
-  <label style={{ display:"block", marginBottom:"10px" }}>
-    <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
-    <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} size={5}
-      style={{ width:"8ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+{/* Profile: one clean symmetric row */}
+<div style={{ display:"grid", gridTemplateColumns:"auto auto auto", gap:"16px", justifyContent:"center", alignItems:"end", margin:"6px 0 10px" }}>
+  <label style={{ display:"grid", gap:"6px", justifyItems:"center" }}>
+    <div style={{ fontSize:"14px", color:"#555" }}>Weight (lbs)</div>
+    <input
+      type="number"
+      inputMode="decimal"
+      value={settingsWeight}
+      onChange={e=>setSettingsWeight(e.target.value)}
+      size={5}
+      style={{ width:"12ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
+    />
   </label>
-  <label style={{ display:"block", marginBottom:"10px" }}>
-    <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
-    <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} size={5}
-      style={{ width:"8ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+
+  <label style={{ display:"grid", gap:"6px", justifyItems:"center" }}>
+    <div style={{ fontSize:"14px", color:"#555" }}>Height (cm)</div>
+    <input
+      type="number"
+      inputMode="numeric"
+      value={settingsHeight}
+      onChange={e=>setSettingsHeight(e.target.value)}
+      size={5}
+      style={{ width:"12ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
+    />
+  </label>
+
+  <label style={{ display:"grid", gap:"6px", justifyItems:"center" }}>
+    <div style={{ fontSize:"14px", color:"#555" }}>Birthday</div>
+    <input
+      type="date"
+      value={settingsBirth}
+      onChange={e=>setSettingsBirth(e.target.value)}
+      style={{ width:"12ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", textAlign:"center" }}
+    />
   </label>
 </div>
-<label style={{ display:"block", marginBottom:"10px" }}>
-  <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
-  <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)}
-    style={{ width:"18ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", margin:"0 auto", display:"block" }} />
-</label>
 
 
           {/* Home Page Display toggles */}
@@ -957,7 +976,7 @@ if (screen === "settings") {
                 placeholder="Add new checklist item"
                 value={newChecklistName}
                 onChange={e=>setNewChecklistName(e.target.value)}
-                style={{ flex:"0 0 60%", maxWidth:"60%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                style={{ flex:"0 0 66%", maxWidth:"66%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
               />
               <button
                 onClick={()=>{
