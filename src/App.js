@@ -241,7 +241,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   // === Liquids logger state & defs ===
   const [liquidKey, setLiquidKey] = useState("olive_oil");
   const [liquidUnit, setLiquidUnit] = useState("tsp");
-  const [liquidQty, setLiquidQty] = useState("1");
+  const [liquidQty, setLiquidQty] = useState("");
 
   const liquidDefs = {
     olive_oil:     { name: "Olive oil",     perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
@@ -1427,7 +1427,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "10px 14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            padding: "10px 14px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
@@ -1506,7 +1506,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
           <button
             onClick={addLiquid}
-            style={{ padding: "10px 14px", fontSize: "14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            style={{ padding: "8px 12px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
           >
             Add
           </button>
