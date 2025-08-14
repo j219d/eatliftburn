@@ -1049,41 +1049,74 @@ if (screen === "onboarding") {
   };
 
   return (
-    <div style={{ padding:"24px", paddingBottom:"24px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"40px auto" }}>
-      <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>Welcome to EatLiftBurn</h1>
-      <p style={{ textAlign:"center", color:"#666", marginTop:0, marginBottom:"16px" }}>
-        Quick setup so your BMR and goals are accurate.
-      </p>
+    <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "40px auto" }}>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "24px" }}>
+        Welcome to EatLiftBurn
+      </h1>
 
-      <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
-        <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
-          <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
-            <input type="radio" name="sex" value="male" checked={onbSex==="male"} onChange={()=>setOnbSex("male")} />
+      <div style={{ background: "#f9f9f9", borderRadius: "12px", padding: "16px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+        {/* Sex selection */}
+        <div style={{ display: "flex", gap: "16px", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <input type="radio" name="sex" value="male" checked={onbSex === "male"} onChange={() => setOnbSex("male")} />
             Male
           </label>
-          <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
-            <input type="radio" name="sex" value="female" checked={onbSex==="female"} onChange={()=>setOnbSex("female")} />
+          <label style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <input type="radio" name="sex" value="female" checked={onbSex === "female"} onChange={() => setOnbSex("female")} />
             Female
           </label>
         </div>
 
-        <label style={{ display:"block", marginBottom:"10px" }}>
-          <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
-          <input type="number" inputMode="numeric" value={onbHeight} onChange={e=>setOnbHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-        </label>
+        {/* Weight & Height on one line, narrow centered inputs */}
+        <div style={{ display: "grid", gridTemplateColumns: "auto auto", gap: "16px", justifyContent: "center", marginBottom: "16px" }}>
+          <label style={{ display: "grid", gap: "6px", justifyItems: "center" }}>
+            <div style={{ fontSize: "14px", color: "#555" }}>Weight (lbs)</div>
+            <input
+              type="number"
+              inputMode="decimal"
+              value={onbWeight}
+              onChange={e => setOnbWeight(e.target.value)}
+              style={{ width: "12ch", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", textAlign: "center" }}
+            />
+          </label>
 
-        <label style={{ display:"block", marginBottom:"10px" }}>
-          <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
-          <input type="date" value={onbBirth} onChange={e=>setOnbBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-        </label>
+          <label style={{ display: "grid", gap: "6px", justifyItems: "center" }}>
+            <div style={{ fontSize: "14px", color: "#555" }}>Height (cm)</div>
+            <input
+              type="number"
+              inputMode="numeric"
+              value={onbHeight}
+              onChange={e => setOnbHeight(e.target.value)}
+              style={{ width: "12ch", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", textAlign: "center" }}
+            />
+          </label>
+        </div>
 
-        <label style={{ display:"block", marginBottom:"10px" }}>
-          <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
-          <input type="number" inputMode="decimal" value={onbWeight} onChange={e=>setOnbWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
-        </label>
+        {/* Birthday below on one line with label */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+          <div style={{ fontSize: "14px", color: "#555" }}>Birthday</div>
+          <input
+            type="date"
+            value={onbBirth}
+            onChange={e => setOnbBirth(e.target.value)}
+            style={{ width: "16ch", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", textAlign: "center" }}
+          />
+        </div>
 
-        <button onClick={startApp} style={{ width:"100%", padding:"12px", fontSize:"16px", borderRadius:"10px", border:"none", background:"#1976d2", color:"#fff", cursor:"pointer", marginTop:"8px" }}>
-          Save & Continue
+        <button
+          onClick={startApp}
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "16px",
+            borderRadius: "10px",
+            border: "none",
+            background: "#1976d2",
+            color: "#fff",
+            cursor: "pointer"
+          }}
+        >
+          Get Started
         </button>
       </div>
     </div>
