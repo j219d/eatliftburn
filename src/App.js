@@ -2120,106 +2120,130 @@ setWorkoutLog(prev => ({
 
 
   if (screen === "modeSettings") {
-    return (
-      <>
-        <div style={{position:"fixed", top:0, left:0, right:0, height:"56px", backgroundColor:"#fff",
-                     borderBottom:"1px solid #ddd", boxShadow:"0 1px 4px rgba(0,0,0,0.1)",
-                     display:"flex", alignItems:"center", justifyContent:"center", zIndex:100}}>
-          <button onClick={() => setScreen("home")} style={{ border:"none", background:"transparent", fontSize:"18px", cursor:"pointer"}}>
-            🏠 Home
-          </button>
-        </div>
+  return (
+    <>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "56px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #ddd",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 100
+        }}
+      >
+        <button
+          onClick={() => setScreen("home")}
+          style={{ border: "none", background: "transparent", fontSize: "18px", cursor: "pointer" }}
+        >
+          🏠 Home
+        </button>
+      </div>
 
-        <div style={{ padding:"24px", paddingTop:"58px", paddingBottom:"80px", fontFamily:"Inter, Arial, sans-serif", maxWidth:"500px", margin:"auto"}}>
-          <h1 style={{ fontSize:"24px", fontWeight:"bold", textAlign:"center", marginBottom:"16px"}}>⚙️ Mode Settings</h1>
+      <div
+        style={{
+          padding: "24px",
+          paddingTop: "70px",
+          paddingBottom: "80px",
+          fontFamily: "Inter, Arial, sans-serif",
+          maxWidth: "500px",
+          margin: "auto"
+        }}
+      >
+        <h1 style={{ fontSize: "22px", fontWeight: "bold", textAlign: "center", marginBottom: "12px" }}>
+          ⚙️ Mode Settings
+        </h1>
 
-          <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)" }}>
-            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
-              Cut deficit (calories):
+        <div
+          style={{
+            background: "#f9f9f9",
+            borderRadius: "12px",
+            padding: "16px",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.05)"
+          }}
+        >
+          {/* Two inputs on one centered row with narrow, identical boxes */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "auto auto",
+              gap: "16px",
+              justifyContent: "center",
+              alignItems: "end",
+              marginBottom: "12px"
+            }}
+          >
+            <label style={{ display: "grid", gap: "6px", justifyItems: "center" }}>
+              <div style={{ fontSize: "14px", color: "#555" }}>Cut deficit (calories)</div>
               <input
-                type="number" inputMode="numeric" min="0"
+                type="number"
+                inputMode="numeric"
                 min="0"
                 value={cutDeficit}
                 onChange={(e) => setCutDeficit(Math.max(0, parseInt(e.target.value || "0")))}
-                style={{ width:"110px", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+                style={{
+                  width: "12ch",
+                  padding: "10px",
+                  fontSize: "16px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  textAlign: "center"
+                }}
               />
             </label>
 
-            <label style={{ display:"block", marginBottom:"12px", fontSize:"16px" }}>
-              Bulk surplus (calories):
+            <label style={{ display: "grid", gap: "6px", justifyItems: "center" }}>
+              <div style={{ fontSize: "14px", color: "#555" }}>Bulk surplus (calories)</div>
               <input
-                type="number" inputMode="numeric" min="0"
+                type="number"
+                inputMode="numeric"
                 min="0"
                 value={bulkSurplus}
                 onChange={(e) => setBulkSurplus(Math.max(0, parseInt(e.target.value || "0")))}
-                style={{ width:"110px", padding:"10px", fontSize:"14px", borderRadius:"8px", border:"1px solid #ccc", marginTop:"6px" }}
+                style={{
+                  width: "12ch",
+                  padding: "10px",
+                  fontSize: "16px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                  textAlign: "center"
+                }}
               />
             </label>
-
-            <div style={{ display:"flex", gap:"8px" }}>
-              <button
-                onClick={() => { 
-                  localStorage.setItem("cutDeficit", String(cutDeficit));
-                  localStorage.setItem("bulkSurplus", String(bulkSurplus));
-                  localStorage.setItem("cutProtein", String(cutProtein));
-                  localStorage.setItem("cutFat", String(cutFat));
-                  localStorage.setItem("cutCarb", String(cutCarb));
-                  localStorage.setItem("maintProtein", String(maintProtein));
-                  localStorage.setItem("maintFat", String(maintFat));
-                  localStorage.setItem("maintCarb", String(maintCarb));
-                  localStorage.setItem("bulkProtein", String(bulkProtein));
-                  localStorage.setItem("bulkFat", String(bulkFat));
-                  localStorage.setItem("bulkCarb", String(bulkCarb));
-                  if (mode === "Cut") { setProteinGoal(cutProtein); setFatGoal(cutFat); setCarbGoal(cutCarb); }
-                  else if (mode === "Maintenance") { setProteinGoal(maintProtein); setFatGoal(maintFat); setCarbGoal(maintCarb); }
-                  else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); }
-                  setScreen("home");
-                }}
-                style={{ flex:1, padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
-              >
-                Save
-              </button>
-              <button
-                onClick={() => { setCutDeficit(500); setBulkSurplus(100); setCutProtein(140); setCutFat(50); setCutCarb(120); setMaintProtein(140); setMaintFat(55); setMaintCarb(160); setBulkProtein(150); setBulkFat(60); setBulkCarb(200); if (mode === "Cut") { setProteinGoal(140); setFatGoal(50); setCarbGoal(120); } else if (mode === "Maintenance") { setProteinGoal(140); setFatGoal(55); setCarbGoal(160); } else { setProteinGoal(150); setFatGoal(60); setCarbGoal(200); } } }
-                style={{ flex:1, padding:"10px 16px", fontSize:"16px", backgroundColor:"#eee", color:"#000", border:"none", borderRadius:"8px" }}
-              >
-                Reset to defaults
-              </button>
-            </div>
-          </div>
-        
-          <h2 style={{ marginTop:"20px" }}>✂️ Cut Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
 
-          <h2>🧰 Maintenance Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          </div>
-
-          <h2>🍚 Bulk Macros</h2>
-          <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
-          <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          </div>
+          <button
+            onClick={() => {
+              localStorage.setItem("cutDeficit", String(cutDeficit));
+              localStorage.setItem("bulkSurplus", String(bulkSurplus));
+              setToastMsg("Mode settings saved");
+              setTimeout(() => setToastMsg(""), 1500);
+            }}
+            style={{
+              width: "100%",
+              padding: "12px",
+              fontSize: "16px",
+              borderRadius: "10px",
+              border: "none",
+              background: "#1976d2",
+              color: "#fff",
+              cursor: "pointer"
+            }}
+          >
+            Save
+          </button>
         </div>
+      </div>
+    </>
+  );
+}
 
-        {/* — Fixed Bottom Tab Bar — */}
-        <div style={{ position:"fixed", bottom:0, left:0, right:0, display:"flex", height:"56px", backgroundColor:"#fff",
-                      borderTop:"1px solid #ddd", boxShadow:"0 -1px 4px rgba(0,0,0,0.1)" }}>
-          <button onClick={() => setScreen("food")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🍽️ Food</button>
-          <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
-          <button onClick={() => setScreen("weight")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
-        </div>
-      </>
-    );
-  }
 
    return (
     <>
