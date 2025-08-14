@@ -55,7 +55,7 @@ const [fatGoal, setFatGoal] = useState(
 const [carbGoal, setCarbGoal] = useState(
   () => parseFloat(localStorage.getItem("carbGoal")) || 120
 );
-const fiberGoal = 28;
+const [fiberGoal, setFiberGoal] = useState(() => parseFloat(localStorage.getItem("fiberGoal")) || 28);
 const waterGoal = 81; // ounces (default ≈3×27oz)
   const [stepGoal] = useState(10000);
   // ▶ Mode offsets (editable in Mode Settings)
@@ -73,6 +73,10 @@ const waterGoal = 81; // ounces (default ≈3×27oz)
   const [bulkProtein, setBulkProtein] = useState(() => parseFloat(localStorage.getItem('bulkProtein')) || 150);
   const [bulkFat, setBulkFat] = useState(() => parseFloat(localStorage.getItem('bulkFat')) || 60);
   const [bulkCarb, setBulkCarb] = useState(() => parseFloat(localStorage.getItem('bulkCarb')) || 200);
+
+  const [cutFiber, setCutFiber] = useState(() => parseFloat(localStorage.getItem('cutFiber')) || 28);
+  const [maintFiber, setMaintFiber] = useState(() => parseFloat(localStorage.getItem('maintFiber')) || 28);
+  const [bulkFiber, setBulkFiber] = useState(() => parseFloat(localStorage.getItem('bulkFiber')) || 28);
 
 
   // checklist state moved to dynamic version above
@@ -609,14 +613,17 @@ useEffect(() => {
       setProteinGoal(cutProtein);
       setFatGoal(cutFat);
       setCarbGoal(cutCarb);
+      setFiberGoal(cutFiber);
     } else if (mode === "Maintenance") {
       setProteinGoal(maintProtein);
       setFatGoal(maintFat);
       setCarbGoal(maintCarb);
+      setFiberGoal(maintFiber);
     } else {
       setProteinGoal(bulkProtein);
       setFatGoal(bulkFat);
       setCarbGoal(bulkCarb);
+      setFiberGoal(bulkFiber);
     }
 
   localStorage.setItem("calories", calories);
@@ -646,6 +653,10 @@ useEffect(() => {
     localStorage.setItem("bulkProtein", String(bulkProtein));
     localStorage.setItem("bulkFat", String(bulkFat));
     localStorage.setItem("bulkCarb", String(bulkCarb));
+    localStorage.setItem("cutFiber", String(cutFiber));
+    localStorage.setItem("maintFiber", String(maintFiber));
+    localStorage.setItem("bulkFiber", String(bulkFiber));
+    localStorage.setItem("fiberGoal", String(fiberGoal));
 }, [calories, protein, fat, carbs, fiber, water, steps, deficitGoal, proteinGoal, checklist, foodLog, workoutLog, fatGoal, carbGoal, mode, checklist, foodLog, workoutLog, weightLog]);
 
 
@@ -655,14 +666,17 @@ useEffect(() => {
       setProteinGoal(cutProtein);
       setFatGoal(cutFat);
       setCarbGoal(cutCarb);
+      setFiberGoal(cutFiber);
     } else if (mode === "Maintenance") {
       setProteinGoal(maintProtein);
       setFatGoal(maintFat);
       setCarbGoal(maintCarb);
+      setFiberGoal(maintFiber);
     } else {
       setProteinGoal(bulkProtein);
       setFatGoal(bulkFat);
       setCarbGoal(bulkCarb);
+      setFiberGoal(bulkFiber);
     }
 
     /* numeric defaults removed; user settings apply */
@@ -987,7 +1001,7 @@ if (screen === "settings") {
     <div style={{ fontSize:"14px", color:"#555" }}>Height (cm)</div>
     <input
       type="number"
-      inputMode="numeric"
+      inputMode="decimal"
       value={settingsHeight}
       onChange={e=>setSettingsHeight(e.target.value)}
       size={5}
@@ -1163,7 +1177,7 @@ if (screen === "onboarding") {
             <div style={{ fontSize: "14px", color: "#555" }}>Height (cm)</div>
             <input
               type="number"
-              inputMode="numeric"
+              inputMode="decimal"
               value={onbHeight}
               onChange={e => setOnbHeight(e.target.value)}
               style={{ width: "12ch", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc", textAlign: "center" }}
@@ -1811,10 +1825,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
     // --- NEW: handle Bike rides
 if (type === "Bike") {
 const cal = Math.round(input * 15);        // 15 cal/km
-setWorkoutLog(prev => ({
-...prev,
-[type]: { reps: input, cal }
-}));
+setWorkoutLog(prev => {
+  const prevReps = prev[type]?.reps || 0;
+  const prevCal = prev[type]?.cal || 0;
+  return { ...prev, [type]: { reps: prevReps + input, cal: prevCal + cal } };
+});
 setCustomWorkout({ ...customWorkout, [type]: "" });
 return;
 }
@@ -2195,7 +2210,7 @@ setWorkoutLog(prev => ({
           placeholder="Enter weight"
           value={newWeight}
           onChange={(e) => setNewWeight(e.target.value)}
-          style={{ flex: 1, padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+          style={{ width: "25%", padding: "10px", fontSize: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
         />
         <button
           onClick={addWeight}
@@ -2307,9 +2322,13 @@ setWorkoutLog(prev => ({
                   localStorage.setItem("bulkProtein", String(bulkProtein));
                   localStorage.setItem("bulkFat", String(bulkFat));
                   localStorage.setItem("bulkCarb", String(bulkCarb));
-                  if (mode === "Cut") { setProteinGoal(cutProtein); setFatGoal(cutFat); setCarbGoal(cutCarb); }
-                  else if (mode === "Maintenance") { setProteinGoal(maintProtein); setFatGoal(maintFat); setCarbGoal(maintCarb); }
-                  else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); }
+    localStorage.setItem("cutFiber", String(cutFiber));
+    localStorage.setItem("maintFiber", String(maintFiber));
+    localStorage.setItem("bulkFiber", String(bulkFiber));
+    localStorage.setItem("fiberGoal", String(fiberGoal));
+                  if (mode === "Cut") { setProteinGoal(cutProtein); setFatGoal(cutFat); setCarbGoal(cutCarb); setFiberGoal(cutFiber); }
+                  else if (mode === "Maintenance") { setProteinGoal(maintProtein); setFatGoal(maintFat); setCarbGoal(maintCarb); setFiberGoal(maintFiber); }
+                  else { setProteinGoal(bulkProtein); setFatGoal(bulkFat); setCarbGoal(bulkCarb); setFiberGoal(bulkFiber); }
                   setScreen("home");
                 }}
                 style={{ flex:1, padding:"10px 16px", fontSize:"14px", backgroundColor:"#1976d2", color:"#fff", border:"none", borderRadius:"8px" }}
@@ -2329,21 +2348,21 @@ setWorkoutLog(prev => ({
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={cutProtein} onChange={e => setCutProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={cutFat} onChange={e => setCutFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={cutCarb} onChange={e => setCutCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label> <label>Fiber (g): <input type="text" inputMode="decimal" value={cutFiber} onChange={e => setCutFiber(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🧰 Maintenance Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={maintProtein} onChange={e => setMaintProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={maintFat} onChange={e => setMaintFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={maintCarb} onChange={e => setMaintCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label> <label>Fiber (g): <input type="text" inputMode="decimal" value={maintFiber} onChange={e => setMaintFiber(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
 
           <h2>🍚 Bulk Macros</h2>
           <div style={{ display:"flex", gap:"12px", alignItems:"center", flexWrap:"wrap", marginTop:"8px" }}>
           <label>Protein (g): <input type="text" inputMode="decimal" value={bulkProtein} onChange={e => setBulkProtein(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           <label>Fat (g): <input type="text" inputMode="decimal" value={bulkFat} onChange={e => setBulkFat(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
-          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
+          <label>Carbs (g): <input type="text" inputMode="decimal" value={bulkCarb} onChange={e => setBulkCarb(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label> <label>Fiber (g): <input type="text" inputMode="decimal" value={bulkFiber} onChange={e => setBulkFiber(parseFloat(e.target.value)||0)}  style={{ width:"80px" }} /></label>
           </div>
         </div>
 
