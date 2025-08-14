@@ -890,7 +890,7 @@ if (screen === "settings") {
           </div>
 
           {/* Settings profile row: Weight & Height side-by-side; Birthday below */}
-<div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px", marginBottom:"10px" }}>
+<div style={{ display:"grid", gridTemplateColumns:"auto auto", gap:"12px", marginBottom:"10px", justifyContent:"center", placeItems:"center" }}>
   <label style={{ display:"block", marginBottom:"10px" }}>
     <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
     <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} size={5}
@@ -905,7 +905,7 @@ if (screen === "settings") {
 <label style={{ display:"block", marginBottom:"10px" }}>
   <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
   <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)}
-    style={{ width:"100%", maxWidth:"320px", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+    style={{ width:"18ch", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", margin:"0 auto", display:"block" }} />
 </label>
 
 
@@ -957,7 +957,7 @@ if (screen === "settings") {
                 placeholder="Add new checklist item"
                 value={newChecklistName}
                 onChange={e=>setNewChecklistName(e.target.value)}
-                style={{ flex:"0 0 50%", maxWidth:"50%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                style={{ flex:"0 0 60%", maxWidth:"60%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
               />
               <button
                 onClick={()=>{
