@@ -239,8 +239,8 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
 
   const [customFood, setCustomFood] = useState({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
   // === Liquids logger state & defs ===
-  const [liquidKey, setLiquidKey] = useState("olive_oil");
-  const [liquidUnit, setLiquidUnit] = useState("tsp");
+  const [liquidKey, setLiquidKey] = useState("");
+  const [liquidUnit, setLiquidUnit] = useState("tbsp");
   const [liquidQty, setLiquidQty] = useState("");
 
   const liquidDefs = {
@@ -262,7 +262,8 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
     "1/4 cup": 12,    // 1/4 cup = 4 tbsp = 12 tsp
     "1/2 cup": 24,
     "3/4 cup": 36,
-    "1 cup": 48
+    "1 cup": 48,
+    "oz": 6
   };
 
   const flOzUnits = {
@@ -273,7 +274,8 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
     "1/4 cup": 2,
     "1/2 cup": 4,
     "3/4 cup": 6,
-    "1 cup": 8
+    "1 cup": 8,
+    "oz": 1
   };
 
   function computeLiquidTotals(key, unit, qtyStr) {
@@ -1408,7 +1410,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             placeholder="Grams"
             value={weighedGrams}
             onChange={e => setWeighedGrams(e.target.value)}
-            style={{ padding: "10px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", width: "60px", minWidth: 0, textAlign: "center" }}
+            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", width: "60px", minWidth: 0, textAlign: "center" }}
           />
 
           <button
@@ -1427,7 +1429,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
               });
               setWeighedGrams("");
             }}
-            style={{ padding: "10px 14px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
+            style={{ padding: "8px 12px", fontSize: "15px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
             disabled={!weighedKey || !weighedGrams}
           >
             Add
@@ -1459,7 +1461,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         background: "#fafafa"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-          <span style={{ fontSize: 18 }}>🧴</span>
+          <span style={{ fontSize: 18 }}>💧</span>
           <div style={{ fontWeight: 600 }}>Liquids</div>
           <div style={{ fontSize: 12, color: "#6b7280" }}>(oil, syrups, water)</div>
         </div>
@@ -1469,7 +1471,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             value={liquidKey}
             onChange={(e) => setLiquidKey(e.target.value)}
             style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", minWidth: "180px" }}
-          >
+          ><option value="" disabled>Select food</option>
             <option value="olive_oil">Olive oil</option>
             <option value="avocado_oil">Avocado oil</option>
             <option value="peanut_butter">Peanut butter</option>
@@ -1492,10 +1494,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
             <option>1/2 cup</option>
             <option>3/4 cup</option>
             <option>1 cup</option>
-          </select>
+          
+            <option>oz</option></select>
 
           <input
-            type="number"
+            type="number" inputMode="decimal"
             min="0"
             step="0.25"
             value={liquidQty}
@@ -1517,6 +1520,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
           const _qtyOk = parseFloat(liquidQty || "0") > 0;
           if (!_qtyOk) return null;
+          if (!liquidKey) return null;
           if (!t) return null;
           const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan (date syrup)", honey:"Honey", water:"Water" }[liquidKey];
           const unitLabel = liquidUnit;
