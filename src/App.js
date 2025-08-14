@@ -308,8 +308,7 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
     const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
     const prettyName = def.name + " (" + liquidQty + "× " + liquidUnit + ")";
     addFood({ name: prettyName, cal: t.cal, prot: t.prot, fat: t.fat, carbs: t.carbs, fiber: t.fiber, water: t.water });
-    setToastMsg(prettyName + " added");
-    setTimeout(() => setToastMsg(""), 1200);
+    // toast now handled in addFood
   }
 
   const [customWorkout, setCustomWorkout] = useState({});
@@ -783,6 +782,9 @@ if (type === "Run") {
   if (completeFood.water > 0) {
     setWater(prev => prev + completeFood.water); // ✅ This syncs water log to homepage
   }
+
+  setToastMsg(completeFood.name + " added");
+  setTimeout(() => setToastMsg(""), 1200);
 };
   
 const deleteFood = (index) => {
@@ -1504,7 +1506,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
           <button
             onClick={addLiquid}
-            style={{ padding: "8px 12px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", background: "#f9fafb" }}
+            style={{ padding: "10px 14px", fontSize: "14px", background: "#0070f3", color: "#fff", border: "none", borderRadius: "8px" }}
           >
             Add
           </button>
@@ -1513,6 +1515,8 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         {/* live preview */}
         {(() => {
           const t = computeLiquidTotals(liquidKey, liquidUnit, liquidQty);
+          const _qtyOk = parseFloat(liquidQty || "0") > 0;
+          if (!_qtyOk) return null;
           if (!t) return null;
           const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan (date syrup)", honey:"Honey", water:"Water" }[liquidKey];
           const unitLabel = liquidUnit;
@@ -1628,42 +1632,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         <button
           onClick={() => {
   const { name, cal, prot, fat, carbs, fiber } = customFood;
-
   const parsedCal = parseInt(cal);
-  const parsedProt = parseInt(prot);
-  const parsedFat = fat !== "" && !isNaN(parseFloat(fat)) ? parseFloat(fat) : undefined;
-  const parsedCarbs = carbs !== "" && !isNaN(parseFloat(carbs)) ? parseFloat(carbs) : undefined;
-  const parsedFiber = fiber !== "" && !isNaN(parseFloat(fiber)) ? parseFloat(fiber) : undefined;
-
-  if (name && !isNaN(parsedCal) && !isNaN(parsedProt)) {
-    setCalories(c => c + parsedCal);
-    setProtein(p => p + parsedProt);
-    if (parsedFat !== undefined) setFat(f => f + parsedFat);
-    if (parsedCarbs !== undefined) setCarbs(c => c + parsedCarbs);
-    if (parsedFiber !== undefined) setFiber(f => f + parsedFiber);
-
-    setFoodLog(f => [
-      ...f,
-      {
-        name,
-        cal: parsedCal,
-        prot: parsedProt,
-        ...(parsedFat !== undefined && { fat: parsedFat }),
-        ...(parsedCarbs !== undefined && { carbs: parsedCarbs }),
-        ...(parsedFiber !== undefined && { fiber: parsedFiber }),
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ]);
-
-    setCustomFood({
-      name: "",
-      cal: "",
-      prot: "",
-      fat: "",
-      carbs: "",
-      fiber: ""
-    });
-  }
+  if (!name || isNaN(parsedCal)) return;
+  const parsedProt = prot === "" || isNaN(parseInt(prot)) ? 0 : parseInt(prot);
+  const parsedFat  = fat === ""  || isNaN(parseFloat(fat))  ? 0 : parseFloat(fat);
+  const parsedCarb = carbs === ""|| isNaN(parseFloat(carbs))? 0 : parseFloat(carbs);
+  const parsedFib  = fiber === ""|| isNaN(parseFloat(fiber))? 0 : parseFloat(fiber);
+  addFood({ name, cal: parsedCal, prot: parsedProt, fat: parsedFat, carbs: parsedCarb, fiber: parsedFib, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) });
+  setCustomFood({ name: "", cal: "", prot: "", fat: "", carbs: "", fiber: "" });
 }}
 
           style={{
