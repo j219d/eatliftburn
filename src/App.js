@@ -879,6 +879,74 @@ if (screen === "settings") {
         <h1 style={{ fontSize:"22px", fontWeight:"bold", textAlign:"center", marginBottom:"8px" }}>⚙️ Settings</h1>
         <div style={{ background:"#f9f9f9", borderRadius:"12px", padding:"16px", boxShadow:"0 1px 4px rgba(0,0,0,0.05)", marginBottom:"16px" }}>
           <div style={{ display:"flex", gap:"16px", alignItems:"center", marginBottom:"12px" }}>
+            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
+              <input type="radio" name="sex" value="male" checked={settingsSex==="male"} onChange={()=>setSettingsSex("male")} />
+              Male
+            </label>
+            <label style={{ display:"flex", alignItems:"center", gap:"6px" }}>
+              <input type="radio" name="sex" value="female" checked={settingsSex==="female"} onChange={()=>setSettingsSex("female")} />
+              Female
+            </label>
+          </div>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Height (cm)</div>
+            <input type="number" inputMode="numeric" value={settingsHeight} onChange={e=>setSettingsHeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Birthday</div>
+            <input type="date" value={settingsBirth} onChange={e=>setSettingsBirth(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+          </label>
+
+          <label style={{ display:"block", marginBottom:"10px" }}>
+            <div style={{ fontSize:"14px", color:"#555", marginBottom:"4px" }}>Weight (lbs)</div>
+            <input type="number" inputMode="decimal" value={settingsWeight} onChange={e=>setSettingsWeight(e.target.value)} style={{ width:"100%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }} />
+            </label>
+
+
+          {/* Home Page Display toggles */}
+          <div style={{ background:"#fff", border:"1px solid #eee", borderRadius:"12px", padding:"12px", margin:"12px 0" }}>
+            <div style={{ fontWeight:600, marginBottom:"6px" }}>Home Page Display</div>
+            {[
+              ["Calories","showCalories"],
+              ["Protein","showProtein"],
+              ["Fats","showFat"],
+              ["Carbs","showCarbs"],
+              ["Fiber","showFiber"],
+              ["Water","showWater"],
+              ["Steps","showSteps"],
+              ["Checklist","showChecklist"]
+            ].map(([label,key]) => (
+              <label key={key} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 0" }}>
+                <span>{label}</span>
+                <input type="checkbox" checked={!!displaySettings[key]} onChange={e=>setDisplaySettings(s=>({ ...s, [key]: e.target.checked }))} />
+              </label>
+            ))}
+          </div>
+
+          {/* Goals */}
+          <div style={{ background:"#fff", border:"1px solid #eee", borderRadius:"12px", padding:"12px", margin:"12px 0" }}>
+            <div style={{ fontWeight:600, marginBottom:"6px" }}>Goals</div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"12px" }}>
+              <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
+                <span>Water (oz)</span>
+                <input type="number" inputMode="decimal" value={waterGoalOz} onChange={e=>setWaterGoalOz(Math.max(1, parseFloat(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", width:"8ch" }} />
+              </label>
+              <label style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
+                <span>Steps</span>
+                <input type="number" inputMode="numeric" value={stepsGoalCustom} onChange={e=>setStepsGoalCustom(Math.max(1, parseInt(e.target.value||"0")||1))} style={{ padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc", width:"8ch" }} />
+              </label>
+            </div>
+          </div>
+
+          {/* Checklist customization */}
+          <div style={{ background:"#fff", border:"1px solid #eee", borderRadius:"12px", padding:"12px", margin:"12px 0" }}>
+            <div style={{ display:"flex", alignItems:"center" }}>
+              <div style={{ fontWeight:600 }}>Checklist</div>
+              <label style={{ marginLeft:"auto", display:"flex", alignItems:"center", gap:"6px" }}>
+                <input type="checkbox" checked={displaySettings.showChecklist} onChange={e=>setDisplaySettings(s=>({...s, showChecklist:e.target.checked}))}/> Show on Home
+              </label>
             </div>
 
             <div style={{ display:"flex", gap:"8px", marginTop:"10px" }}>
@@ -886,8 +954,8 @@ if (screen === "settings") {
                 type="text"
                 placeholder="Add new checklist item"
                 value={newChecklistName}
-                onChange={e= style={{ width:"50%" }} >setNewChecklistName(e.target.value)}
-                style={{ flex:1, padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
+                onChange={e=>setNewChecklistName(e.target.value)}
+                style={{ flex:"0 0 50%", maxWidth:"50%", padding:"10px", fontSize:"16px", borderRadius:"8px", border:"1px solid #ccc" }}
               />
               <button
                 onClick={()=>{
