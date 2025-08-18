@@ -247,26 +247,29 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const [liquidUnit, setLiquidUnit] = useState("tbsp");
   const [liquidQty, setLiquidQty] = useState("");
 
-  const liquidDefs = {
-    olive_oil:     { name: "Olive oil",     perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
-    avocado_oil:   { name: "Avocado oil",   perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
-    peanut_butter: { name: "Peanut butter", perTsp: { cal: 94/3, prot: 4/3, fat: 8/3, carbs: 3/3, fiber: 1/3 },
-  butter: {
-    name: "Butter",
-    perTsp: { cal: 34, prot: 0, fat: 3.8, carbs: 0, fiber: 0 },
-    note: ""
-  },
-  almond_butter: {
-    name: "Almond butter",
-    perTsp: { cal: 32, prot: 1, fat: 3, carbs: 1.4, fiber: 0.5 },
-    note: ""
-  },
- note: "" },
-    maple_syrup:   { name: "Maple syrup",   perTsp: { cal: 17, prot: 0,  fat: 0,   carbs: 4.5, fiber: 0 }, note: "" },
-    silan:         { name: "Silan (date syrup)", perTsp: { cal: 20, prot: 0, fat: 0, carbs: 5, fiber: 0 }, note: "" },
-    honey:         { name: "Honey",         perTsp: { cal: 15, prot: 0,  fat: 0,   carbs: 4,   fiber: 0 }, note: "" },
-    water:         { name: "Water",         perFlOz: { water: 1 }, note: "" }
-  };
+const liquidDefs = {
+  almond_butter:      { name: "Almond butter",         perTsp: { cal: 34, prot: 1.2, fat: 3,   carbs: 1.1, fiber: 0.5 }, note: "" },
+  almond_milk:        { name: "Almond milk (unsweet)", perTsp: { cal: 2,  prot: 0.1, fat: 0.2, carbs: 0.1, fiber: 0 }, note: "" },
+  avocado_oil:        { name: "Avocado oil",           perTsp: { cal: 40, prot: 0,   fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
+  butter:             { name: "Butter",                perTsp: { cal: 34, prot: 0,   fat: 3.8, carbs: 0,   fiber: 0 }, note: "" },
+  chicken_broth:      { name: "Chicken broth",         perTsp: { cal: 1.5, prot: 0.2, fat: 0,   carbs: 0.1, fiber: 0 }, note: "" },
+  coconut_cream:      { name: "Coconut cream",         perTsp: { cal: 30, prot: 0.3, fat: 3.2, carbs: 0.4, fiber: 0.1 }, note: "" },
+  coconut_oil:        { name: "Coconut oil",           perTsp: { cal: 40, prot: 0,   fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
+  heavy_cream:        { name: "Heavy cream",           perTsp: { cal: 17, prot: 0.1, fat: 1.8, carbs: 0.2, fiber: 0 }, note: "" },
+  honey:              { name: "Honey",                 perTsp: { cal: 15, prot: 0,   fat: 0,   carbs: 4,   fiber: 0 }, note: "" },
+  jam:                { name: "Jam",                   perTsp: { cal: 17, prot: 0,   fat: 0,   carbs: 4.4, fiber: 0.1 }, note: "" },
+  ketchup:            { name: "Ketchup",               perTsp: { cal: 5,  prot: 0,   fat: 0,   carbs: 1.2, fiber: 0 }, note: "" },
+  maple_syrup:        { name: "Maple syrup",           perTsp: { cal: 17, prot: 0,   fat: 0,   carbs: 4.5, fiber: 0 }, note: "" },
+  milk:               { name: "Milk (whole)",          perTsp: { cal: 8,  prot: 0.4, fat: 0.4, carbs: 0.6, fiber: 0 }, note: "" },
+  olive_oil:          { name: "Olive oil",             perTsp: { cal: 40, prot: 0,   fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
+  peanut_butter:      { name: "Peanut butter",         perTsp: { cal: 31, prot: 1.3, fat: 2.7, carbs: 1,   fiber: 0.3 }, note: "" },
+  pesto:              { name: "Pesto",                 perTsp: { cal: 27, prot: 0.6, fat: 2.7, carbs: 0.6, fiber: 0.1 }, note: "" },
+  silan:              { name: "Silan (date syrup)",    perTsp: { cal: 20, prot: 0,   fat: 0,   carbs: 5,   fiber: 0 }, note: "" },
+  soy_sauce:          { name: "Soy sauce",             perTsp: { cal: 3,  prot: 0.5, fat: 0,   carbs: 0.4, fiber: 0 }, note: "" },
+  sriracha:           { name: "Sriracha",              perTsp: { cal: 5,  prot: 0,   fat: 0,   carbs: 1,   fiber: 0 }, note: "" },
+  techina:            { name: "Techina (tahini)",      perTsp: { cal: 27, prot: 0.8, fat: 2.4, carbs: 1,   fiber: 0.3 }, note: "" },
+  water:              { name: "Water",                 perFlOz: { water: 1 }, note: "" }
+};
 
   // Volume conversion maps
   const tspUnits = {
@@ -1495,24 +1498,26 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
           <span style={{ fontSize: 18 }}>💧</span>
-          <div style={{ fontWeight: 600 }}>Liquids</div>
-          <div style={{ fontSize: 12, color: "#6b7280" }}>(oil, syrups, water)</div>
+          <div style={{ fontWeight: 600 }}>Measure</div>
         </div>
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
           <select
-            value={liquidKey}
-            onChange={(e) => setLiquidKey(e.target.value)}
-            style={{ padding: "8px", fontSize: "14px", borderRadius: "8px", border: "1px solid #ccc", minWidth: "180px" }}
-          ><option value="" disabled>Select food</option>
-            <option value="olive_oil">Olive oil</option>
-            <option value="avocado_oil">Avocado oil</option>
-            <option value="peanut_butter">Peanut butter</option>
-            <option value="maple_syrup">Maple syrup</option>
-            <option value="silan">Silan (date syrup)</option>
-            <option value="honey">Honey</option>
-            <option value="water">Water</option>
-          </select>
+  value={liquidKey}
+  onChange={(e) => setLiquidKey(e.target.value)}
+  style={{
+    padding: "8px",
+    fontSize: "14px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    minWidth: "180px",
+  }}
+>
+  <option value="" disabled>Select item</option>
+  {Object.entries(liquidDefs).map(([key, item]) => (
+    <option key={key} value={key}>{item.name}</option>
+  ))}
+</select>
 
           <select
             value={liquidUnit}
