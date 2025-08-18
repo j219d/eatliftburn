@@ -264,7 +264,7 @@ const liquidDefs = {
   olive_oil:          { name: "Olive oil",             perTsp: { cal: 40, prot: 0,   fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
   peanut_butter:      { name: "Peanut butter",         perTsp: { cal: 31, prot: 1.3, fat: 2.7, carbs: 1,   fiber: 0.3 }, note: "" },
   pesto:              { name: "Pesto",                 perTsp: { cal: 27, prot: 0.6, fat: 2.7, carbs: 0.6, fiber: 0.1 }, note: "" },
-  silan:              { name: "Silan (date syrup)",    perTsp: { cal: 20, prot: 0,   fat: 0,   carbs: 5,   fiber: 0 }, note: "" },
+  silan:              { name: "Silan",                 perTsp: { cal: 20, prot: 0,   fat: 0,   carbs: 5,   fiber: 0 }, note: "" },
   soy_sauce:          { name: "Soy sauce",             perTsp: { cal: 3,  prot: 0.5, fat: 0,   carbs: 0.4, fiber: 0 }, note: "" },
   sriracha:           { name: "Sriracha",              perTsp: { cal: 5,  prot: 0,   fat: 0,   carbs: 1,   fiber: 0 }, note: "" },
   techina:            { name: "Techina",               perTsp: { cal: 27, prot: 0.8, fat: 2.4, carbs: 1,   fiber: 0.3 }, note: "" },
