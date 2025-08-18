@@ -267,7 +267,7 @@ const liquidDefs = {
   silan:              { name: "Silan (date syrup)",    perTsp: { cal: 20, prot: 0,   fat: 0,   carbs: 5,   fiber: 0 }, note: "" },
   soy_sauce:          { name: "Soy sauce",             perTsp: { cal: 3,  prot: 0.5, fat: 0,   carbs: 0.4, fiber: 0 }, note: "" },
   sriracha:           { name: "Sriracha",              perTsp: { cal: 5,  prot: 0,   fat: 0,   carbs: 1,   fiber: 0 }, note: "" },
-  techina:            { name: "Techina (tahini)",      perTsp: { cal: 27, prot: 0.8, fat: 2.4, carbs: 1,   fiber: 0.3 }, note: "" },
+  techina:            { name: "Techina",               perTsp: { cal: 27, prot: 0.8, fat: 2.4, carbs: 1,   fiber: 0.3 }, note: "" },
   water:              { name: "Water",                 perFlOz: { water: 1 }, note: "" }
 };
 
@@ -1487,7 +1487,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         })()}
       </div>
       
-      {/* 🧴 Liquids (Card) */}
+      {/* Liquids (Card) */}
       <div style={{
         marginTop: "12px",
         marginBottom: "18px",
@@ -1497,7 +1497,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         background: "#fafafa"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-          <span style={{ fontSize: 18 }}>💧</span>
+          <span style={{ fontSize: 18 }}>🥄</span>
           <div style={{ fontWeight: 600 }}>Measure</div>
         </div>
 
