@@ -250,7 +250,18 @@ const allChecklistItemsComplete = Object.values(checklist).every(Boolean);
   const liquidDefs = {
     olive_oil:     { name: "Olive oil",     perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
     avocado_oil:   { name: "Avocado oil",   perTsp: { cal: 40, prot: 0,  fat: 4.7, carbs: 0,   fiber: 0 }, note: "" },
-    peanut_butter: { name: "Peanut butter", perTsp: { cal: 94/3, prot: 4/3, fat: 8/3, carbs: 3/3, fiber: 1/3 }, note: "" },
+    peanut_butter: { name: "Peanut butter", perTsp: { cal: 94/3, prot: 4/3, fat: 8/3, carbs: 3/3, fiber: 1/3 },
+  butter: {
+    name: "Butter",
+    perTsp: { cal: 34, prot: 0, fat: 3.8, carbs: 0, fiber: 0 },
+    note: ""
+  },
+  almond_butter: {
+    name: "Almond butter",
+    perTsp: { cal: 32, prot: 1, fat: 3, carbs: 1.4, fiber: 0.5 },
+    note: ""
+  },
+ note: "" },
     maple_syrup:   { name: "Maple syrup",   perTsp: { cal: 17, prot: 0,  fat: 0,   carbs: 4.5, fiber: 0 }, note: "" },
     silan:         { name: "Silan (date syrup)", perTsp: { cal: 20, prot: 0, fat: 0, carbs: 5, fiber: 0 }, note: "" },
     honey:         { name: "Honey",         perTsp: { cal: 15, prot: 0,  fat: 0,   carbs: 4,   fiber: 0 }, note: "" },
@@ -1544,7 +1555,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           if (!_qtyOk) return null;
           if (!liquidKey) return null;
           if (!t) return null;
-          const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan (date syrup)", honey:"Honey", water:"Water" }[liquidKey];
+          const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan", honey:"Honey", water:"Water" }[liquidKey];
           const unitLabel = liquidUnit;
           return (
             <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
