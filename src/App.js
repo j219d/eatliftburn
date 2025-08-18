@@ -1496,10 +1496,11 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         borderRadius: "10px",
         background: "#fafafa"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
-          <span style={{ fontSize: 18 }}>🥄</span>
-          <div style={{ fontWeight: 600 }}>Measure</div>
-        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: 18, fontWeight: 600, marginBottom: "10px" }}>
+  <span>🥄</span>
+  <div>Measure</div>
+</div>
+
 
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
           <select
