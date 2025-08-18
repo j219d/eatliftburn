@@ -327,19 +327,19 @@ const [weighedQuery, setWeighedQuery] = useState("");
 
   const workouts = {
   "Leg Press": 0.4,
-  "Bench Press": 0.3,
-  "Incline Press": 0.25,
-  "Pull-ups": 0.4,
-  "Shoulder Press": 0.3,
+  "Bench Press": 0.7,
+  "Incline Press": 0.6,
+  "Pull-ups": 1.0,
+  "Shoulder Press": 0.4,
   "Glute Abductor": 0.25,
   "Low Pull": 0.3,
-  "Hamstring Curl": 0.25,
+  "Hamstring Curl": 0.3,
   "Lunges": 0.4,
   "Back Extensions": 0.2,
-  "Core Pull": 0.2,
-  "Biceps": 0.2,
-  "Triceps": 0.2,
-  "Push-ups": 0.3,
+  "Core Pull": 0.25,
+  "Biceps": 0.3,
+  "Triceps": 0.25,
+  "Push-ups": 0.4,
   "Plank": 0.04,
   "Run": "run",
   "Bike": "bike"
@@ -522,6 +522,7 @@ const foodOptions = [
 
 // ⚖️ Per-100g macro table for weighed logging (cooked/no-oil where applicable)
 const weighedFoods = [
+  { key: "avocado", label: "Avocado", per100: { cal: 160, prot: 2, fat: 15, carbs: 8.5, fiber: 6.7 } },
   { key: "chicken_breast_cooked", label: "Chicken breast (cooked)", per100: { cal: 165, prot: 31, fat: 3.6, carbs: 0, fiber: 0 } },
   { key: "chicken_thigh_bbq_ns", label: "Chicken thigh (BBQ, no skin)", per100: { cal: 200, prot: 26, fat: 8, carbs: 0, fiber: 0 } },
   { key: "broccoli_cooked", label: "Broccoli (cooked, no oil)", per100: { cal: 35, prot: 2.4, fat: 0.4, carbs: 7.0, fiber: 3.3 } },
@@ -536,7 +537,6 @@ const weighedFoods = [
   { key: "ground_beef_90_10_cooked", label: "Ground beef 90/10 (cooked)", per100: { cal: 176, prot: 25, fat: 8, carbs: 0, fiber: 0 } },
   { key: "ground_beef_80_20_raw", label: "Ground beef 80/20 (raw)", per100: { cal: 254, prot: 17, fat: 20, carbs: 0, fiber: 0 } },
   { key: "ground_beef_80_20_cooked", label: "Ground beef 80/20 (cooked)", per100: { cal: 254, prot: 25.8, fat: 17, carbs: 0, fiber: 0 } },
-  { key: "cottage_nancys_2pct", label: "Cottage cheese Nancy’s 2%", per100: { cal: 88, prot: 11, fat: 2, carbs: 3, fiber: 0 } },
   { key: "cottage_goodculture_4pct", label: "Cottage cheese Good Culture 4%", per100: { cal: 98, prot: 12, fat: 4, carbs: 3, fiber: 0 } },
   { key: "salmon_cooked", label: "Salmon (cooked)", per100: { cal: 206, prot: 22, fat: 13, carbs: 0, fiber: 0 } },
   { key: "tuna_cooked", label: "Tuna (cooked, not canned)", per100: { cal: 184, prot: 29, fat: 1, carbs: 0, fiber: 0 } },
