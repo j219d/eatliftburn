@@ -1555,7 +1555,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           if (!_qtyOk) return null;
           if (!liquidKey) return null;
           if (!t) return null;
-          const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan", honey:"Honey", water:"Water" }[liquidKey];
+          const n = { olive_oil:"Olive oil", avocado_oil:"Avocado oil", peanut_butter:"Peanut butter", maple_syrup:"Maple syrup", silan:"Silan (date syrup)", honey:"Honey", water:"Water" }[liquidKey];
           const unitLabel = liquidUnit;
           return (
             <div style={{ marginTop: 10, fontSize: 14, color: "#333" }}>
