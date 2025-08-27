@@ -596,6 +596,7 @@ const weighedFoods = [
   { key: "mango", label: "Mango", per100: { cal: 60, prot: 0.8, fat: 0.4, carbs: 15, fiber: 1.6 } },
   { key: "pineapple", label: "Pineapple", per100: { cal: 50, prot: 0.5, fat: 0.1, carbs: 13, fiber: 1.4 } },
   { key: "watermelon", label: "Watermelon", per100: { cal: 30, prot: 0.6, fat: 0.2, carbs: 8, fiber: 0.4 } },
+  { key: "yogurt_fage0", label: "Yogurt (Fage 0%)", per100: { cal: 53, prot: 10.6, fat: 0, carbs: 2.9, fiber: 0 } },
   { key: "lamb_shoulder_cooked", label: "Lamb shoulder (cooked)", per100: { cal: 276, prot: 25, fat: 20, carbs: 0, fiber: 0 } }
 ];
 // Helper: compute macros from grams using per-100g profile
