@@ -764,9 +764,9 @@ const logWorkout = (type, reps) => {
   // Calculate burn (optional – only needed if displayed or used elsewhere)
   const burn =
   type === "Run"
-    ? Math.round(reps * 65)
+    ? Math.round(reps *  68)
     : type === "Steps"
-    ? Math.round(reps * 0.035)
+    ? Math.round(reps  * 0.03)
     : type === "Plank"
     ? Math.round(reps * 0.04)
     : Math.round(reps * workouts[type]);
@@ -1859,7 +1859,7 @@ return;
 }
 // existing Run handling
 if (type === "Run") {
-  const cal = Math.round(input * 60);
+  const cal = Math.round(input *  68);
   const runSteps = Math.round(input * 1100);
 
   setSteps(prev => prev + runSteps);
@@ -1921,7 +1921,7 @@ setWorkoutLog(prev => ({
           onClick={() => {
             const steps = parseInt(customWorkout["Steps"]);
             if (!isNaN(steps)) {
-              const stepCalories = Math.round(steps * 0.035); // updated: 0.035 kcal/step
+              const stepCalories = Math.round(steps  * 0.03); // updated: * 0.03 kcal/step
               setSteps(prev => {
   const newSteps = prev + steps;
   localStorage.setItem("steps", newSteps.toString());
@@ -1932,7 +1932,7 @@ setWorkoutLog(prev => ({
   ...prev,
   Steps: {
     reps: (prev["Steps"]?.reps || 0) + steps,
-    cal: Math.round(((prev["Steps"]?.reps || 0) + steps) * 0.035)
+    cal: Math.round(((prev["Steps"]?.reps || 0) + steps)  * 0.03)
   }
 }));
               setCustomWorkout({ ...customWorkout, Steps: "" });
@@ -1991,7 +1991,7 @@ setWorkoutLog(prev => ({
       const cal = parseInt(customWorkout.treadCal);
       const km = parseFloat(customWorkout.treadKm);
       if (!isNaN(cal) && !isNaN(km)) {
-        const estimatedSteps = Math.round(km * 1250);
+        const estimatedSteps = Math.round(km *  1350);
         setSteps(prev => {
   const newSteps = prev + estimatedSteps;
   return newSteps;
