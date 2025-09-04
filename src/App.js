@@ -340,20 +340,20 @@ const liquidDefs = {
 const [weighedQuery, setWeighedQuery] = useState("");
 
   const workouts = {
-  "Leg Press": 0.4,
+  "Push-ups": 0.4,
   "Bench Press": 0.7,
   "Incline Press": 0.6,
   "Pull-ups": 1.0,
-  "Shoulder Press": 0.4,
-  "Glute Abductor": 0.25,
-  "Low Pull": 0.3,
-  "Hamstring Curl": 0.3,
+  "Leg Press": 0.6,
+  "Shoulder Press": 0.5,
+  "Glute Abductor": 0.2,
+  "Low Pull": 0.4,
+  "Hamstring Curl": 0.2,
   "Lunges": 0.4,
   "Back Extensions": 0.2,
   "Core Pull": 0.25,
-  "Biceps": 0.3,
-  "Triceps": 0.25,
-  "Push-ups": 0.4,
+  "Biceps": 0.35,
+  "Triceps": 0.3,
   "Plank": 0.04,
   "Run": "run",
   "Bike": "bike"
