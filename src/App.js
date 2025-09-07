@@ -656,10 +656,10 @@ function SimpleSession({ addSession, latestWeight }) {
   }
 
   return (
-    <div className="card" style={{padding:"12px", borderRadius:12}}>
-      <div style={{fontWeight:600, marginBottom:8}}>Quick session</div>
+    <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"8px 0"}}>
+      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Quick Session (Simple Mode)</div>
 
-      <label style={{display:"block", marginBottom:6}}>
+      <label style={{display:"block", marginBottom:8}}>
         Minutes
         <input
           type="number"
@@ -671,7 +671,7 @@ function SimpleSession({ addSession, latestWeight }) {
         />
       </label>
 
-      <div style={{display:"flex", gap:8, marginBottom:8}}>
+      <div style={{display:"flex", gap:8, marginBottom:10}}>
         <select value={intensity} onChange={e=>setIntensity(e.target.value)} style={{flex:1, padding:8, borderRadius:10}}>
           <option value="low">Low</option>
           <option value="moderate">Moderate</option>
@@ -684,11 +684,11 @@ function SimpleSession({ addSession, latestWeight }) {
         </select>
       </div>
 
-      <div style={{fontSize:14, opacity:0.8, marginBottom:8}}>
+      <div style={{fontSize:14, opacity:0.85, marginBottom:10}}>
         Est. calories: <b>{cal}</b>
       </div>
 
-      <button onClick={handleAdd} style={{width:"100%", padding:10, borderRadius:10}}>
+      <button onClick={handleAdd} style={{width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid #ddd"}}>
         Add
       </button>
     </div>
@@ -1918,7 +1918,10 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
 
 
 
-      <div style={{
+      
+{/* Advanced logging (existing UI) */}
+{workoutMode === "advanced" && (<>
+<div style={{
         padding:       "24px",
         paddingTop:    "58px",
         paddingBottom: "80px",
@@ -2269,6 +2272,8 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
+</>) }
+
       </>
     );
   }
