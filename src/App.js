@@ -47,6 +47,8 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 
 // 🧠 Daily macro/water goals
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
+const [showModes, setShowModes] = useState(false);
+
 
 
   // --- NEW: Workout logging mode (simple vs advanced) ---
@@ -57,8 +59,6 @@ const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
 
   const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
-const [showModes, setShowModes] = useState(false);
-
 const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
 );
@@ -656,7 +656,7 @@ function SimpleSession({ addSession, latestWeight }) {
   }
 
   return (
-    <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"8px 0"}}>
+    <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"10px 0"}}>
       <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Quick Session (Simple Mode)</div>
 
       <label style={{display:"block", marginBottom:8}}>
@@ -1900,6 +1900,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
+      
 <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", margin:"68px 0 10px 0"}}>
   <h2 style={{margin:0}}>🏋️ Workouts</h2>
   <button
@@ -1911,15 +1912,10 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
   </button>
 </div>
 
-{/* --- Workout Mode Conditional --- */}
-{workoutMode === "simple" ? (
-  <SimpleSession addSession={(entry) => addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
-) : null}
-
-
-
-      
-{/* Advanced logging (existing UI) */}
+{/* --- Simple vs Advanced toggle view --- */}
+{workoutMode === "simple" && (
+  <SimpleSession addSession={(entry)=>addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
+)}
 {workoutMode === "advanced" && (<>
 <div style={{
         padding:       "24px",
@@ -2272,7 +2268,7 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
-</>) }
+</>)}
 
       </>
     );
