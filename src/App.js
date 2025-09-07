@@ -2,6 +2,7 @@
 
 
 
+
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
@@ -56,7 +57,6 @@ const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
     return "advanced"; // default to detailed (existing) mode
   });
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
-  const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -1912,8 +1912,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>setShowWorkoutSettings(true)} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>{ setWorkoutMode(prev => (prev === "advanced" ? "simple" : "advanced")); }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
+<div style={{height:"8px"}}></div>
 
       {/* Strength + Run entries */}
 {workoutMode === "simple" ? (
@@ -2256,9 +2257,7 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
 {/* --- Workout Settings Modal --- */}
-{showWorkoutSettings && (
-  <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.35)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999}}
-    onClick={()=>setShowWorkoutSettings(false)}
+
   >
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
       <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
