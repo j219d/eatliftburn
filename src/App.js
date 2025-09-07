@@ -56,7 +56,6 @@ const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
     return "advanced"; // default to detailed (existing) mode
   });
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
-  const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -1925,7 +1924,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>setShowWorkoutSettings(true)} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>{ const next = workoutMode === "advanced" ? "simple" : "advanced"; setWorkoutMode(next); if (typeof setToastMsg === "function") { setToastMsg(`Workout mode: ${next[0].toUpperCase()}${next.slice(1)}`); setTimeout(()=>setToastMsg(""),1200); } }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}} aria-label={`Switch workout mode (current: ${workoutMode})`}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
@@ -2269,9 +2268,7 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
 {/* --- Workout Settings Modal --- */}
-{showWorkoutSettings && (
-  <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.35)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999}}
-    onClick={()=>setShowWorkoutSettings(false)}
+
   >
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
       <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
@@ -2567,7 +2564,7 @@ marginBottom:    "20px"
       onClick={() => setScreen("settings")}
       style={{ background:"transparent", border:"1px solid #ddd", borderRadius:"999px", padding:"4px 10px", cursor:"pointer" }}
       title="Settings"
-    >⚙️</button>
+     aria-label={`Switch workout mode (current: ${workoutMode})`}>⚙️</button>
 
     
   </div>
