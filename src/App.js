@@ -1924,7 +1924,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>{ const next = workoutMode === "advanced" ? "simple" : "advanced"; setWorkoutMode(next); if (typeof setToastMsg === "function") { setToastMsg(`Workout mode: ${next[0].toUpperCase()}${next.slice(1)}`); setTimeout(()=>setToastMsg(""),1200); } }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}} aria-label={`Switch workout mode (current: ${workoutMode})`}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>{ const next = workoutMode === "advanced" ? "simple" : "advanced"; setWorkoutMode(next); if (typeof setToastMsg === "function") { setToastMsg(`Workout mode: ${next[0].toUpperCase()}${next.slice(1)}`); setTimeout(()=>setToastMsg(""),1200); } }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
@@ -2267,27 +2267,7 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
-{/* --- Workout Settings Modal --- */}
-
-  >
-    <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
-      <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
-      <label style={{display:"flex", alignItems:"center", gap:10, marginBottom:8}}>
-        <input type="radio" name="workoutMode" value="simple" checked={workoutMode === "simple"} onChange={()=>setWorkoutMode("simple")} />
-        <span>Simple (time + intensity + rest)</span>
-      </label>
-      <label style={{display:"flex", alignItems:"center", gap:10}}>
-        <input type="radio" name="workoutMode" value="advanced" checked={workoutMode === "advanced"} onChange={()=>setWorkoutMode("advanced")} />
-        <span>Advanced (per-exercise sets/reps)</span>
-      </label>
-      <div style={{display:"flex", gap:8, marginTop:14}}>
-        <button type="button" onClick={()=>setShowWorkoutSettings(false)} style={{flex:1, padding:10, borderRadius:10}}>Close</button>
-      </div>
-    </div>
-  </div>
-)}
-
-      </>
+{/* --- Workout Settings       </>
     );
   }
 
@@ -2564,7 +2544,7 @@ marginBottom:    "20px"
       onClick={() => setScreen("settings")}
       style={{ background:"transparent", border:"1px solid #ddd", borderRadius:"999px", padding:"4px 10px", cursor:"pointer" }}
       title="Settings"
-     aria-label={`Switch workout mode (current: ${workoutMode})`}>⚙️</button>
+    >⚙️</button>
 
     
   </div>
