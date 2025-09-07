@@ -350,20 +350,20 @@ const liquidDefs = {
 const [weighedQuery, setWeighedQuery] = useState("");
 
   const workouts = {
-  "Leg Press": 0.4,
-  "Bench Press": 0.7,
+  "Push-ups": 0.5,
+  "Leg Press": 0.8,
+  "Bench Press": 0.6,
   "Incline Press": 0.6,
-  "Pull-ups": 1.0,
-  "Shoulder Press": 0.4,
-  "Glute Abductor": 0.25,
-  "Low Pull": 0.3,
-  "Hamstring Curl": 0.3,
-  "Lunges": 0.4,
+  "Pull-ups": 1.2,
+  "Shoulder Press": 0.6,
+  "Glute Abductor": 0.5,
+  "Low Pull": 0.6,
+  "Hamstring Curl": 0.5,
+  "Lunges": 0.8,
   "Back Extensions": 0.2,
-  "Core Pull": 0.25,
+  "Core Pull": 0.5,
   "Biceps": 0.3,
-  "Triceps": 0.25,
-  "Push-ups": 0.4,
+  "Triceps": 0.3,
   "Plank": 0.04,
   "Run": "run",
   "Bike": "bike"
@@ -630,13 +630,27 @@ function computeFromGrams(per100, grams) {
 // --- Simple session calories via METs ---
 // Intensity: 'low' | 'moderate' | 'vigorous'
 // Rest: 'short' | 'normal' | 'long'
+
 function sessionCalories(minutes, intensity, rest, latestWeight) {
+  // Conservative NET calories (BMR already counted elsewhere):
+  // - Use lower METs typical for resistance work
+  // - Subtract resting 1 MET to avoid double counting BMR
+  // - Apply stronger rest deductions
   const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback
-  const MET = intensity === "vigorous" ? 6.0 : intensity === "moderate" ? 5.0 : 3.5;
-  const restFactor = rest === "long" ? 0.8 : rest === "short" ? 0.95 : 0.9;
-  const effectiveMin = Math.max(0, minutes || 0) * restFactor;
-  return Math.round((MET * 3.5 * weightKg / 200) * effectiveMin);
+  const baseMET = intensity === "vigorous" ? 5.0 : intensity === "moderate" ? 3.5 : 2.5; // conservative
+  const netMET = Math.max(0, baseMET - 1.0); // remove resting metabolic rate
+  const restFactor = rest === "long" ? 0.75 : rest === "short" ? 0.95 : 0.85; // stronger deductions
+  const effectiveMin = Math.max(0, (minutes || 0)) * restFactor;
+
+  // kcal/min = MET * 3.5 * kg / 200
+  const kcalPerMin = (netMET * 3.5 * weightKg) / 200;
+  const kcal = Math.round(kcalPerMin * effectiveMin);
+
+  // Extra safety: clamp unrealistic values for typical "weights" sessions
+  //  - 60 min vigorous with long rests should be < ~320 kcal for ~80kg
+  return Math.max(0, Math.min(kcal, 400));
 }
+
 
 function SimpleSession({ addSession, latestWeight }) {
   const [minutes, setMinutes] = React.useState("");
@@ -658,7 +672,7 @@ function SimpleSession({ addSession, latestWeight }) {
 
   return (
     <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"10px 0"}}>
-      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Quick Session (Simple Mode)</div>
+      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Simple Workout Entry</div>
       <label style={{display:"block", marginBottom:8}}>
         Minutes
         <input
