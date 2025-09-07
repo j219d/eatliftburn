@@ -47,8 +47,6 @@ const [water, setWater] = useState(() => parseInt(localStorage.getItem("water"))
 
 // 🧠 Daily macro/water goals
 const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
-const [showModes, setShowModes] = useState(false);
-
 
 
   // --- NEW: Workout logging mode (simple vs advanced) ---
@@ -59,6 +57,8 @@ const [showModes, setShowModes] = useState(false);
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
 
   const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
+const [showModes, setShowModes] = useState(false);
+
 const [fatGoal, setFatGoal] = useState(
   () => parseFloat(localStorage.getItem("fatGoal")) || 50
 );
@@ -630,7 +630,7 @@ function computeFromGrams(per100, grams) {
 // Intensity: 'low' | 'moderate' | 'vigorous'
 // Rest: 'short' | 'normal' | 'long'
 function sessionCalories(minutes, intensity, rest, latestWeight) {
-  const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback if no weight
+  const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback
   const MET = intensity === "vigorous" ? 6.0 : intensity === "moderate" ? 5.0 : 3.5;
   const restFactor = rest === "long" ? 0.8 : rest === "short" ? 0.95 : 0.9;
   const effectiveMin = Math.max(0, minutes || 0) * restFactor;
@@ -658,7 +658,6 @@ function SimpleSession({ addSession, latestWeight }) {
   return (
     <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"10px 0"}}>
       <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Quick Session (Simple Mode)</div>
-
       <label style={{display:"block", marginBottom:8}}>
         Minutes
         <input
@@ -670,7 +669,6 @@ function SimpleSession({ addSession, latestWeight }) {
           style={{width:"100%", padding:8, borderRadius:10, border:"1px solid #ddd"}}
         />
       </label>
-
       <div style={{display:"flex", gap:8, marginBottom:10}}>
         <select value={intensity} onChange={e=>setIntensity(e.target.value)} style={{flex:1, padding:8, borderRadius:10}}>
           <option value="low">Low</option>
@@ -683,11 +681,9 @@ function SimpleSession({ addSession, latestWeight }) {
           <option value="long">Long breaks</option>
         </select>
       </div>
-
       <div style={{fontSize:14, opacity:0.85, marginBottom:10}}>
         Est. calories: <b>{cal}</b>
       </div>
-
       <button onClick={handleAdd} style={{width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid #ddd"}}>
         Add
       </button>
@@ -697,7 +693,6 @@ function SimpleSession({ addSession, latestWeight }) {
 
 // Store simple sessions inside workoutLog.Session so totalBurn auto-includes them
 function addSimpleSession(entry, setWorkoutLog, setToastMsg) {
-  // entry = { minutes, intensity, rest, cal }
   setWorkoutLog(prev => {
     const existing = prev.Session && Array.isArray(prev.Session.entries) ? prev.Session : { entries: [], cal: 0 };
     const entries = [...existing.entries, entry];
@@ -1232,7 +1227,9 @@ if (screen === "settings") {
             Save
           </button>
         </div>
-      </div>
+      
+</>)}
+</div>
     </>
   );
 }
@@ -1900,24 +1897,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
-      
-<div style={{display:"flex", alignItems:"center", justifyContent:"space-between", margin:"68px 0 10px 0"}}>
-  <h2 style={{margin:0}}>🏋️ Workouts</h2>
-  <button
-    aria-label="Workout settings"
-    onClick={()=>setShowWorkoutSettings(true)}
-    style={{fontSize:16, lineHeight:1, padding:"6px 8px", borderRadius:10, border:"1px solid #ddd", background:"#fff"}}
-  >
-    ⚙️
-  </button>
-</div>
-
-{/* --- Simple vs Advanced toggle view --- */}
-{workoutMode === "simple" && (
-  <SimpleSession addSession={(entry)=>addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
-)}
-{workoutMode === "advanced" && (<>
-<div style={{
+      <div style={{
         padding:       "24px",
         paddingTop:    "58px",
         paddingBottom: "80px",
@@ -1931,10 +1911,14 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts
+          🏋️ Workouts <button onClick={()=>setShowWorkoutSettings(true)} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
+{workoutMode === "simple" ? (
+  <SimpleSession addSession={(entry)=>addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
+) : (<>
+
       {Object.keys(workouts).map((type, i) => (
         <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <label style={{ width: "100px", fontSize: "16px" }}>{type}</label>
@@ -2268,8 +2252,6 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
-</>)}
-
       </>
     );
   }
@@ -2758,40 +2740,19 @@ marginBottom:    "20px"
 
 {/* --- Workout Settings Modal --- */}
 {showWorkoutSettings && (
-  <div style={{
-    position:"fixed", inset:0, background:"rgba(0,0,0,0.35)",
-    display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999
-  }}
+  <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.35)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999}}
     onClick={()=>setShowWorkoutSettings(false)}
   >
-    <div
-      onClick={e=>e.stopPropagation()}
-      style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}
-    >
+    <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
       <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
-
       <label style={{display:"flex", alignItems:"center", gap:10, marginBottom:8}}>
-        <input
-          type="radio"
-          name="workoutMode"
-          value="simple"
-          checked={workoutMode === "simple"}
-          onChange={()=>setWorkoutMode("simple")}
-        />
+        <input type="radio" name="workoutMode" value="simple" checked={workoutMode === "simple"} onChange={()=>setWorkoutMode("simple")} />
         <span>Simple (time + intensity + rest)</span>
       </label>
-
       <label style={{display:"flex", alignItems:"center", gap:10}}>
-        <input
-          type="radio"
-          name="workoutMode"
-          value="advanced"
-          checked={workoutMode === "advanced"}
-          onChange={()=>setWorkoutMode("advanced")}
-        />
+        <input type="radio" name="workoutMode" value="advanced" checked={workoutMode === "advanced"} onChange={()=>setWorkoutMode("advanced")} />
         <span>Advanced (per-exercise sets/reps)</span>
       </label>
-
       <div style={{display:"flex", gap:8, marginTop:14}}>
         <button onClick={()=>setShowWorkoutSettings(false)} style={{flex:1, padding:10, borderRadius:10}}>Close</button>
       </div>
