@@ -57,6 +57,7 @@ const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
     return "advanced"; // default to detailed (existing) mode
   });
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
+  const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -631,13 +632,21 @@ function computeFromGrams(per100, grams) {
 // --- Simple session calories via METs ---
 // Intensity: 'low' | 'moderate' | 'vigorous'
 // Rest: 'short' | 'normal' | 'long'
+
 function sessionCalories(minutes, intensity, rest, latestWeight) {
-  const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback
-  const MET = intensity === "vigorous" ? 6.0 : intensity === "moderate" ? 5.0 : 3.5;
-  const restFactor = rest === "long" ? 0.8 : rest === "short" ? 0.95 : 0.9;
-  const effectiveMin = Math.max(0, minutes || 0) * restFactor;
-  return Math.round((MET * 3.5 * weightKg / 200) * effectiveMin);
+  // Conservative NET calories: count only exercise above resting (BMR already handled elsewhere).
+  // Lower METs typical for resistance work; subtract 1.0 MET resting; stronger rest deductions.
+  const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // safe fallback
+  const baseMET = intensity === "vigorous" ? 5.0 : intensity === "moderate" ? 3.5 : 2.5; // conservative
+  const netMET  = Math.max(0, baseMET - 1.0); // remove resting component
+  const restFactor = rest === "long" ? 0.75 : rest === "short" ? 0.95 : 0.85;
+  const mins = Math.max(0, Number(minutes) || 0);
+  const kcalPerMin = (netMET * 3.5 * weightKg) / 200;
+  const kcal = Math.round(kcalPerMin * mins * restFactor);
+  // Soft cap to avoid inflated numbers for typical weights sessions.
+  return Math.max(0, Math.min(kcal, 400));
 }
+
 
 function SimpleSession({ addSession, latestWeight }) {
   const [minutes, setMinutes] = React.useState("");
@@ -1910,9 +1919,9 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           fontSize:    "24px",
           fontWeight:  "bold",
           textAlign:   "center",
-          marginBottom:"18px"
+          marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>{ setWorkoutMode(prev => (prev === "advanced" ? "simple" : "advanced")); }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>setShowWorkoutSettings(true)} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
@@ -2256,7 +2265,9 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
 {/* --- Workout Settings Modal --- */}
-
+{showWorkoutSettings && (
+  <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.35)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999}}
+    onClick={()=>setShowWorkoutSettings(false)}
   >
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
       <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
