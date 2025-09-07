@@ -365,13 +365,7 @@ const [weighedQuery, setWeighedQuery] = useState("");
   "Triceps": 0.25,
   "Push-ups": 0.4,
   "Plank": 0.04,
-  "
-{/* --- Workout Mode Conditional --- */}
-{workoutMode === "simple" ? (
-  <SimpleSession addSession={(entry) => addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
-) : null}
-
-Run": "run",
+  "Run": "run",
   "Bike": "bike"
 };
   
@@ -1269,7 +1263,7 @@ if (screen === "onboarding") {
   return (
     <div style={{ padding: "24px", fontFamily: "Inter, Arial, sans-serif", maxWidth: "500px", margin: "40px auto" }}>
       <h1 style={{ fontSize: "24px", fontWeight: "bold", textAlign: "center", marginBottom: "24px" }}>
-        Welcome to The500Plan
+        Welcome to EatLiftBurn
       </h1>
 
       <div style={{ background: "#f9f9f9", borderRadius: "12px", padding: "16px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
@@ -1906,6 +1900,24 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
         </button>
       </div>
 
+<div style={{display:"flex", alignItems:"center", justifyContent:"space-between", margin:"68px 0 10px 0"}}>
+  <h2 style={{margin:0}}>🏋️ Workouts</h2>
+  <button
+    aria-label="Workout settings"
+    onClick={()=>setShowWorkoutSettings(true)}
+    style={{fontSize:16, lineHeight:1, padding:"6px 8px", borderRadius:10, border:"1px solid #ddd", background:"#fff"}}
+  >
+    ⚙️
+  </button>
+</div>
+
+{/* --- Workout Mode Conditional --- */}
+{workoutMode === "simple" ? (
+  <SimpleSession addSession={(entry) => addSimpleSession(entry, setWorkoutLog, setToastMsg)} latestWeight={latestWeight} />
+) : null}
+
+
+
       <div style={{
         padding:       "24px",
         paddingTop:    "58px",
@@ -2169,18 +2181,9 @@ setWorkoutLog(prev => ({
 
         {/* Logged Workouts */}
         <>
-          
-<div style={{display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10}}>
-  <h2 style={{margin:0}}>🏋️ Workouts</h2>
-  <button
-    aria-label="Workout settings"
-    onClick={()=>setShowWorkoutSettings(true)}
-    style={{fontSize:16, lineHeight:1, padding:"6px 8px", borderRadius:10, border:"1px solid #ddd", background:"#fff"}}
-  >
-    ⚙️
-  </button>
-</div>
-
+          <h2 style={{ fontSize: "20px", fontWeight: "600", marginTop: "24px", marginBottom: "12px" }}>
+            Logged Workouts
+          </h2>
           <ul style={{ paddingLeft: "16px", marginBottom: "16px" }}>
             {Object.entries(workoutLog).map(([type, value], i) => {
               let display = "";
