@@ -631,23 +631,15 @@ function computeFromGrams(per100, grams) {
 // Rest: 'short' | 'normal' | 'long'
 
 function sessionCalories(minutes, intensity, rest, latestWeight) {
-  // Conservative NET calories (BMR already counted elsewhere):
-  // - Use lower METs typical for resistance work
-  // - Subtract resting 1 MET to avoid double counting BMR
-  // - Apply stronger rest deductions
+  // Conservative NET calories (BMR already counted elsewhere)
   const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback
   const baseMET = intensity === "vigorous" ? 5.0 : intensity === "moderate" ? 3.5 : 2.5; // conservative
-  const netMET = Math.max(0, baseMET - 1.0); // remove resting metabolic rate
-  const restFactor = rest === "long" ? 0.75 : rest === "short" ? 0.95 : 0.85; // stronger deductions
-  const effectiveMin = Math.max(0, (minutes || 0)) * restFactor;
-
-  // kcal/min = MET * 3.5 * kg / 200
+  const netMET  = Math.max(0, baseMET - 1.0); // subtract resting 1.0 MET
+  const restFactor = rest === "long" ? 0.75 : rest === "short" ? 0.95 : 0.85;
+  const effectiveMin = Math.max(0, Number(minutes) || 0) * restFactor;
   const kcalPerMin = (netMET * 3.5 * weightKg) / 200;
   const kcal = Math.round(kcalPerMin * effectiveMin);
-
-  // Extra safety: clamp unrealistic values for typical "weights" sessions
-  //  - 60 min vigorous with long rests should be < ~320 kcal for ~80kg
-  return Math.max(0, Math.min(kcal, 400));
+  return Math.max(0, Math.min(kcal, 400)); // soft cap
 }
 
 
@@ -671,7 +663,7 @@ function SimpleSession({ addSession, latestWeight }) {
 
   return (
     <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"10px 0"}}>
-      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Simple Workout Entry</div>
+      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Workout Entry</div>
       <label style={{display:"block", marginBottom:8}}>
         Minutes
         <input
@@ -1924,7 +1916,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>{ const next = workoutMode === "advanced" ? "simple" : "advanced"; setWorkoutMode(next); if (typeof setToastMsg === "function") { setToastMsg(`Workout mode: ${next[0].toUpperCase()}${next.slice(1)}`); setTimeout(()=>setToastMsg(""),1200); } }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>{ setWorkoutMode(prev => (prev === "advanced" ? "simple" : "advanced")); }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
@@ -2267,7 +2259,27 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("workouts")} style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>🏋️ Workouts</button>
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
-{/* --- Workout Settings       </>
+{/* --- Workout Settings Modal --- */}
+
+  >
+    <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
+      <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
+      <label style={{display:"flex", alignItems:"center", gap:10, marginBottom:8}}>
+        <input type="radio" name="workoutMode" value="simple" checked={workoutMode === "simple"} onChange={()=>setWorkoutMode("simple")} />
+        <span>Simple (time + intensity + rest)</span>
+      </label>
+      <label style={{display:"flex", alignItems:"center", gap:10}}>
+        <input type="radio" name="workoutMode" value="advanced" checked={workoutMode === "advanced"} onChange={()=>setWorkoutMode("advanced")} />
+        <span>Advanced (per-exercise sets/reps)</span>
+      </label>
+      <div style={{display:"flex", gap:8, marginTop:14}}>
+        <button type="button" onClick={()=>setShowWorkoutSettings(false)} style={{flex:1, padding:10, borderRadius:10}}>Close</button>
+      </div>
+    </div>
+  </div>
+)}
+
+      </>
     );
   }
 
