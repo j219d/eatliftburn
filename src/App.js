@@ -1910,11 +1910,10 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           fontSize:    "24px",
           fontWeight:  "bold",
           textAlign:   "center",
-          marginBottom:"12px"
+          marginBottom:"18px"
         }}>
           🏋️ Workouts <button type="button" onClick={()=>{ setWorkoutMode(prev => (prev === "advanced" ? "simple" : "advanced")); }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
-<div style={{height:"8px"}}></div>
 
       {/* Strength + Run entries */}
 {workoutMode === "simple" ? (
