@@ -56,6 +56,7 @@ const [mode, setMode] = useState(() => localStorage.getItem("mode") || "Cut");
     return "advanced"; // default to detailed (existing) mode
   });
   useEffect(() => { try { localStorage.setItem("workoutMode", workoutMode); } catch {} }, [workoutMode]);
+  const [showWorkoutSettings, setShowWorkoutSettings] = useState(false);
 const [showModes, setShowModes] = useState(false);
 
 const [fatGoal, setFatGoal] = useState(
@@ -629,19 +630,13 @@ function computeFromGrams(per100, grams) {
 // --- Simple session calories via METs ---
 // Intensity: 'low' | 'moderate' | 'vigorous'
 // Rest: 'short' | 'normal' | 'long'
-
 function sessionCalories(minutes, intensity, rest, latestWeight) {
-  // Conservative NET calories (BMR already counted elsewhere)
   const weightKg = latestWeight ? latestWeight / 2.20462 : 70; // fallback
-  const baseMET = intensity === "vigorous" ? 5.0 : intensity === "moderate" ? 3.5 : 2.5; // conservative
-  const netMET  = Math.max(0, baseMET - 1.0); // subtract resting 1.0 MET
-  const restFactor = rest === "long" ? 0.75 : rest === "short" ? 0.95 : 0.85;
-  const effectiveMin = Math.max(0, Number(minutes) || 0) * restFactor;
-  const kcalPerMin = (netMET * 3.5 * weightKg) / 200;
-  const kcal = Math.round(kcalPerMin * effectiveMin);
-  return Math.max(0, Math.min(kcal, 400)); // soft cap
+  const MET = intensity === "vigorous" ? 6.0 : intensity === "moderate" ? 5.0 : 3.5;
+  const restFactor = rest === "long" ? 0.8 : rest === "short" ? 0.95 : 0.9;
+  const effectiveMin = Math.max(0, minutes || 0) * restFactor;
+  return Math.round((MET * 3.5 * weightKg / 200) * effectiveMin);
 }
-
 
 function SimpleSession({ addSession, latestWeight }) {
   const [minutes, setMinutes] = React.useState("");
@@ -663,7 +658,7 @@ function SimpleSession({ addSession, latestWeight }) {
 
   return (
     <div className="card" style={{padding:"14px 12px", borderRadius:12, border:"1px solid #eee", margin:"10px 0"}}>
-      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Workout Entry</div>
+      <div style={{fontWeight:700, fontSize:16, marginBottom:10}}>Quick Session (Simple Mode)</div>
       <label style={{display:"block", marginBottom:8}}>
         Minutes
         <input
@@ -1916,7 +1911,7 @@ f.name.toLowerCase().includes(foodSearch.toLowerCase())
           textAlign:   "center",
           marginBottom:"12px"
         }}>
-          🏋️ Workouts <button type="button" onClick={()=>{ setWorkoutMode(prev => (prev === "advanced" ? "simple" : "advanced")); }} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
+          🏋️ Workouts <button type="button" onClick={()=>setShowWorkoutSettings(true)} style={{marginLeft:8, fontSize:14, border:'1px solid #ddd', borderRadius:8, padding:'2px 6px', background:'#fff'}}>⚙️</button>
         </h1>
 
       {/* Strength + Run entries */}
@@ -2260,7 +2255,9 @@ setWorkoutLog(prev => ({
           <button onClick={() => setScreen("weight")}   style={{ flex:1,border:"none",background:"transparent",fontSize:"16px",cursor:"pointer" }}>⚖️ Weight</button>
         </div>
 {/* --- Workout Settings Modal --- */}
-
+{showWorkoutSettings && (
+  <div style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.35)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999}}
+    onClick={()=>setShowWorkoutSettings(false)}
   >
     <div onClick={e=>e.stopPropagation()} style={{background:"#fff", padding:16, borderRadius:14, width:"92%", maxWidth:420}}>
       <div style={{fontWeight:700, marginBottom:10}}>Workout logging mode</div>
