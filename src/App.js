@@ -514,8 +514,9 @@ const foodOptions = [
   { name: "Protein scoop (1 Promix Vanilla)", cal: 75, prot: 15, fat: 0.25, carbs: 3.5 },
   { name: "Protein scoop (2 Promix Vanilla)", cal: 150, prot: 30, fat: 0.5, carbs: 7 },
   { name: "Psyllium Husk (1 tsp)", cal: 15, prot: 0, fat: 0, carbs: 4, fiber: 4 },
-  { name: "Pumpkin seeds (1 tsp)", cal: 20, prot: 1, fat: 1.5, carbs: 0.7, fiber: 0.4 },
-  { name: "Pumpkin seeds (1 tbsp)", cal: 60, prot: 3, fat: 4.5, carbs: 2, fiber: 1.1 },
+  { name: "Pumpkin seeds (1 tsp)", cal: 52, prot: 2.2, fat: 4.3, carbs: 1.1, fiber: 0.27 },
+  { name: "Pumpkin seeds (1/2 tbsp)", cal: 78, prot: 3.25, fat: 6.5, carbs: 1.65, fiber: 0.4 },
+  { name: "Pumpkin seeds (1 tbsp)", cal: 155, prot: 6.5, fat: 13, carbs: 3.3, fiber: 0.8 },
   { name: "Ribeye steak (50g)", cal: 144, prot: 12.4, fat: 10, carbs: 0, fiber: 0 },
   { name: "Ribeye steak (100g)", cal: 288, prot: 24.8, fat: 20, carbs: 0, fiber: 0 },
   { name: "Ribeye steak (150g)", cal: 432, prot: 37.2, fat: 30, carbs: 0, fiber: 0 },
@@ -617,6 +618,7 @@ const weighedFoods = [
   { key: "yogurt_fage0", label: "Yogurt (Fage 0%)", per100: { cal: 53, prot: 10.6, fat: 0, carbs: 2.9, fiber: 0 } },
   { key: "pomegranate", label: "Pomegranate", per100: { cal: 83, prot: 1.7, fat: 1.2, carbs: 18.7, fiber: 4.0 } },
   { key: "hummus", label: "Hummus", per100: { cal: 166, prot: 7.9, fat: 9.6, carbs: 14.3, fiber: 6.0 } },
+  { key: "pumpkin_seeds", label: "Pumpkin seeds", per100: { cal: 633, prot: 26.7, fat: 53.3, carbs: 13.3, fiber: 3.3 } },
   { key: "lamb_shoulder_cooked", label: "Lamb shoulder (cooked)", per100: { cal: 276, prot: 25, fat: 20, carbs: 0, fiber: 0 } }
 ];
 // Helper: compute macros from grams using per-100g profile
