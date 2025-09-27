@@ -586,7 +586,6 @@ const weighedFoods = [
   { key: "quinoa_cooked", label: "Quinoa (cooked)", per100: { cal: 120, prot: 4.1, fat: 1.9, carbs: 21.3, fiber: 2.8 } },
   { key: "pasta_raw", label: "Pasta (raw)", per100: { cal: 371, prot: 13, fat: 1.5, carbs: 75, fiber: 3.2 } },
   { key: "pasta_cooked", label: "Pasta (cooked)", per100: { cal: 131, prot: 5, fat: 1.1, carbs: 25, fiber: 1.4 } },
-  { key: "pumpkin_seeds", label: "Pumpkin seeds", per100: { cal: 559, prot: 30, fat: 49, carbs: 11, fiber: 6 } },
   { key: "walnuts", label: "Walnuts", per100: { cal: 654, prot: 15, fat: 65, carbs: 14, fiber: 7 } },
   { key: "cashews", label: "Cashews", per100: { cal: 553, prot: 18, fat: 44, carbs: 30, fiber: 3.3 } },
   { key: "pistachios", label: "Pistachios", per100: { cal: 560, prot: 20, fat: 45, carbs: 28, fiber: 10 } },
