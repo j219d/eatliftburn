@@ -350,49 +350,45 @@ const liquidDefs = {
   const [weighedGrams, setWeighedGrams] = useState("");
 const [weighedQuery, setWeighedQuery] = useState("");
 
-  // --- Organized 4-Day Split + Cardio Section (no Plank) ---
-const workouts = {
-  "Day 1 – Weighted Compound Strength (Full Body)": {
-    "Weighted Pull-Ups": 1.0,
-    "Weighted Dips": 0.9,
-    "Weighted Lunges": 0.8,
-    "Weighted Push-Ups (optional)": 0.6,
-    "Hanging Leg Raises (optional)": 0.3,
-  },
+// Simple text headers + exact exercises you want to show (in order)
+const WORKOUT_DISPLAY = [
+  { header: "Day 1 – Weighted Compound Strength (Full Body)" },
+  "Weighted Pull-Ups",
+  "Weighted Dips",
+  "Weighted Lunges",
+  { small: "Optional:" },
+  "Weighted Push-Ups",
+  "Hanging Leg Raises",
 
-  "Day 2 – Chest / Shoulders / Triceps (Push Day)": {
-    "Bench Press": 0.6,
-    "Incline Bench Press": 0.6,
-    "Shoulder Press": 0.6,
-    "Tricep Pulldown": 0.3,
-    "Weighted Crunches": 0.25,
-    "Lean-In Dumbbell Lat Raise (optional)": 0.3,
-  },
+  { header: "Day 2 – Chest / Shoulders / Triceps (Push Day)" },
+  "Bench Press",
+  "Incline Bench Press", // "(Alternate with)" is just display text
+  "Shoulder Press",
+  "Tricep Pulldown",
+  "Weighted Crunches",
+  { small: "Optional:" },
+  "Lean-In Dumbbell Lat Raise",
 
-  "Day 3 – Back / Biceps (Pull Day)": {
-    "Barbell Bicep Curl": 0.4,
-    "Pull-Ups (body-weight)": 1.0,
-    "Low Pull": 0.6,
-    "Rope Face Pulls": 0.4,
-    "Dumbbell Bicep Curl (30’) (optional)": 0.4,
-  },
+  { header: "Day 3 – Back / Biceps (Pull Day)" },
+  "Barbell Bicep Curl",
+  "Pull-Ups (body-weight)",
+  "Low Pull",
+  "Rope Face Pulls",
+  { small: "Optional:" },
+  "Dumbbell Bicep Curl (30’)",
 
-  "Day 4 – Legs / Glutes / Core": {
-    "Leg Press": 0.8,
-    "Standing Calf Raises": 0.4,
-    "Seated Leg Curls": 0.5,
-    "Glute Abductor (optional)": 0.4,
-    "Lunges (bodyweight, optional)": 0.8,
-  },
+  { header: "Day 4 – Legs / Glutes / Core" },
+  "Leg Press",
+  "Standing Calf Raises",
+  "Seated Leg Curls",
+  { small: "Optional:" },
+  "Glute Abductor",
+  "Lunges (bodyweight)",
 
-  "Cardio": {
-    "Run": "run",
-    "Bike": "bike",
-    "Steps": "steps",
-    "Treadmill": "treadmill",
-    "Swim": "swim",
-  },
-};
+  { header: "Cardio" },       // header only
+  "Run",
+  "Bike",
+];
   
 const foodOptions = [
   { name: "Almond Milk (1/4 cup)", cal: 23, prot: 0.9, fat: 1.9, carbs: 0.5, fiber: 0 },
