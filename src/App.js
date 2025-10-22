@@ -350,27 +350,48 @@ const liquidDefs = {
   const [weighedGrams, setWeighedGrams] = useState("");
 const [weighedQuery, setWeighedQuery] = useState("");
 
-  const workouts = {
-  "Push-ups": 0.5,
-  "Bench Press": 0.6,
-  "Incline Press": 0.6,
-  "Dips": 0.6,
-  "Chest Flys": 0.4,
-  "Pull-ups": 1.0,
-  "Leg Press": 0.8,
-  "Biceps": 0.4,
-  "Triceps": 0.3,
-  "Shoulder Press": 0.6,
-  "Glute Abductor": 0.4,
-  "Low Pull": 0.6,
-  "Leg Curl": 0.5,
-  "Lunges": 0.8,
-  "Back Extensions": 0.2,
-  "Core Pull": 0.5,
-  "Leg Raises": 0.3,
-  "Plank": 0.04,
-  "Run": "run",
-  "Bike": "bike"
+  // --- Organized 4-Day Split + Cardio Section (no Plank) ---
+const workouts = {
+  "Day 1 – Weighted Compound Strength (Full Body)": {
+    "Weighted Pull-Ups": 1.0,
+    "Weighted Dips": 0.9,
+    "Weighted Lunges": 0.8,
+    "Weighted Push-Ups (optional)": 0.6,
+    "Hanging Leg Raises (optional)": 0.3,
+  },
+
+  "Day 2 – Chest / Shoulders / Triceps (Push Day)": {
+    "Bench Press": 0.6,
+    "Incline Bench Press": 0.6,
+    "Shoulder Press": 0.6,
+    "Tricep Pulldown": 0.3,
+    "Weighted Crunches": 0.25,
+    "Lean-In Dumbbell Lat Raise (optional)": 0.3,
+  },
+
+  "Day 3 – Back / Biceps (Pull Day)": {
+    "Barbell Bicep Curl": 0.4,
+    "Pull-Ups (body-weight)": 1.0,
+    "Low Pull": 0.6,
+    "Rope Face Pulls": 0.4,
+    "Dumbbell Bicep Curl (30’) (optional)": 0.4,
+  },
+
+  "Day 4 – Legs / Glutes / Core": {
+    "Leg Press": 0.8,
+    "Standing Calf Raises": 0.4,
+    "Seated Leg Curls": 0.5,
+    "Glute Abductor (optional)": 0.4,
+    "Lunges (bodyweight, optional)": 0.8,
+  },
+
+  "Cardio": {
+    "Run": "run",
+    "Bike": "bike",
+    "Steps": "steps",
+    "Treadmill": "treadmill",
+    "Swim": "swim",
+  },
 };
   
 const foodOptions = [
