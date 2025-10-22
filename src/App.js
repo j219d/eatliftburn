@@ -352,33 +352,33 @@ const [weighedQuery, setWeighedQuery] = useState("");
 
 const workouts = {
   // Day 1
-  "1 - Pull-ups": 1.0,
-  "1 - Dips": 0.6,
-  "1 - Lunges": 0.8,
-  "1 - Push-ups (Opt)": 0.5,
-  "1 - Leg Raises (Opt)": 0.3,
+  "1 Pull-ups": 1.0,
+  "1 Dips": 0.6,
+  "1 Lunges": 0.8,
+  "1 Push-ups (Opt)": 0.5,
+  "1 Leg Raises (Opt)": 0.3,
 
   // Day 2
-  "2 - Bench Press": 0.6,
-  "2 - Incline Press": 0.6,
-  "2 - Shoulder Press": 0.6,
-  "2 - Triceps": 0.3,
-  "2 - Core Pull": 0.5,
-  "2 - Dumbbell Lat Raise (Opt)": 0.3,
+  "2 Bench Press": 0.6,
+  "2 Incline Press": 0.6,
+  "2 Shoulder Press": 0.6,
+  "2 Triceps": 0.3,
+  "2 Core Pull": 0.5,
+  "2 Dumbbell Lat Raise (Opt)": 0.3,
 
   // Day 3
-  "3 - Barbell Bicep Curl": 0.4,
-  "3 - Pull-ups": 1.0,
-  "3 - Low Pull": 0.6,
-  "3 - Rope Face Pulls": 0.3,
-  "3 - Dumbbell Bicep Curl (Opt)": 0.4,
+  "3 Barbell Bicep Curl": 0.4,
+  "3 Pull-ups": 1.0,
+  "3 Low Pull": 0.6,
+  "3 Rope Face Pulls": 0.3,
+  "3 Dumbbell Bicep Curl (Opt)": 0.4,
 
   // Day 4
-  "4 - Leg Press": 0.8,
-  "4 - Calf Raises": 0.2,
-  "4 - Leg Curl": 0.5,
-  "4 - Glute Abductor (Opt)": 0.4,
-  "4 - Lunges (Opt)": 0.8,
+  "4 Leg Press": 0.8,
+  "4 Calf Raises": 0.2,
+  "4 Leg Curl": 0.5,
+  "4 Glute Abductor (Opt)": 0.4,
+  "4 Lunges (Opt)": 0.8,
 
   // Cardio
   "Run": "run",
