@@ -350,110 +350,40 @@ const liquidDefs = {
   const [weighedGrams, setWeighedGrams] = useState("");
 const [weighedQuery, setWeighedQuery] = useState("");
 
- // 1) Keep your flat workouts object (make keys unique)
 const workouts = {
-  "Weighted Pull-Ups": 1.0,
-  "Weighted Dips": 0.6,
-  "Weighted Lunges": 0.8,
-  "Weighted Push-Ups": 0.5,
-  "Hanging Leg Raises": 0.3,
+  // Day 1
+  "1 - Pull-ups": 1.0,
+  "1 - Dips": 0.6,
+  "1 - Lunges": 0.8,
+  "1 - Push-ups": 0.5,
+  "1 - Leg Raises": 0.3,
 
-  "Bench Press": 0.6,
-  "Incline Press": 0.6,
-  "Shoulder Press": 0.6,
-  "Triceps": 0.3,
-  "Core Pull": 0.5,
-  "Lean-In Dumbbell Lat Raise": 0.3,
+  // Day 2
+  "2 - Bench Press": 0.6,
+  "2 - Incline Press": 0.6,
+  "2 - Shoulder Press": 0.6,
+  "2 - Triceps": 0.3,
+  "2 - Core Pull": 0.5,
+  "2 - Lean-In Dumbbell Lat Raise": 0.3,
 
-  "Barbell Bicep Curl": 0.4,
-  "Pull-Ups (body-weight)": 1.0,
-  "Low Pull": 0.6,
-  "Rope Face Pulls": 0.3,
-  "Dumbbell Bicep Curl": 0.4,
+  // Day 3
+  "3 - Barbell Bicep Curl": 0.4,
+  "3 - Pull-ups": 1.0,
+  "3 - Low Pull": 0.6,
+  "3 - Rope Face Pulls": 0.3,
+  "3 - Dumbbell Bicep Curl": 0.4,
 
-  "Leg Press": 0.8,
-  "Calf Raises": 0.2,
-  "Leg Curl": 0.5,
-  "Glute Abductor": 0.4,
-  "Lunges (bodyweight)": 0.8,
+  // Day 4
+  "4 - Leg Press": 0.8,
+  "4 - Calf Raises": 0.2,
+  "4 - Leg Curl": 0.5,
+  "4 - Glute Abductor": 0.4,
+  "4 - Lunges": 0.8,
 
+  // Cardio
   "Run": "run",
   "Bike": "bike",
 };
-
-// 2) Insert simple text headers at specific indices
-const keys = Object.keys(workouts); // respects your literal order
-const headersAtIndex = {
-  0:  "Day 1 – Weighted Compound Strength (Full Body)",
-  5:  "Day 2 – Chest / Shoulders / Triceps (Push day)",
-  11: "Day 3 – Back / Biceps (Pull day)",
-  16: "Day 4 – Legs / Glutes / Core",
-  21: "Cardio",
-};
-
-// 3) Your render: loop keys, print a header when index matches
-{keys.map((type, idx) => (
-  <React.Fragment key={type}>
-    {headersAtIndex[idx] && (
-      <h3 style={{ margin: "18px 0 10px", fontWeight: 700 }}>{headersAtIndex[idx]}</h3>
-    )}
-
-    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-      <label style={{ width: 200, fontSize: 16 }}>{type}</label>
-
-      <input
-        type="number"
-        inputMode="numeric"
-        min="0"
-        placeholder="Reps"
-        value={customWorkout[type] || ""}
-        onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
-        style={{ width: 100, padding: 8, fontSize: 16, borderRadius: 8, border: "1px solid #ccc" }}
-      />
-
-      <button
-        onClick={() => {
-          const input = parseFloat(customWorkout[type]);
-          if (isNaN(input)) return;
-
-          // keep your existing special handling
-          if (type === "Bike") {
-            const cal = Math.round(input * 15);
-            setWorkoutLog(prev => {
-              const prevReps = prev[type]?.reps || 0;
-              const prevCal  = prev[type]?.cal  || 0;
-              return { ...prev, [type]: { reps: prevReps + input, cal: prevCal + cal } };
-            });
-            setCustomWorkout({ ...customWorkout, [type]: "" });
-            return;
-          }
-          if (type === "Run") {
-            const cal = Math.round(input * 68);
-            const runSteps = Math.round(input * 1100);
-            setSteps(prev => prev + runSteps);
-            setWorkoutLog(prev => {
-              const prevReps  = prev[type]?.reps || 0;
-              const prevCal   = prev[type]?.cal  || 0;
-              const prevSteps = prev[type]?.stepsAdded || 0;
-              return { ...prev, [type]: { reps: prevReps + input, cal: prevCal + cal, stepsAdded: prevSteps + runSteps } };
-            });
-            setCustomWorkout({ ...customWorkout, [type]: "" });
-            return;
-          }
-
-          // default reps-based logging
-          setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
-          setCustomWorkout({ ...customWorkout, [type]: "" });
-        }}
-        style={{ padding: "8px 12px", fontSize: 16, backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: 8 }}
-      >
-        Add
-      </button>
-    </div>
-  </React.Fragment>
-))}
-
-/* 4) BELOW this list, keep your existing Steps / Treadmill / Swim sections exactly as they are */
 
 const foodOptions = [
   { name: "Almond Milk (1/4 cup)", cal: 23, prot: 0.9, fat: 1.9, carbs: 0.5, fiber: 0 },
