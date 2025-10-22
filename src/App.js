@@ -376,8 +376,8 @@ const workouts = {
   // Day 4
   "4 Leg Press": 0.8,
   "4 Calf Raises": 0.2,
-  "4 Leg Curl": 0.5,
-  "4 Glute Abductor (Opt)": 0.4,
+  "4 Leg Curl": 0.4,
+  "4 Glutes (Opt)": 0.3,
   "4 Lunges (Opt)": 0.8,
 
   // Cardio
