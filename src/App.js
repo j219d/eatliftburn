@@ -350,45 +350,35 @@ const liquidDefs = {
   const [weighedGrams, setWeighedGrams] = useState("");
 const [weighedQuery, setWeighedQuery] = useState("");
 
-// Simple text headers + exact exercises you want to show (in order)
-const WORKOUT_DISPLAY = [
-  { header: "Day 1 – Weighted Compound Strength (Full Body)" },
-  "Weighted Pull-Ups",
-  "Weighted Dips",
-  "Weighted Lunges",
-  { small: "Optional:" },
-  "Weighted Push-Ups",
-  "Hanging Leg Raises",
+  const workouts = {
+  "Pull-ups": 1.0,
+  "Dips": 0.6,
+  "Lunges": 0.8,
+  "Push-ups": 0.5,
+  "Leg Raises": 0.3,
 
-  { header: "Day 2 – Chest / Shoulders / Triceps (Push Day)" },
-  "Bench Press",
-  "Incline Bench Press", // "(Alternate with)" is just display text
-  "Shoulder Press",
-  "Tricep Pulldown",
-  "Weighted Crunches",
-  { small: "Optional:" },
-  "Lean-In Dumbbell Lat Raise",
+  "Bench Press": 0.6,
+  "Incline Press": 0.6,
+  "Shoulder Press": 0.6,
+  "Triceps": 0.3,
+  "Core Pull": 0.5,
+  "Lean-In Dumbbell Lat Raise": 0.3,
 
-  { header: "Day 3 – Back / Biceps (Pull Day)" },
-  "Barbell Bicep Curl",
-  "Pull-Ups (body-weight)",
-  "Low Pull",
-  "Rope Face Pulls",
-  { small: "Optional:" },
-  "Dumbbell Bicep Curl (30’)",
-
-  { header: "Day 4 – Legs / Glutes / Core" },
-  "Leg Press",
-  "Standing Calf Raises",
-  "Seated Leg Curls",
-  { small: "Optional:" },
-  "Glute Abductor",
-  "Lunges (bodyweight)",
-
-  { header: "Cardio" },       // header only
-  "Run",
-  "Bike",
-];
+  "Barbell Bicep Curl": 0.4,
+  "Pull-ups": 1.0,
+  "Low Pull": 0.6,
+  "Rope Face Pulls": 0.3,
+  "Dumbbell Bicep Curl": 0.4,
+    
+  "Leg Press": 0.8,
+  "Calf Raises": 0.2,
+  "Leg Curl": 0.5,
+  "Glute Abductor": 0.4,
+  "Lunges": 0.8,
+  
+  "Run": "run",
+  "Bike": "bike"
+};
   
 const foodOptions = [
   { name: "Almond Milk (1/4 cup)", cal: 23, prot: 0.9, fat: 1.9, carbs: 0.5, fiber: 0 },
