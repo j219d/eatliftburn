@@ -350,12 +350,13 @@ const liquidDefs = {
   const [weighedGrams, setWeighedGrams] = useState("");
 const [weighedQuery, setWeighedQuery] = useState("");
 
-  const workouts = {
-  "Pull-ups": 1.0,
-  "Dips": 0.6,
-  "Lunges": 0.8,
-  "Push-ups": 0.5,
-  "Leg Raises": 0.3,
+ // 1) Keep your flat workouts object (make keys unique)
+const workouts = {
+  "Weighted Pull-Ups": 1.0,
+  "Weighted Dips": 0.6,
+  "Weighted Lunges": 0.8,
+  "Weighted Push-Ups": 0.5,
+  "Hanging Leg Raises": 0.3,
 
   "Bench Press": 0.6,
   "Incline Press": 0.6,
@@ -365,21 +366,95 @@ const [weighedQuery, setWeighedQuery] = useState("");
   "Lean-In Dumbbell Lat Raise": 0.3,
 
   "Barbell Bicep Curl": 0.4,
-  "Pull-ups": 1.0,
+  "Pull-Ups (body-weight)": 1.0,
   "Low Pull": 0.6,
   "Rope Face Pulls": 0.3,
   "Dumbbell Bicep Curl": 0.4,
-    
+
   "Leg Press": 0.8,
   "Calf Raises": 0.2,
   "Leg Curl": 0.5,
   "Glute Abductor": 0.4,
-  "Lunges": 0.8,
-  
+  "Lunges (bodyweight)": 0.8,
+
   "Run": "run",
-  "Bike": "bike"
+  "Bike": "bike",
 };
-  
+
+// 2) Insert simple text headers at specific indices
+const keys = Object.keys(workouts); // respects your literal order
+const headersAtIndex = {
+  0:  "Day 1 – Weighted Compound Strength (Full Body)",
+  5:  "Day 2 – Chest / Shoulders / Triceps (Push day)",
+  11: "Day 3 – Back / Biceps (Pull day)",
+  16: "Day 4 – Legs / Glutes / Core",
+  21: "Cardio",
+};
+
+// 3) Your render: loop keys, print a header when index matches
+{keys.map((type, idx) => (
+  <React.Fragment key={type}>
+    {headersAtIndex[idx] && (
+      <h3 style={{ margin: "18px 0 10px", fontWeight: 700 }}>{headersAtIndex[idx]}</h3>
+    )}
+
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+      <label style={{ width: 200, fontSize: 16 }}>{type}</label>
+
+      <input
+        type="number"
+        inputMode="numeric"
+        min="0"
+        placeholder="Reps"
+        value={customWorkout[type] || ""}
+        onChange={(e) => setCustomWorkout({ ...customWorkout, [type]: e.target.value })}
+        style={{ width: 100, padding: 8, fontSize: 16, borderRadius: 8, border: "1px solid #ccc" }}
+      />
+
+      <button
+        onClick={() => {
+          const input = parseFloat(customWorkout[type]);
+          if (isNaN(input)) return;
+
+          // keep your existing special handling
+          if (type === "Bike") {
+            const cal = Math.round(input * 15);
+            setWorkoutLog(prev => {
+              const prevReps = prev[type]?.reps || 0;
+              const prevCal  = prev[type]?.cal  || 0;
+              return { ...prev, [type]: { reps: prevReps + input, cal: prevCal + cal } };
+            });
+            setCustomWorkout({ ...customWorkout, [type]: "" });
+            return;
+          }
+          if (type === "Run") {
+            const cal = Math.round(input * 68);
+            const runSteps = Math.round(input * 1100);
+            setSteps(prev => prev + runSteps);
+            setWorkoutLog(prev => {
+              const prevReps  = prev[type]?.reps || 0;
+              const prevCal   = prev[type]?.cal  || 0;
+              const prevSteps = prev[type]?.stepsAdded || 0;
+              return { ...prev, [type]: { reps: prevReps + input, cal: prevCal + cal, stepsAdded: prevSteps + runSteps } };
+            });
+            setCustomWorkout({ ...customWorkout, [type]: "" });
+            return;
+          }
+
+          // default reps-based logging
+          setWorkoutLog(prev => ({ ...prev, [type]: (prev[type] || 0) + input }));
+          setCustomWorkout({ ...customWorkout, [type]: "" });
+        }}
+        style={{ padding: "8px 12px", fontSize: 16, backgroundColor: "#0070f3", color: "#fff", border: "none", borderRadius: 8 }}
+      >
+        Add
+      </button>
+    </div>
+  </React.Fragment>
+))}
+
+/* 4) BELOW this list, keep your existing Steps / Treadmill / Swim sections exactly as they are */
+
 const foodOptions = [
   { name: "Almond Milk (1/4 cup)", cal: 23, prot: 0.9, fat: 1.9, carbs: 0.5, fiber: 0 },
   { name: "Almond Milk (1/2 cup)", cal: 46, prot: 1.8, fat: 3.8, carbs: 1.0, fiber: 0 },
