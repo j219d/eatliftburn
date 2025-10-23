@@ -363,20 +363,21 @@ const workouts = {
   "2 Incline Press": 0.6,
   "2 Shoulder Press": 0.6,
   "2 Triceps": 0.3,
+  "2 Dbell Lat Raise": 0.3,
   "2 Core Pull": 0.5,
-  "2 Dbell Lat Raise (Opt)": 0.3,
 
   // Day 3
   "3 Bbell Bicep Curl": 0.4,
   "3 Pull-ups": 1.0,
   "3 Rope Face Pulls": 0.3,
   "3 Low Pull": 0.6,
-  "3 Dbell Bicep Curl (Opt)": 0.4,
+  "3 Dbell Bicep Curl": 0.4,
 
   // Day 4
   "4 Leg Press": 0.8,
-  "4 Calf Raises": 0.2,
   "4 Leg Curl": 0.4,
+  "4 RDLs": 0.7,
+  "4 Calf Raises": 0.2,
   "4 Glutes (Opt)": 0.3,
   "4 Lunges (Opt)": 0.8,
 
