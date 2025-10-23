@@ -369,8 +369,8 @@ const workouts = {
   // Day 3
   "3 Bbell Bicep Curl": 0.4,
   "3 Pull-ups": 1.0,
-  "3 Low Pull": 0.6,
   "3 Rope Face Pulls": 0.3,
+  "3 Low Pull": 0.6,
   "3 Dbell Bicep Curl (Opt)": 0.4,
 
   // Day 4
